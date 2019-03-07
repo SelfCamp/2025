@@ -1,5 +1,18 @@
+#board {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    width: 50vw;
+    height: 50vw;
+    margin: auto;
+    justify-content: stretch;
+    justify-items: stretch;
+}
+
 .tile {
   color: #FFFFFF;
+    border: 2px solid black;
+
 }
 
 .tile [value='2'] {
