@@ -1,0 +1,55 @@
+.tile {
+  color: #FFFFFF;
+}
+
+.tile [value='2'] {
+  background-color: #000000;
+}
+
+.tile [value='4'] {
+  background-color: #111111;
+}
+
+.tile [value='8'] {
+  background-color: #222222;
+}
+
+.tile [value='16'] {
+  background-color: #333333;
+}
+
+.tile [value='32'] {
+  background-color: #444444;
+}
+
+.tile [value='64'] {
+  background-color: #555555;
+}
+
+.tile [value='128'] {
+  background-color: #666666;
+}
+
+.tile [value='256'] {
+  background-color: #777777;
+}
+
+.tile [value='512'] {
+  background-color: #888888;
+}
+
+.tile [value='1024'] {
+  background-color: #999999;
+}
+
+.tile [value='2048'] {
+  background-color: #AAAAAA;
+}
+
+.tile [value='1'] {
+  background-color: #BBBBBB;
+}
+
+.tile [value='2049'] {
+  background-color: #CCCCCC;
+}
