@@ -1,68 +1,77 @@
 #board {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    width: 50vw;
-    height: 50vw;
-    margin: auto;
-    justify-content: stretch;
-    justify-items: stretch;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  width: 50vw;
+  height: 50vw;
+  margin: calc((100vh - 50vw) / 2) auto;
+  justify-content: stretch;
+  justify-items: stretch;
+  grid-gap: 1vw;
 }
 
 .tile {
   color: #FFFFFF;
-    border: 2px solid black;
+  font-family: monospace;
+  font-size: 4vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
+  border: 2px solid #444444;
+  background-color: #81caaf;
+
+  border-radius: 1vw;
 }
 
-.tile [value='2'] {
+.tile[value='2'] {
   background-color: #000000;
 }
 
-.tile [value='4'] {
+.tile[value='4'] {
   background-color: #111111;
 }
 
-.tile [value='8'] {
+.tile[value='8'] {
   background-color: #222222;
 }
 
-.tile [value='16'] {
+.tile[value='16'] {
   background-color: #333333;
 }
 
-.tile [value='32'] {
+.tile[value='32'] {
   background-color: #444444;
 }
 
-.tile [value='64'] {
+.tile[value='64'] {
   background-color: #555555;
 }
 
-.tile [value='128'] {
+.tile[value='128'] {
   background-color: #666666;
 }
 
-.tile [value='256'] {
+.tile[value='256'] {
   background-color: #777777;
 }
 
-.tile [value='512'] {
+.tile[value='512'] {
   background-color: #888888;
 }
 
-.tile [value='1024'] {
+.tile[value='1024'] {
   background-color: #999999;
 }
 
-.tile [value='2048'] {
+.tile[value='2048'] {
   background-color: #AAAAAA;
 }
 
-.tile [value='1'] {
+.tile[value='1'] {
   background-color: #BBBBBB;
 }
 
-.tile [value='2049'] {
+.tile[value='2049'] {
   background-color: #CCCCCC;
 }
