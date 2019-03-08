@@ -1,0 +1,52 @@
+board = new Board();
+board.spawnTiles(2);
+
+boardHistory = [board];
+arrowPressHistory = [];
+
+while isGameOngoing() {
+  // Listen for arrow keys
+}
+
+handleEndOfGame();
+
+
+
+
+
+// Event listeners
+const handleArrowPress = (event) => {
+  let direction = // get from event
+  let currentBoard = boardHistory[boardHistory.length-1];
+  updateMvAttributesInDOM(currentBoard, direction);
+  setTimeout(() => displayNewBoard(currentBoard, direction), animationDuration);
+}
+
+
+displayNewBoard(currentBoard, direction) {
+  let newBoard = updateBoard(currentBoard, direction);
+  newBoard.spawnTiles(1);
+  boardHistory.push(newBoard);
+  updateBoardInDOM(newBoard);
+}
+
+
+const updateBoard = (currentBoard, direction) => {
+  // make a copy
+  // split into rows based on direction - keep references to tiles
+  for (row of rows) {
+    shakeRow(row)  // mutates tiles in input
+  }
+}
+
+
+const shakeRow = (row) => {
+  for (tile of row) {  // start from end
+    // propagate to furthest empty slot
+    // merge with next tile if (there is one && is of same value && hasn't been merged yet)
+  }
+}
+
+const isGameOngoing = (board) => {
+  return (maxTileValue < 2048 && !isBoardFull)
+}
