@@ -75,3 +75,16 @@
 .tile[value='2049'] {
   background-color: #CCCCCC;
 }
+
+@keyframes spawn {
+
+}
+
+@keyframes slide {
+  /*attr('data-mv-len')*/
+  /*attr('data-mv-dir')*/
+}
+
+@keyframes merge {
+
+}
