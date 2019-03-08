@@ -1,0 +1,25 @@
+Tiles are propagated...
+- one by one
+- towards last index
+- starting with tile at latest index
+
+
+Examples:
+
+→ → → →
+4 . 2 .
+4 . . 2
+. . 4 2
+
+→ → → →
+4 2 . 2
+4 . 2 2
+4 . .!4  // flagged on merge
+. . 4!4  // can't merge again
+
+→ → → →
+2 2 2 2
+2 2 .!4
+2 . 2!4
+. 2 2!4
+. .!4!4
