@@ -27,10 +27,8 @@ console.log(currentBoard);
 console.log(currentBoard[2]);
 
 const updateMvAttributesInDOM = (board, direction) => {
-  console.log(board, direction);
   for (let row of board) {
     for (let tile of row) {
-      console.log(document);
       let tileElement = document.querySelector(tile.selector);
       tileElement.setAttribute("data-mv-dir", direction);
       tileElement.setAttribute("data-mv-len", tile.previousValueMvLen ? tile.previousValueMvLen : "");
