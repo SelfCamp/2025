@@ -16,6 +16,19 @@ function Board() {
       this.matrix[row].push(new Tile(`#r${row}c${column}`));
     }
   }
+  this.spawnTiles = (num, isItTheOneAlready=false) => {
+    let emptyTiles = [];
+    for (let row of this.matrix) {
+      emptyTiles.push(...row.filter(tile => !tile.currentValue))
+    }
+    let choiceIndex = Math.floor(Math.random() * emptyTiles.length);
+    emptyTiles[choiceIndex].currentValue =
+        isItTheOneAlready
+        ? 1
+        : Math.random() < 0.9
+            ? 2
+            : 4
+  }
 }
 
 
@@ -25,6 +38,7 @@ const boardHistory = [];
 const moveDirectionHistory = [];
 
 const board = new Board();
+board.spawnTiles(1);
 boardHistory.push(board);
 
 
