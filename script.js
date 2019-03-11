@@ -18,7 +18,7 @@ function Board() {
       this.matrix[row].push(new Tile(`#r${row}c${column}`));
     }
   }
-  this.spawnTiles = (howMany, isItTheOneAlready = false) => {
+  this.spawnTiles = (howMany, isItTheOneAlready=false) => {
     for (let i = 0; i < howMany; i++) {
       let emptyTiles = [];
       for (let row of this.matrix) {
@@ -83,6 +83,7 @@ const squashBoard = (currentBoard, direction) => {
 const propagateTile = (row, indexFrom) => {
   for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {
     if (!row[indexTo].currentValue) {
+      // TODO: add index difference to previousValueMvLen
       [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];
       return indexTo
     }
@@ -94,18 +95,18 @@ const propagateTile = (row, indexFrom) => {
 const attemptMerge = (row, index) => {
   let thisTile = row[index];
   let nextTile = row[index + 1];
+
   if (index === 3 || nextTile.isCurrentValueFromMerge) {
     return false
   }
 
   if (thisTile.currentValue === nextTile.currentValue) {
-    thisTile.currentValue = 0;
+    thisTile.currentValue = null;
     nextTile.currentValue = nextTile.currentValue * 2;
     nextTile.isCurrentValueFromMerge = true;
   }
 };
 
-// TODO
 const squashRow = (row) => {
   for (let index of [2, 1 ,0]) {
     if (!row[index].currentValue) {
@@ -113,23 +114,19 @@ const squashRow = (row) => {
     }
     let newIndex = propagateTile(row, index);
     attemptMerge(row, newIndex);
-
-
   }
 };
 
-// TODO: finish
+// TODO
 const isGameOngoing = (board) => {
   return true;
-  // return (maxTileValue < 2048 && !isBoardFull)
+  // TODO: return (maxTileValue < 2048 && !isBoardFull)
 };
 
 // TODO: finish
 const handleEndOfGame = () => {
 
 };
-
-
 
 const updateMvAttributesInDOM = (board, direction) => {
   for (let row of board.matrix) {
@@ -138,7 +135,6 @@ const updateMvAttributesInDOM = (board, direction) => {
       tileElement.setAttribute("data-mv-dir", direction);
       tileElement.setAttribute("data-mv-len", tile.previousValueMvLen ? tile.previousValueMvLen : "");
     }
-
   }
 };
 
@@ -148,9 +144,7 @@ const squashBoardInDOM = (nextBoard) => {
       let tileElement = document.querySelector(tile.selector);
       tileElement.setAttribute("value", tile.currentValue);
       tileElement.textContent = tile.currentValue;
-
     }
-
   }
 };
 
@@ -164,7 +158,7 @@ const listenForArrowPress = event => {
 
 /* DEFINE CONSTANTS */
 
-const ARROW_PRESS_TIMEOUT = 2000;
+const ARROW_PRESS_TIMEOUT = 2000;  // ms
 
 
 /* CREATE OBJECTS */
