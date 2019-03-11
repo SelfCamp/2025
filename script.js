@@ -176,22 +176,40 @@ const boardHistory = [board];
 const arrowPressHistory = [];
 
 
-/* GAME LOGIC */
+/* MAIN LOGIC */
 
 document.addEventListener("keydown", listenForArrowPress);
-// while (isGameOngoing()) {
-//   // Listen for arrow keys
-// }
-handleEndOfGame();
+
+// Mock of what will be looped in `handleArrowPress`
+let currentBoard = boardHistory[boardHistory.length-1];
+updateMvAttributesInDOM(currentBoard, "left");
+squashBoardInDOM(currentBoard);
+let squashedBoard = squashBoard(currentBoard);
+
+if (!isGameOngoing(currentBoard)) {
+  handleEndOfGame();
+}
 
 
-/* MOCK MAIN LOGIC */
+/* TEST SQUASH-BOARD */
 
-// let currentBoard = boardHistory[boardHistory.length-1];
-// updateMvAttributesInDOM(currentBoard, "left");
-// squashBoardInDOM(currentBoard);
-let mockRow = [new Tile(0, 4), new Tile(0, 0),new Tile(0, 2),new Tile(0, 2)];
-let copied = [...mockRow];
-console.log("copied:", copied);
-squashRow(mockRow);
-console.log("result:",mockRow);
+// const mockBoard = new Board();
+// mockBoard.spawnTiles(10);
+// console.log('Before squashBoard: ', mockBoard);
+//
+// let squashedBoard = squashBoard(mockBoard);
+// console.log('After squashBoard: ', squashedBoard);
+
+
+/* TEST SQUASH-ROW */
+
+// let mockRow = [
+//   new Tile('r0c0', 4),
+//   new Tile('r0c1', null),
+//   new Tile('r0c2', 2),
+//   new Tile('r0c3', 2)
+// ];
+// let mockRowCopy = [...mockRow];
+// console.log("Before squashRow: ", mockRowCopy);
+// squashRow(mockRow);
+// console.log("After squashRow: ", mockRow);
