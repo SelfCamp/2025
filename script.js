@@ -1,3 +1,5 @@
+'use strict';
+
 /* DEFINE CLASSES */
 
 function Tile(selector, currentValue=null, isCurrentValueFromMerge=false, previousValueMoveDirection=null, previousValueMoveLength=null ) {
@@ -31,6 +33,9 @@ function Board() {
   }
 }
 
+/* DEFINE CONSTANTS */
+
+const ARROW_PRESS_TIMEOUT = 2000;
 
 /* CREATE OBJECTS */
 
@@ -45,11 +50,42 @@ boardHistory.push(board);
 /* GAME LOGIC */
 
 let currentBoard = boardHistory[boardHistory.length-1];
-let lastMoveDirection = arrowPressHistory[arrowPressHistory.length-1];
 
-console.log(boardHistory);
-console.log(currentBoard);
-console.log(currentBoard.matrix[2]);
+const isArrowPressAllowed = () => {
+    if (!arrowPressHistory.length) {
+      return true
+    }
+    let previousArrowPress = arrowPressHistory[arrowPressHistory.length-1];
+    let timeSinceLastArrowPress = new Date() - previousArrowPress.timestamp;
+    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
+};
+
+document.addEventListener("keydown", (event => {
+  let isItAnArrow = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(event.key);
+  if (isItAnArrow && isArrowPressAllowed()) {
+      handleArrowPress(event.key)
+  }
+}));
+
+
+// TODO
+const handleArrowPress = (key) => {
+  let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
+  let direction = directions[key];
+  arrowPressHistory.push({direction: direction, timestamp: new Date()});
+  console.log(direction);
+
+//   let currentBoard = boardHistory[boardHistory.length-1];
+//   let nextBoard = createNextBoard(currentBoard, direction)
+//   boardHistory.push(nextBoard);
+//
+//   updateMvAttributesInDOM(currentBoard, direction);
+//   setTimeout(() => squashBoardInDOM(nextBoard, direction), animationDuration);
+};
+
+
+
+// console.log(currentBoard);
 
 const updateMvAttributesInDOM = (board, direction) => {
   for (let row of board.matrix) {
