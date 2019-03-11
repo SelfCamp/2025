@@ -179,14 +179,19 @@ const arrowPressHistory = [];
 /* GAME LOGIC */
 
 document.addEventListener("keydown", listenForArrowPress);
-while (isGameOngoing()) {
-  // Listen for arrow keys
-}
+// while (isGameOngoing()) {
+//   // Listen for arrow keys
+// }
 handleEndOfGame();
 
 
 /* MOCK MAIN LOGIC */
 
-let currentBoard = boardHistory[boardHistory.length-1];
-updateMvAttributesInDOM(currentBoard, "left");
-squashBoardInDOM(currentBoard);
+// let currentBoard = boardHistory[boardHistory.length-1];
+// updateMvAttributesInDOM(currentBoard, "left");
+// squashBoardInDOM(currentBoard);
+let mockRow = [new Tile(0, 4), new Tile(0, 0),new Tile(0, 2),new Tile(0, 2)];
+let copied = [...mockRow];
+console.log("copied:", copied);
+squashRow(mockRow);
+console.log("result:",mockRow);
