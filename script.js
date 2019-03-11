@@ -80,12 +80,17 @@ const handleArrowPress = (key) => {
 // };
 
 // TODO
-// const squashRow = (row) => {
-//   for (tile of row) {  // start from end
-//     // propagate to furthest empty slot
-//     // merge with next tile if (there is one && is of same value && hasn't been merged yet)
-//   }
-// };
+const squashRow = (row) => {
+  for (let index of [2, 1 ,0]) {
+    if (!row[index].currentValue) {
+      continue
+    }
+    let newIndex = propagateTile(row, index);
+    attemptMerge(row, newIndex);
+
+
+  }
+};
 
 // TODO: finish
 const isGameOngoing = (board) => {
