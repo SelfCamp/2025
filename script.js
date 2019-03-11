@@ -97,5 +97,16 @@ const updateMvAttributesInDOM = (board, direction) => {
 
   }
 };
+const squashBoardInDOM = (nextBoard) => {
+  for (let row of nextBoard.matrix) {
+    for (let tile of row) {
+      let tileElement = document.querySelector(tile.selector);
+      tileElement.setAttribute("value", tile.currentValue);
+      tileElement.textContent = tile.currentValue;
 
+    }
+
+  }
+};
 updateMvAttributesInDOM(currentBoard, "left");
+squashBoardInDOM(currentBoard);
