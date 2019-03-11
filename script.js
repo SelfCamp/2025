@@ -36,31 +36,7 @@ function Board() {
 }
 
 
-/* DEFINE FUNCTIONS */
-
-const isArrowPressAllowed = () => {
-    if (!arrowPressHistory.length) {
-      return true
-    }
-    let previousArrowPress = arrowPressHistory[arrowPressHistory.length-1];
-    let timeSinceLastArrowPress = new Date() - previousArrowPress.timestamp;
-    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
-};
-
-// TODO: finish
-const handleArrowPress = (key) => {
-  let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
-  let direction = directions[key];
-  arrowPressHistory.push({direction: direction, timestamp: new Date()});
-  console.log(direction);
-
-  let currentBoard = boardHistory[boardHistory.length-1];
-  let nextBoard = createNextBoard(currentBoard, direction)
-  // boardHistory.push(nextBoard);
-  //
-  // updateMvAttributesInDOM(currentBoard, direction);
-  // setTimeout(() => squashBoardInDOM(nextBoard, direction), animationDuration);
-};
+/* DEFINE BOARD TRANSFORMING FUNCTIONS */
 
 // TODO
 // const createNextBoard = (currentBoard, direction) => {
@@ -78,6 +54,16 @@ const squashBoard = (currentBoard, direction) => {
   }
   // TODO: set every object's flag back to false
   return newBoard;
+};
+
+const squashRow = (row) => {
+  for (let index of [2, 1 ,0]) {
+    if (!row[index].currentValue) {
+      continue
+    }
+    let newIndex = propagateTile(row, index);
+    attemptMerge(row, newIndex);
+  }
 };
 
 const propagateTile = (row, indexFrom) => {
@@ -107,26 +93,8 @@ const attemptMerge = (row, index) => {
   }
 };
 
-const squashRow = (row) => {
-  for (let index of [2, 1 ,0]) {
-    if (!row[index].currentValue) {
-      continue
-    }
-    let newIndex = propagateTile(row, index);
-    attemptMerge(row, newIndex);
-  }
-};
 
-// TODO
-const isGameOngoing = (board) => {
-  return true;
-  // TODO: return (maxTileValue < 2048 && !isBoardFull)
-};
-
-// TODO: finish
-const handleEndOfGame = () => {
-
-};
+/* DEFINE VIEW HANDLING FUNCTIONS */
 
 const updateMvAttributesInDOM = (board, direction) => {
   for (let row of board.matrix) {
@@ -148,11 +116,48 @@ const squashBoardInDOM = (nextBoard) => {
   }
 };
 
+/* DEFINE TOP EVENT HANDLING FUNCTIONS */
+
 const listenForArrowPress = event => {
   let isItAnArrow = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(event.key);
   if (isItAnArrow && isArrowPressAllowed()) {
     handleArrowPress(event.key)
   }
+};
+
+// TODO: finish
+const handleArrowPress = (key) => {
+  let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
+  let direction = directions[key];
+  arrowPressHistory.push({direction: direction, timestamp: new Date()});
+  console.log(direction);
+
+  let currentBoard = boardHistory[boardHistory.length-1];
+  // let nextBoard = createNextBoard(currentBoard, direction)
+  // boardHistory.push(nextBoard);
+  //
+  // updateMvAttributesInDOM(nextBoard, direction);
+  // setTimeout(() => squashBoardInDOM(nextBoard, direction), animationDuration);
+};
+
+const isArrowPressAllowed = () => {
+    if (!arrowPressHistory.length) {
+      return true
+    }
+    let previousArrowPress = arrowPressHistory[arrowPressHistory.length-1];
+    let timeSinceLastArrowPress = new Date() - previousArrowPress.timestamp;
+    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
+};
+
+
+/* DEFINE OTHER FUNCTIONS */
+
+const isGameOngoing = (board) => {
+  return true;  // TODO: return (maxTileValue < 2048 && !isBoardFull)
+};
+
+const handleEndOfGame = () => {
+  // TODO
 };
 
 
@@ -161,7 +166,7 @@ const listenForArrowPress = event => {
 const ARROW_PRESS_TIMEOUT = 2000;  // ms
 
 
-/* CREATE OBJECTS */
+/* INITIALIZE OBJECTS */  //  Will be `resetGame` logic
 
 const board = new Board();
 board.spawnTiles(2);
