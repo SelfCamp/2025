@@ -77,7 +77,33 @@ const handleArrowPress = (key) => {
 //   for (row of rows) {
 //     squashRow(row)  // mutates tiles in input
 //   }
+//   // set every object's flag back to false
 // };
+
+const propagateTile = (row, indexFrom) => {
+  for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {
+    if (!row[indexTo].currentValue) {
+      [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];
+      return indexTo
+    }
+
+  }
+  return indexFrom
+};
+
+const attemptMerge = (row, index) => {
+  let thisTile = row[index];
+  let nextTile = row[index + 1];
+  if (index === 3 || nextTile.isCurrentValueFromMerge) {
+    return false
+  }
+
+  if (thisTile.currentValue === nextTile.currentValue) {
+    thisTile.currentValue = 0;
+    nextTile.currentValue = nextTile.currentValue * 2;
+    nextTile.isCurrentValueFromMerge = true;
+  }
+};
 
 // TODO
 const squashRow = (row) => {
