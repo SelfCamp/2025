@@ -1,5 +1,6 @@
 'use strict';
 
+
 /* DEFINE CLASSES */
 
 function Tile(selector, currentValue=null, isCurrentValueFromMerge=false, previousValueMoveDirection=null, previousValueMoveLength=null ) {
@@ -35,9 +36,68 @@ function Board() {
   }
 }
 
+
+/* DEFINE FUNCTIONS */
+
+const isArrowPressAllowed = () => {
+    if (!arrowPressHistory.length) {
+      return true
+    }
+    let previousArrowPress = arrowPressHistory[arrowPressHistory.length-1];
+    let timeSinceLastArrowPress = new Date() - previousArrowPress.timestamp;
+    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
+};
+
+// TODO: finish
+const handleArrowPress = (key) => {
+  let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
+  let direction = directions[key];
+  arrowPressHistory.push({direction: direction, timestamp: new Date()});
+  console.log(direction);
+
+  // let currentBoard = boardHistory[boardHistory.length-1];
+  // let nextBoard = createNextBoard(currentBoard, direction)
+  // boardHistory.push(nextBoard);
+  //
+  // updateMvAttributesInDOM(currentBoard, direction);
+  // setTimeout(() => squashBoardInDOM(nextBoard, direction), animationDuration);
+};
+
+const updateMvAttributesInDOM = (board, direction) => {
+  for (let row of board.matrix) {
+    for (let tile of row) {
+      let tileElement = document.querySelector(tile.selector);
+      tileElement.setAttribute("data-mv-dir", direction);
+      tileElement.setAttribute("data-mv-len", tile.previousValueMvLen ? tile.previousValueMvLen : "");
+    }
+
+  }
+};
+
+const squashBoardInDOM = (nextBoard) => {
+  for (let row of nextBoard.matrix) {
+    for (let tile of row) {
+      let tileElement = document.querySelector(tile.selector);
+      tileElement.setAttribute("value", tile.currentValue);
+      tileElement.textContent = tile.currentValue;
+
+    }
+
+  }
+};
+
+const listenForArrowPress = event => {
+  let isItAnArrow = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(event.key);
+  if (isItAnArrow && isArrowPressAllowed()) {
+    handleArrowPress(event.key)
+  }
+};
+
+
 /* DEFINE CONSTANTS */
 
 const ARROW_PRESS_TIMEOUT = 2000;
+
 
 /* CREATE OBJECTS */
 
@@ -53,62 +113,10 @@ boardHistory.push(board);
 
 let currentBoard = boardHistory[boardHistory.length-1];
 
-const isArrowPressAllowed = () => {
-    if (!arrowPressHistory.length) {
-      return true
-    }
-    let previousArrowPress = arrowPressHistory[arrowPressHistory.length-1];
-    let timeSinceLastArrowPress = new Date() - previousArrowPress.timestamp;
-    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
-};
-
-document.addEventListener("keydown", (event => {
-  let isItAnArrow = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(event.key);
-  if (isItAnArrow && isArrowPressAllowed()) {
-      handleArrowPress(event.key)
-  }
-}));
-
-
-// TODO
-const handleArrowPress = (key) => {
-  let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
-  let direction = directions[key];
-  arrowPressHistory.push({direction: direction, timestamp: new Date()});
-  console.log(direction);
-
-//   let currentBoard = boardHistory[boardHistory.length-1];
-//   let nextBoard = createNextBoard(currentBoard, direction)
-//   boardHistory.push(nextBoard);
-//
-//   updateMvAttributesInDOM(currentBoard, direction);
-//   setTimeout(() => squashBoardInDOM(nextBoard, direction), animationDuration);
-};
-
+document.addEventListener("keydown", listenForArrowPress);
 
 
 // console.log(currentBoard);
 
-const updateMvAttributesInDOM = (board, direction) => {
-  for (let row of board.matrix) {
-    for (let tile of row) {
-      let tileElement = document.querySelector(tile.selector);
-      tileElement.setAttribute("data-mv-dir", direction);
-      tileElement.setAttribute("data-mv-len", tile.previousValueMvLen ? tile.previousValueMvLen : "");
-    }
-
-  }
-};
-const squashBoardInDOM = (nextBoard) => {
-  for (let row of nextBoard.matrix) {
-    for (let tile of row) {
-      let tileElement = document.querySelector(tile.selector);
-      tileElement.setAttribute("value", tile.currentValue);
-      tileElement.textContent = tile.currentValue;
-
-    }
-
-  }
-};
 updateMvAttributesInDOM(currentBoard, "left");
 squashBoardInDOM(currentBoard);
