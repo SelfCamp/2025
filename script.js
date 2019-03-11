@@ -18,18 +18,20 @@ function Board() {
       this.matrix[row].push(new Tile(`#r${row}c${column}`));
     }
   }
-  this.spawnTiles = (howMany, isItTheOneAlready=false) => {
-    let emptyTiles = [];
-    for (let row of this.matrix) {
-      emptyTiles.push(...row.filter(tile => !tile.currentValue))
+  this.spawnTiles = (howMany, isItTheOneAlready = false) => {
+    for (let i = 0; i < howMany; i++) {
+      let emptyTiles = [];
+      for (let row of this.matrix) {
+        emptyTiles.push(...row.filter(tile => !tile.currentValue))
+      }
+      let choiceIndex = Math.floor(Math.random() * emptyTiles.length);
+      emptyTiles[choiceIndex].currentValue =
+          isItTheOneAlready
+              ? 1
+              : Math.random() < 0.9
+              ? 2
+              : 4
     }
-    let choiceIndex = Math.floor(Math.random() * emptyTiles.length);
-    emptyTiles[choiceIndex].currentValue =
-        isItTheOneAlready
-        ? 1
-        : Math.random() < 0.9
-            ? 2
-            : 4
   }
 }
 
