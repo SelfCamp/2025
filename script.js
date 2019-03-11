@@ -3,10 +3,9 @@
 
 /* DEFINE CLASSES */
 
-function Tile(selector, currentValue=null, isCurrentValueFromMerge=false, previousValueMoveDirection=null, previousValueMoveLength=null ) {
+function Tile(selector, currentValue=null, isCurrentValueFromMerge=false, previousValueMoveLength=null) {
   this.currentValue = currentValue;
   this.isCurrentValueFromMerge = isCurrentValueFromMerge;
-  this.previousValueMoveDirection = previousValueMoveDirection;
   this.previousValueMvLen = previousValueMoveLength;
   this.selector = selector
 }
