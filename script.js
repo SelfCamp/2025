@@ -1,3 +1,5 @@
+/* DEFINE CLASSES */
+
 function Tile(selector, currentValue=null, isCurrentValueFromMerge=false, previousValueMoveDirection=null, previousValueMoveLength=null ) {
   this.currentValue = currentValue;
   this.isCurrentValueFromMerge = isCurrentValueFromMerge;
@@ -6,28 +8,37 @@ function Tile(selector, currentValue=null, isCurrentValueFromMerge=false, previo
   this.selector = selector
 }
 
-const boardHistory = [];
-const moveDirectionHistory = [];
-
-const board = [];
-for (let row = 0; row < 4; row++) {
-  board[row] = [];
-  for (let column = 0; column < 4; column++) {
-    board[row].push(new Tile(`#r${row}c${column}`));
+function Board() {
+  this.matrix = [];
+  for (let row = 0; row < 4; row++) {
+    this.matrix[row] = [];
+    for (let column = 0; column < 4; column++) {
+      this.matrix[row].push(new Tile(`#r${row}c${column}`));
+    }
   }
 }
 
+
+/* CREATE OBJECTS */
+
+const boardHistory = [];
+const moveDirectionHistory = [];
+
+const board = new Board();
 boardHistory.push(board);
+
+
+/* GAME LOGIC */
 
 let currentBoard = boardHistory[boardHistory.length-1];
 let lastMoveDirection = moveDirectionHistory[moveDirectionHistory.length-1];
 
 console.log(boardHistory);
 console.log(currentBoard);
-console.log(currentBoard[2]);
+console.log(currentBoard.matrix[2]);
 
 const updateMvAttributesInDOM = (board, direction) => {
-  for (let row of board) {
+  for (let row of board.matrix) {
     for (let tile of row) {
       let tileElement = document.querySelector(tile.selector);
       tileElement.setAttribute("data-mv-dir", direction);
