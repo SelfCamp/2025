@@ -55,13 +55,50 @@ const handleArrowPress = (key) => {
   arrowPressHistory.push({direction: direction, timestamp: new Date()});
   console.log(direction);
 
-  // let currentBoard = boardHistory[boardHistory.length-1];
-  // let nextBoard = createNextBoard(currentBoard, direction)
+  let currentBoard = boardHistory[boardHistory.length-1];
+  let nextBoard = createNextBoard(currentBoard, direction)
   // boardHistory.push(nextBoard);
   //
   // updateMvAttributesInDOM(currentBoard, direction);
   // setTimeout(() => squashBoardInDOM(nextBoard, direction), animationDuration);
 };
+
+// TODO
+// const createNextBoard = (currentBoard, direction) => {
+//   let nextBoard = squashBoard(currentBoard, direction);
+//   nextBoard.spawnTiles(1);
+//   return nextBoard;
+// };
+
+// TODO
+// const squashBoard = (currentBoard, direction) => {
+//   // make a copy
+//   // split into rows based on direction - keep references to tiles
+//   for (row of rows) {
+//     squashRow(row)  // mutates tiles in input
+//   }
+// };
+
+// TODO
+// const squashRow = (row) => {
+//   for (tile of row) {  // start from end
+//     // propagate to furthest empty slot
+//     // merge with next tile if (there is one && is of same value && hasn't been merged yet)
+//   }
+// };
+
+// TODO: finish
+const isGameOngoing = (board) => {
+  return true;
+  // return (maxTileValue < 2048 && !isBoardFull)
+};
+
+// TODO: finish
+const handleEndOfGame = () => {
+
+};
+
+
 
 const updateMvAttributesInDOM = (board, direction) => {
   for (let row of board.matrix) {
@@ -101,22 +138,24 @@ const ARROW_PRESS_TIMEOUT = 2000;
 
 /* CREATE OBJECTS */
 
-const boardHistory = [];
-const arrowPressHistory = [];
-
 const board = new Board();
 board.spawnTiles(2);
-boardHistory.push(board);
+
+const boardHistory = [board];
+const arrowPressHistory = [];
 
 
 /* GAME LOGIC */
 
-let currentBoard = boardHistory[boardHistory.length-1];
-
 document.addEventListener("keydown", listenForArrowPress);
+while (isGameOngoing()) {
+  // Listen for arrow keys
+}
+handleEndOfGame();
 
 
-// console.log(currentBoard);
+/* MOCK MAIN LOGIC */
 
+let currentBoard = boardHistory[boardHistory.length-1];
 updateMvAttributesInDOM(currentBoard, "left");
 squashBoardInDOM(currentBoard);
