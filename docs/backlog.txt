@@ -1,8 +1,12 @@
+INBOX
+-
+
 Must have
 - working board logic
 - win on 2048
 
 Nice to have
+- tests (TDD workflow after basic functionality)
 - undo
 - time
 - score
@@ -19,3 +23,4 @@ OK to have
 - badges
 - game replay
 - multiplayer (opponent makes your every 2nd move)
+- spinoff: contribute +1 version to http://2048game.com/variations/
