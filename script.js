@@ -16,7 +16,7 @@ function Board() {
       this.matrix[row].push(new Tile(`#r${row}c${column}`));
     }
   }
-  this.spawnTiles = (num, isItTheOneAlready=false) => {
+  this.spawnTiles = (howMany, isItTheOneAlready=false) => {
     let emptyTiles = [];
     for (let row of this.matrix) {
       emptyTiles.push(...row.filter(tile => !tile.currentValue))
@@ -35,17 +35,17 @@ function Board() {
 /* CREATE OBJECTS */
 
 const boardHistory = [];
-const moveDirectionHistory = [];
+const arrowPressHistory = [];
 
 const board = new Board();
-board.spawnTiles(1);
+board.spawnTiles(2);
 boardHistory.push(board);
 
 
 /* GAME LOGIC */
 
 let currentBoard = boardHistory[boardHistory.length-1];
-let lastMoveDirection = moveDirectionHistory[moveDirectionHistory.length-1];
+let lastMoveDirection = arrowPressHistory[arrowPressHistory.length-1];
 
 console.log(boardHistory);
 console.log(currentBoard);

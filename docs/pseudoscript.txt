@@ -18,22 +18,22 @@ const handleArrowPress = (event) => {
   arrowPressHistory.push(direction);
 
   let currentBoard = boardHistory[boardHistory.length-1];
-  let newBoard = createNewBoard(currentBoard, direction)
-  boardHistory.push(newBoard);
+  let nextBoard = createNextBoard(currentBoard, direction)
+  boardHistory.push(nextBoard);
 
   updateMvAttributesInDOM(currentBoard, direction);
-  setTimeout(() => squashBoardInDOM(newBoard, direction), animationDuration);
+  setTimeout(() => squashBoardInDOM(nextBoard, direction), animationDuration);
 }
 
 
-createNewBoard(currentBoard, direction) {
-  let newBoard = squashBoard(currentBoard, direction);
-  newBoard.spawnTiles(1);
-  return newBoard;
+createNextBoard(currentBoard, direction) {
+  let nextBoard = squashBoard(currentBoard, direction);
+  nextBoard.spawnTiles(1);
+  return nextBoard;
 }
 
 
-const squashBoardInDOM(newBoard, direction) {
+const squashBoardInDOM(nextBoard, direction) {
 
 }
 
