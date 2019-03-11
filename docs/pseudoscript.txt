@@ -12,35 +12,46 @@ handleEndOfGame();
 
 
 
-
-
-// Event listeners
 const handleArrowPress = (event) => {
+
   let direction = // get from event
+  arrowPressHistory.push(direction);
+
   let currentBoard = boardHistory[boardHistory.length-1];
-  updateMvAttributesInDOM(currentBoard, direction);
-  setTimeout(() => displayNewBoard(currentBoard, direction), animationDuration);
-}
-
-
-displayNewBoard(currentBoard, direction) {
-  let newBoard = updateBoard(currentBoard, direction);
-  newBoard.spawnTiles(1);
+  let newBoard = createNewBoard(currentBoard, direction)
   boardHistory.push(newBoard);
-  updateBoardInDOM(newBoard);
+
+  updateMvAttributesInDOM(currentBoard, direction);
+  setTimeout(() => squashBoardInDOM(newBoard, direction), animationDuration);
 }
 
 
-const updateBoard = (currentBoard, direction) => {
+createNewBoard(currentBoard, direction) {
+  let newBoard = squashBoard(currentBoard, direction);
+  newBoard.spawnTiles(1);
+  return newBoard;
+}
+
+
+const squashBoardInDOM(newBoard, direction) {
+
+}
+
+
+const handleEndOfGame = () => {
+  
+}
+
+const squashBoard = (currentBoard, direction) => {
   // make a copy
   // split into rows based on direction - keep references to tiles
   for (row of rows) {
-    shakeRow(row)  // mutates tiles in input
+    squashRow(row)  // mutates tiles in input
   }
 }
 
 
-const shakeRow = (row) => {
+const squashRow = (row) => {
   for (tile of row) {  // start from end
     // propagate to furthest empty slot
     // merge with next tile if (there is one && is of same value && hasn't been merged yet)
