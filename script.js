@@ -69,15 +69,16 @@ const handleArrowPress = (key) => {
 //   return nextBoard;
 // };
 
-// TODO
-// const squashBoard = (currentBoard, direction) => {
-//   // make a copy
-//   // split into rows based on direction - keep references to tiles
-//   for (row of rows) {
-//     squashRow(row)  // mutates tiles in input
-//   }
-//   // set every object's flag back to false
-// };
+const squashBoard = (currentBoard, direction) => {
+  let newBoard = new Board();
+  newBoard.matrix = JSON.parse(JSON.stringify(currentBoard.matrix));  // TODO: simpler deep copy if possible
+  // TODO: split into rows based on direction - keep references to tiles
+  for (let row of newBoard.matrix) {
+    squashRow(row)  // mutates tiles in input
+  }
+  // TODO: set every object's flag back to false
+  return newBoard;
+};
 
 const propagateTile = (row, indexFrom) => {
   for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {
