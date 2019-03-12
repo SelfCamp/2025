@@ -32,6 +32,13 @@ function Board() {
               ? 2
               : 4
     }
+  };
+  this.resetMergeFlags = () => {
+    for (let row of this.matrix) {
+      for (let tile of row) {
+        tile.isCurrentValueFromMerge = false;
+      }
+    }
   }
 }
 
@@ -48,11 +55,12 @@ function Board() {
 const squashBoard = (currentBoard, direction) => {
   let newBoard = new Board();
   newBoard.matrix = JSON.parse(JSON.stringify(currentBoard.matrix));  // TODO: simpler deep copy if possible
+  newBoard.resetMergeFlags();
   // TODO: split into rows based on direction - keep references to tiles
+
   for (let row of newBoard.matrix) {
     squashRow(row)  // mutates tiles in input
   }
-  // TODO: set every object's flag back to false
   return newBoard;
 };
 
