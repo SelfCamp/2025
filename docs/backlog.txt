@@ -6,7 +6,7 @@ Must have
 - win on 2048
 
 Nice to have
-- tests (TDD workflow after basic functionality)
+- tests & jsdoc (TDD workflow after basic functionality)
 - undo
 - time
 - score
