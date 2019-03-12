@@ -52,14 +52,11 @@ function Board() {
 //   return nextBoard;
 // };
 
-
-
 const squashBoard = (currentBoard, direction) => {
   let newBoard = new Board();
   newBoard.matrix = JSON.parse(JSON.stringify(currentBoard.matrix));  // TODO: simpler deep copy if possible
   newBoard.resetMergeFlags();
-  // TODO: split into rows based on direction - keep references to tiles
-  let temporaryBoardSlices = sliceMatrixPerDirection(newBoard.matrix, direction)
+  let temporaryBoardSlices = sliceMatrixPerDirection(newBoard.matrix, direction);
   for (let row of temporaryBoardSlices) {
     squashRow(row)  // mutates tiles in input
   }
@@ -96,21 +93,20 @@ const sliceMatrixPerDirection = (matrix, direction) => {
   return temporaryMatrixSlices
 };
 
-
 const squashRow = (row) => {
   for (let index of [2, 1 ,0]) {
     if (!row[index].currentValue) {
       continue
     }
     let newIndex = propagateTile(row, index);
-    attemptMerge(row, newIndex);
+    let hasMerged = attemptMerge(row, newIndex);
+    row[index].previousValueMvLen = newIndex - index + hasMerged;
   }
 };
 
 const propagateTile = (row, indexFrom) => {
   for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {
     if (!row[indexTo].currentValue) {
-      // TODO: add index difference to previousValueMvLen
       [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];
       return indexTo
     }
@@ -124,14 +120,17 @@ const attemptMerge = (row, index) => {
   let nextTile = row[index + 1];
 
   if (index === 3 || nextTile.isCurrentValueFromMerge) {
-    return false
+    return false;
   }
 
   if (thisTile.currentValue === nextTile.currentValue) {
     thisTile.currentValue = null;
     nextTile.currentValue = nextTile.currentValue * 2;
     nextTile.isCurrentValueFromMerge = true;
+    return true;
   }
+
+  return false;
 };
 
 
@@ -218,27 +217,27 @@ const arrowPressHistory = [];
 
 /* MAIN LOGIC */
 
-document.addEventListener("keydown", listenForArrowPress);
-
-// Mock of what will be looped in `handleArrowPress`
-let currentBoard = boardHistory[boardHistory.length-1];
-updateMvAttributesInDOM(currentBoard, "left");
-squashBoardInDOM(currentBoard);
-let squashedBoard = squashBoard(currentBoard);
-
-if (!isGameOngoing(currentBoard)) {
-  handleEndOfGame();
-}
+// document.addEventListener("keydown", listenForArrowPress);
+//
+// // Mock of what will be looped in `handleArrowPress`
+// let currentBoard = boardHistory[boardHistory.length-1];
+// updateMvAttributesInDOM(currentBoard, "left");
+// squashBoardInDOM(currentBoard);
+// let squashedBoard = squashBoard(currentBoard);
+//
+// if (!isGameOngoing(currentBoard)) {
+//   handleEndOfGame();
+// }
 
 
 /* TEST SQUASH-BOARD */
 
-// const mockBoard = new Board();
-// mockBoard.spawnTiles(10);
-// console.log('Before squashBoard: ', mockBoard);
-//
-// let squashedBoard = squashBoard(mockBoard);
-// console.log('After squashBoard: ', squashedBoard);
+const mockBoard = new Board();
+mockBoard.spawnTiles(10);
+console.log('Before squashBoard: ', mockBoard);
+
+let squashedBoard = squashBoard(mockBoard, 'right');
+console.log('After squashBoard: ', squashedBoard);
 
 
 /* TEST SQUASH-ROW */
