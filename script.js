@@ -8,10 +8,11 @@ function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=f
   this.wasJustMerged = wasJustMerged;
   this.wasJustSpawned = wasJustSpawned;
   this.previousValueMvLen = previousValueMvLen;
-  this.selector = selector
+  this.selector = selector;
 }
 
 function Board() {
+  this.hasChanged = false;
   this.matrix = [];
   for (let row = 0; row < 4; row++) {
     this.matrix[row] = [];
@@ -44,6 +45,8 @@ function Board() {
       }
     }
   };
+  // TODO: implement (use wasJustMerged & previousValueMvLen to check if anything changed since last board)
+  this.hasChanged = () => {}
 }
 
 
@@ -51,6 +54,7 @@ function Board() {
 
 const createNextBoard = (currentBoard, direction) => {
   let nextBoard = squashBoard(currentBoard, direction);
+  // TODO: do only if Board.hasChanged()
   nextBoard.spawnTiles(1);
   return nextBoard;
 };
