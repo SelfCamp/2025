@@ -45,12 +45,12 @@ function Board() {
 
 /* DEFINE BOARD TRANSFORMING FUNCTIONS */
 
-// TODO
-// const createNextBoard = (currentBoard, direction) => {
-//   let nextBoard = squashBoard(currentBoard, direction);
-//   nextBoard.spawnTiles(1);
-//   return nextBoard;
-// };
+const createNextBoard = (currentBoard, direction) => {
+  let nextBoard = squashBoard(currentBoard, direction);
+  nextBoard.spawnTiles(1);
+  // TODO: add wasJustSpawned
+    return nextBoard;
+};
 
 const squashBoard = (currentBoard, direction) => {
   let newBoard = new Board();
@@ -173,11 +173,11 @@ const handleArrowPress = (key) => {
   console.log(direction);
 
   let currentBoard = boardHistory[boardHistory.length-1];
-  // let nextBoard = createNextBoard(currentBoard, direction)
-  // boardHistory.push(nextBoard);
+  let nextBoard = createNextBoard(currentBoard, direction);
+  boardHistory.push(nextBoard);
   //
-  // updateMvAttributesInDOM(nextBoard, direction);
-  // setTimeout(() => squashBoardInDOM(nextBoard, direction), animationDuration);
+  updateMvAttributesInDOM(nextBoard, direction);
+  setTimeout(() => squashBoardInDOM(nextBoard, direction), ANIMATION_DURATION);
 };
 
 const isArrowPressAllowed = () => {
@@ -203,8 +203,8 @@ const handleEndOfGame = () => {
 
 /* DEFINE CONSTANTS */
 
-const ARROW_PRESS_TIMEOUT = 2000;  // ms
-
+const ARROW_PRESS_TIMEOUT = 1000;  // ms
+const ANIMATION_DURATION = 300;
 
 /* INITIALIZE OBJECTS */  //  Will be `resetGame` logic
 
@@ -217,14 +217,10 @@ const arrowPressHistory = [];
 
 /* MAIN LOGIC */
 
-// document.addEventListener("keydown", listenForArrowPress);
-//
-// // Mock of what will be looped in `handleArrowPress`
-// let currentBoard = boardHistory[boardHistory.length-1];
-// updateMvAttributesInDOM(currentBoard, "left");
-// squashBoardInDOM(currentBoard);
-// let squashedBoard = squashBoard(currentBoard);
-//
+let currentBoard = boardHistory[boardHistory.length-1];
+squashBoardInDOM(currentBoard);
+document.addEventListener("keydown", listenForArrowPress);
+
 // if (!isGameOngoing(currentBoard)) {
 //   handleEndOfGame();
 // }
@@ -232,12 +228,12 @@ const arrowPressHistory = [];
 
 /* TEST SQUASH-BOARD */
 
-const mockBoard = new Board();
-mockBoard.spawnTiles(10);
-console.log('Before squashBoard: ', mockBoard);
-
-let squashedBoard = squashBoard(mockBoard, 'right');
-console.log('After squashBoard: ', squashedBoard);
+// const mockBoard = new Board();
+// mockBoard.spawnTiles(10);
+// console.log('Before squashBoard: ', mockBoard);
+//
+// let squashedBoard = squashBoard(mockBoard, 'right');
+// console.log('After squashBoard: ', squashedBoard);
 
 
 /* TEST SQUASH-ROW */
