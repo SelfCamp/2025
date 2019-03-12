@@ -211,8 +211,8 @@ const handleEndOfGame = () => {
 
 /* DEFINE CONSTANTS */
 
-const ARROW_PRESS_TIMEOUT = 1000;  // ms
-const ANIMATION_DURATION = 300;
+const ARROW_PRESS_TIMEOUT = 100;  // ms
+const ANIMATION_DURATION = 0;
 
 /* INITIALIZE OBJECTS */  //  Will be `resetGame` logic
 
