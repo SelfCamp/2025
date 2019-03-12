@@ -52,17 +52,50 @@ function Board() {
 //   return nextBoard;
 // };
 
+
+
 const squashBoard = (currentBoard, direction) => {
   let newBoard = new Board();
   newBoard.matrix = JSON.parse(JSON.stringify(currentBoard.matrix));  // TODO: simpler deep copy if possible
   newBoard.resetMergeFlags();
   // TODO: split into rows based on direction - keep references to tiles
-
-  for (let row of newBoard.matrix) {
+  let temporaryBoardSlices = sliceMatrixPerDirection(newBoard.matrix, direction)
+  for (let row of temporaryBoardSlices) {
     squashRow(row)  // mutates tiles in input
   }
   return newBoard;
 };
+
+const sliceMatrixPerDirection = (matrix, direction) => {
+  let temporaryMatrixSlices = [[], [], [], []];
+  switch (direction) {
+    case "up":
+      for (let columnIndex of [0, 1, 2, 3]) {
+        for (let rowIndex of [3, 2, 1, 0]) {
+          temporaryMatrixSlices[columnIndex].push(matrix[rowIndex][columnIndex])
+        }
+      }
+      break;
+    case "down":
+      for (let columnIndex of [0, 1, 2, 3]) {
+        for (let rowIndex of [0, 1, 2, 3]) {
+          temporaryMatrixSlices[columnIndex].push(matrix[rowIndex][columnIndex])
+        }
+      }
+      break;
+    case "left":
+      for (let rowIndex of [0, 1, 2, 3]) {
+        for (let columnIndex of [3, 2, 1, 0]) {
+          temporaryMatrixSlices[rowIndex].push(matrix[rowIndex][columnIndex])
+        }
+      }
+      break;
+    case "right":
+      return matrix
+  }
+  return temporaryMatrixSlices
+};
+
 
 const squashRow = (row) => {
   for (let index of [2, 1 ,0]) {
