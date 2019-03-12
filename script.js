@@ -3,10 +3,11 @@
 
 /* DEFINE CLASSES */
 
-function Tile(selector, currentValue=null, isCurrentValueFromMerge=false, previousValueMoveLength=null) {
+function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
   this.currentValue = currentValue;
-  this.isCurrentValueFromMerge = isCurrentValueFromMerge;
-  this.previousValueMvLen = previousValueMoveLength;
+  this.wasJustMerged = wasJustMerged;
+  this.wasJustSpawned = wasJustSpawned;
+  this.previousValueMvLen = previousValueMvLen;
   this.selector = selector
 }
 
@@ -30,16 +31,19 @@ function Board() {
               ? 1
               : Math.random() < 0.9
               ? 2
-              : 4
+              : 4;
+      emptyTiles[choiceIndex].wasJustSpawned = true;
     }
   };
-  this.resetMergeFlags = () => {
+  this.resetAnimationProperties = () => {
     for (let row of this.matrix) {
       for (let tile of row) {
-        tile.isCurrentValueFromMerge = false;
+        tile.wasJustMerged = false;
+        tile.wasJustSpawned = false;
+        tile.previousValueMvLen = null;
       }
     }
-  }
+  };
 }
 
 
@@ -48,14 +52,12 @@ function Board() {
 const createNextBoard = (currentBoard, direction) => {
   let nextBoard = squashBoard(currentBoard, direction);
   nextBoard.spawnTiles(1);
-  // TODO: add wasJustSpawned
-    return nextBoard;
+  return nextBoard;
 };
 
 const squashBoard = (currentBoard, direction) => {
   let newBoard = new Board();
   newBoard.matrix = JSON.parse(JSON.stringify(currentBoard.matrix));  // TODO: simpler deep copy if possible
-  newBoard.resetMergeFlags();
   let temporaryBoardSlices = sliceMatrixPerDirection(newBoard.matrix, direction);
   for (let row of temporaryBoardSlices) {
     squashRow(row)  // mutates tiles in input
@@ -110,7 +112,6 @@ const propagateTile = (row, indexFrom) => {
       [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];
       return indexTo
     }
-
   }
   return indexFrom
 };
@@ -119,14 +120,14 @@ const attemptMerge = (row, index) => {
   let thisTile = row[index];
   let nextTile = row[index + 1];
 
-  if (index === 3 || nextTile.isCurrentValueFromMerge) {
+  if (index === 3 || nextTile.wasJustMerged) {
     return false;
   }
 
   if (thisTile.currentValue === nextTile.currentValue) {
     thisTile.currentValue = null;
     nextTile.currentValue = nextTile.currentValue * 2;
-    nextTile.isCurrentValueFromMerge = true;
+    nextTile.wasJustMerged = true;
     return true;
   }
 
@@ -165,7 +166,6 @@ const listenForArrowPress = event => {
   }
 };
 
-// TODO: finish
 const handleArrowPress = (key) => {
   let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
   let direction = directions[key];
@@ -173,10 +173,14 @@ const handleArrowPress = (key) => {
   console.log(direction);
 
   let currentBoard = boardHistory[boardHistory.length-1];
+  // console.log("Previous board matrix: ", [...currentBoard.matrix]);
+
   let nextBoard = createNextBoard(currentBoard, direction);
+  // console.log("New board matrix: ", nextBoard.matrix);
   boardHistory.push(nextBoard);
-  //
+
   updateMvAttributesInDOM(nextBoard, direction);
+  nextBoard.resetAnimationProperties();
   setTimeout(() => squashBoardInDOM(nextBoard, direction), ANIMATION_DURATION);
 };
 
