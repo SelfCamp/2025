@@ -56,7 +56,29 @@ function Board() {
       }
     }
     return false;
-  }
+  };
+  this.gameStatus = () => {
+    let hasEmptySpots;
+    for (let row of this.matrix) {
+      for (let tile of row) {
+        if (tile.currentValue === 2048) {
+          return 'won';
+        }
+        if (tile.currentValue === null) {
+          hasEmptySpots = true;
+        }
+      }
+    }
+    hasEmptySpots = false;
+    if (hasEmptySpots)  {
+      return 'ongoing'
+    }
+    // TODO: mock moves in all 4 directions
+    //       if any of them .hasChanged(), return 'ongoing'
+    //       else return 'lost'
+    let testBoard = new Board();
+    console.log(testBoard);
+  };
 }
 
 
@@ -185,7 +207,7 @@ const handleArrowPress = (key) => {
   let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
   let direction = directions[key];
   arrowPressHistory.push({direction: direction, timestamp: new Date()});
-  console.log(direction);
+  // console.log(direction);
 
   let currentBoard = boardHistory[boardHistory.length-1];
   // console.log("Previous board matrix: ", [...currentBoard.matrix]);
@@ -197,6 +219,7 @@ const handleArrowPress = (key) => {
   updateMvAttributesInDOM(nextBoard, direction);
   nextBoard.resetAnimationProperties();
   setTimeout(() => squashBoardInDOM(nextBoard, direction), ANIMATION_DURATION);
+  console.log(nextBoard.gameStatus());
 };
 
 const isArrowPressAllowed = () => {
@@ -211,9 +234,6 @@ const isArrowPressAllowed = () => {
 
 /* DEFINE OTHER FUNCTIONS */
 
-const isGameOngoing = (board) => {
-  return true;  // TODO: return (maxTileValue < 2048 && !isBoardFull)
-};
 
 const handleEndOfGame = () => {
   // TODO
