@@ -296,13 +296,3 @@ document.addEventListener("keydown", listenForArrowPress);
 // console.log("Before squashRow: ", mockRowCopy);
 // squashRow(mockRow);
 // console.log("After squashRow: ", mockRow);
-
-
-module.exports = {
-  Tile,
-  createNextBoard,
-  squashBoard,
-  sliceMatrixPerDirection,
-  propagateTile,
-  attemptMerge,
-};
