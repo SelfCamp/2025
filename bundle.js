@@ -17134,7 +17134,7 @@ function Board() {
       this.matrix[row].push(new Tile(`#r${row}c${column}`));
     }
   }
-  this.spawnTiles = (howMany, isItTheOneAlready=false) => {
+  this.spawnTiles = (howMany, isItTheOneAlready = false) => {
     for (let i = 0; i < howMany; i++) {
       let emptyTiles = [];
       for (let row of this.matrix) {
@@ -17159,24 +17159,55 @@ function Board() {
       }
     }
   };
-  // TODO: implement (use wasJustMerged & previousValueMvLen to check if anything changed since last board)
-  this.hasChanged = () => {}
-}
+  this.hasChanged = () => {
+    for (let row of this.matrix) {
+      for (let tile of row) {
+        if (tile.previousValueMvLen || tile.wasJustMerged) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+  this.gameStatus = () => {
+    let hasEmptySpots;
+    for (let row of this.matrix) {
+      for (let tile of row) {
+        if (tile.currentValue === 2048) {
+          return 'won';
+        }
+        if (tile.currentValue === null) {
+          hasEmptySpots = true;
+        }
+      }
+    }
+    if (hasEmptySpots) {
+      return 'ongoing'
+    }
+    for (let direction of ["up", "right", "down", "left"]) {
+      let testBoardCopy = createNextBoard(this, direction);
+      if (testBoardCopy.hasChanged()) {
+        return "ongoing"
+      }
+    }
+    return "lost";
+    }
+  }
 
 
 /* DEFINE BOARD TRANSFORMING FUNCTIONS */
 
 const createNextBoard = (currentBoard, direction) => {
   let nextBoard = squashBoard(currentBoard, direction);
-  // TODO: do only if Board.hasChanged()
-  nextBoard.spawnTiles(1);
+  if (nextBoard.hasChanged()) {
+    nextBoard.spawnTiles(1);
+  }
   return nextBoard;
 };
 
 const squashBoard = (currentBoard, direction) => {
   let newBoard = new Board();
-  // newBoard.matrix = JSON.parse(JSON.stringify(currentBoard.matrix));  // TODO: simpler deep copy if possible
-  newBoard = cloneDeep(currentBoard);
+  newBoard.matrix = cloneDeep(currentBoard.matrix);
   let temporaryBoardSlices = sliceMatrixPerDirection(newBoard.matrix, direction);
   for (let row of temporaryBoardSlices) {
     squashRow(row)  // mutates tiles in input
@@ -17276,6 +17307,12 @@ const squashBoardInDOM = (nextBoard) => {
   }
 };
 
+const changeBackgroundInDOM = (color) => {
+  let body = document.querySelector('body');
+  body.setAttribute('style', `background-color: ${color}`);
+};
+
+
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
 
 const listenForArrowPress = event => {
@@ -17289,7 +17326,7 @@ const handleArrowPress = (key) => {
   let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
   let direction = directions[key];
   arrowPressHistory.push({direction: direction, timestamp: new Date()});
-  console.log(direction);
+  // console.log(direction);
 
   let currentBoard = boardHistory[boardHistory.length-1];
   // console.log("Previous board matrix: ", [...currentBoard.matrix]);
@@ -17301,6 +17338,16 @@ const handleArrowPress = (key) => {
   updateMvAttributesInDOM(nextBoard, direction);
   nextBoard.resetAnimationProperties();
   setTimeout(() => squashBoardInDOM(nextBoard, direction), ANIMATION_DURATION);
+  switch (nextBoard.gameStatus()) {
+    case 'ongoing':
+      break;
+    case 'won':
+      changeBackgroundInDOM('green');
+      break;
+    case 'lost':
+      changeBackgroundInDOM('red');
+      break;
+  }
 };
 
 const isArrowPressAllowed = () => {
@@ -17315,9 +17362,6 @@ const isArrowPressAllowed = () => {
 
 /* DEFINE OTHER FUNCTIONS */
 
-const isGameOngoing = (board) => {
-  return true;  // TODO: return (maxTileValue < 2048 && !isBoardFull)
-};
 
 const handleEndOfGame = () => {
   // TODO
@@ -17371,5 +17415,15 @@ document.addEventListener("keydown", listenForArrowPress);
 // console.log("Before squashRow: ", mockRowCopy);
 // squashRow(mockRow);
 // console.log("After squashRow: ", mockRow);
+
+
+module.exports = {
+  Tile,
+  createNextBoard,
+  squashBoard,
+  sliceMatrixPerDirection,
+  propagateTile,
+  attemptMerge,
+};
 
 },{"lodash":1}]},{},[2]);
