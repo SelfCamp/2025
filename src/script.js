@@ -1,8 +1,8 @@
 'use strict';
 
-const {Board} = require('./src/classes');
-const {updateMvAttributesInDOM, squashBoardInDOM, changeBackgroundInDOM} = require('./src/domManipulation');
-const {createNextBoard} = require('./src/boardTransformation');
+const {Board} = require('./classes');
+const {updateMvAttributesInDOM, squashBoardInDOM, changeBackgroundInDOM} = require('./domManipulation');
+const {createNextBoard} = require('./boardTransformation');
 
 
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
