@@ -17114,85 +17114,8 @@
 
 const {cloneDeep} = require('lodash');
 
-
-/* DEFINE CLASSES */
-
-function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
-  this.currentValue = currentValue;
-  this.wasJustMerged = wasJustMerged;
-  this.wasJustSpawned = wasJustSpawned;
-  this.previousValueMvLen = previousValueMvLen;
-  this.selector = selector;
-}
-
-function Board() {
-  this.hasChanged = false;
-  this.matrix = [];
-  for (let row = 0; row < 4; row++) {
-    this.matrix[row] = [];
-    for (let column = 0; column < 4; column++) {
-      this.matrix[row].push(new Tile(`#r${row}c${column}`));
-    }
-  }
-  this.spawnTiles = (howMany, isItTheOneAlready = false) => {
-    for (let i = 0; i < howMany; i++) {
-      let emptyTiles = [];
-      for (let row of this.matrix) {
-        emptyTiles.push(...row.filter(tile => !tile.currentValue))
-      }
-      let choiceIndex = Math.floor(Math.random() * emptyTiles.length);
-      emptyTiles[choiceIndex].currentValue =
-          isItTheOneAlready
-              ? 1
-              : Math.random() < 0.9
-              ? 2
-              : 4;
-      emptyTiles[choiceIndex].wasJustSpawned = true;
-    }
-  };
-  this.resetAnimationProperties = () => {
-    for (let row of this.matrix) {
-      for (let tile of row) {
-        tile.wasJustMerged = false;
-        tile.wasJustSpawned = false;
-        tile.previousValueMvLen = null;
-      }
-    }
-  };
-  this.hasChanged = () => {
-    for (let row of this.matrix) {
-      for (let tile of row) {
-        if (tile.previousValueMvLen || tile.wasJustMerged) {
-          return true;
-        }
-      }
-    }
-    return false;
-  };
-  this.gameStatus = () => {
-    let hasEmptySpots;
-    for (let row of this.matrix) {
-      for (let tile of row) {
-        if (tile.currentValue === 2048) {
-          return 'won';
-        }
-        if (tile.currentValue === null) {
-          hasEmptySpots = true;
-        }
-      }
-    }
-    if (hasEmptySpots) {
-      return 'ongoing'
-    }
-    for (let direction of ["up", "right", "down", "left"]) {
-      let testBoardCopy = createNextBoard(this, direction);
-      if (testBoardCopy.hasChanged()) {
-        return "ongoing"
-      }
-    }
-    return "lost";
-    }
-  }
+const {Tile, Board} = require('./src/classes');
+const {updateMvAttributesInDOM, squashBoardInDOM, changeBackgroundInDOM} = require('./src/domManipulation');
 
 
 /* DEFINE BOARD TRANSFORMING FUNCTIONS */
@@ -17285,34 +17208,6 @@ const attemptMerge = (row, index) => {
 };
 
 
-/* DEFINE VIEW HANDLING FUNCTIONS */
-
-const updateMvAttributesInDOM = (board, direction) => {
-  for (let row of board.matrix) {
-    for (let tile of row) {
-      let tileElement = document.querySelector(tile.selector);
-      tileElement.setAttribute("data-mv-dir", direction);
-      tileElement.setAttribute("data-mv-len", tile.previousValueMvLen ? tile.previousValueMvLen : "");
-    }
-  }
-};
-
-const squashBoardInDOM = (nextBoard) => {
-  for (let row of nextBoard.matrix) {
-    for (let tile of row) {
-      let tileElement = document.querySelector(tile.selector);
-      tileElement.setAttribute("value", tile.currentValue);
-      tileElement.textContent = tile.currentValue;
-    }
-  }
-};
-
-const changeBackgroundInDOM = (color) => {
-  let body = document.querySelector('body');
-  body.setAttribute('style', `background-color: ${color}`);
-};
-
-
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
 
 const listenForArrowPress = event => {
@@ -17360,18 +17255,11 @@ const isArrowPressAllowed = () => {
 };
 
 
-/* DEFINE OTHER FUNCTIONS */
-
-
-const handleEndOfGame = () => {
-  // TODO
-};
-
-
 /* DEFINE CONSTANTS */
 
 const ARROW_PRESS_TIMEOUT = 100;  // ms
 const ANIMATION_DURATION = 0;
+
 
 /* INITIALIZE OBJECTS */  //  Will be `resetGame` logic
 
@@ -17419,11 +17307,127 @@ document.addEventListener("keydown", listenForArrowPress);
 
 module.exports = {
   Tile,
-  createNextBoard,
-  squashBoard,
-  sliceMatrixPerDirection,
-  propagateTile,
-  attemptMerge,
 };
 
-},{"lodash":1}]},{},[2]);
+},{"./src/classes":3,"./src/domManipulation":4,"lodash":1}],3:[function(require,module,exports){
+/* DEFINE CLASSES */
+
+function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
+  this.currentValue = currentValue;
+  this.wasJustMerged = wasJustMerged;
+  this.wasJustSpawned = wasJustSpawned;
+  this.previousValueMvLen = previousValueMvLen;
+  this.selector = selector;
+}
+
+function Board() {
+  this.hasChanged = false;
+  this.matrix = [];
+  for (let row = 0; row < 4; row++) {
+    this.matrix[row] = [];
+    for (let column = 0; column < 4; column++) {
+      this.matrix[row].push(new Tile(`#r${row}c${column}`));
+    }
+  }
+  this.spawnTiles = (howMany, isItTheOneAlready = false) => {
+    for (let i = 0; i < howMany; i++) {
+      let emptyTiles = [];
+      for (let row of this.matrix) {
+        emptyTiles.push(...row.filter(tile => !tile.currentValue))
+      }
+      let choiceIndex = Math.floor(Math.random() * emptyTiles.length);
+      emptyTiles[choiceIndex].currentValue =
+          isItTheOneAlready
+              ? 1
+              : Math.random() < 0.9
+              ? 2
+              : 4;
+      emptyTiles[choiceIndex].wasJustSpawned = true;
+    }
+  };
+  this.resetAnimationProperties = () => {
+    for (let row of this.matrix) {
+      for (let tile of row) {
+        tile.wasJustMerged = false;
+        tile.wasJustSpawned = false;
+        tile.previousValueMvLen = null;
+      }
+    }
+  };
+  this.hasChanged = () => {
+    for (let row of this.matrix) {
+      for (let tile of row) {
+        if (tile.previousValueMvLen || tile.wasJustMerged) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+  this.gameStatus = () => {
+    let hasEmptySpots;
+    for (let row of this.matrix) {
+      for (let tile of row) {
+        if (tile.currentValue === 2048) {
+          return 'won';
+        }
+        if (tile.currentValue === null) {
+          hasEmptySpots = true;
+        }
+      }
+    }
+    if (hasEmptySpots) {
+      return 'ongoing'
+    }
+    for (let direction of ["up", "right", "down", "left"]) {
+      let testBoardCopy = createNextBoard(this, direction);
+      if (testBoardCopy.hasChanged()) {
+        return "ongoing"
+      }
+    }
+    return "lost";
+  }
+}
+
+
+module.exports = {
+  Tile,
+  Board,
+};
+
+},{}],4:[function(require,module,exports){
+/* DEFINE VIEW HANDLING FUNCTIONS */
+
+const updateMvAttributesInDOM = (board, direction) => {
+  for (let row of board.matrix) {
+    for (let tile of row) {
+      let tileElement = document.querySelector(tile.selector);
+      tileElement.setAttribute("data-mv-dir", direction);
+      tileElement.setAttribute("data-mv-len", tile.previousValueMvLen ? tile.previousValueMvLen : "");
+    }
+  }
+};
+
+const squashBoardInDOM = (nextBoard) => {
+  for (let row of nextBoard.matrix) {
+    for (let tile of row) {
+      let tileElement = document.querySelector(tile.selector);
+      tileElement.setAttribute("value", tile.currentValue);
+      tileElement.textContent = tile.currentValue;
+    }
+  }
+};
+
+const changeBackgroundInDOM = (color) => {
+  let body = document.querySelector('body');
+  body.setAttribute('style', `background-color: ${color}`);
+};
+
+
+module.exports = {
+  updateMvAttributesInDOM,
+  squashBoardInDOM,
+  changeBackgroundInDOM,
+};
+
+},{}]},{},[2]);
