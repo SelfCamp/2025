@@ -63,7 +63,7 @@ const createNextBoard = (currentBoard, direction) => {
 
 const squashBoard = (currentBoard, direction) => {
   let newBoard = new Board();
-  newBoard = cloneDeep(currentBoard);
+  newBoard.matrix = cloneDeep(currentBoard.matrix);
   let temporaryBoardSlices = sliceMatrixPerDirection(newBoard.matrix, direction);
   for (let row of temporaryBoardSlices) {
     squashRow(row)  // mutates tiles in input
