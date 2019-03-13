@@ -17135,6 +17135,7 @@ function Board() {
     }
   }
   this.spawnTiles = (howMany, isItTheOneAlready=false) => {
+    console.log('spawning');
     for (let i = 0; i < howMany; i++) {
       let emptyTiles = [];
       for (let row of this.matrix) {
@@ -17159,8 +17160,18 @@ function Board() {
       }
     }
   };
-  // TODO: implement (use wasJustMerged & previousValueMvLen to check if anything changed since last board)
-  this.hasChanged = () => {}
+  this.hasChanged = () => {
+    for (let row of this.matrix) {
+      for (let tile of row) {
+        if (tile.previousValueMvLen || tile.wasJustMerged) {
+          console.log('changed');
+          return true;
+        }
+      }
+    }
+    console.log('not changed');
+    return false;
+  }
 }
 
 
@@ -17168,15 +17179,15 @@ function Board() {
 
 const createNextBoard = (currentBoard, direction) => {
   let nextBoard = squashBoard(currentBoard, direction);
-  // TODO: do only if Board.hasChanged()
-  nextBoard.spawnTiles(1);
+  if (nextBoard.hasChanged()) {
+    nextBoard.spawnTiles(1);
+  }
   return nextBoard;
 };
 
 const squashBoard = (currentBoard, direction) => {
   let newBoard = new Board();
-  // newBoard.matrix = JSON.parse(JSON.stringify(currentBoard.matrix));  // TODO: simpler deep copy if possible
-  newBoard = cloneDeep(currentBoard);
+  newBoard.matrix = cloneDeep(currentBoard.matrix);
   let temporaryBoardSlices = sliceMatrixPerDirection(newBoard.matrix, direction);
   for (let row of temporaryBoardSlices) {
     squashRow(row)  // mutates tiles in input
@@ -17372,4 +17383,13 @@ document.addEventListener("keydown", listenForArrowPress);
 // squashRow(mockRow);
 // console.log("After squashRow: ", mockRow);
 
+
+module.exports = {
+  Tile,
+  createNextBoard,
+  squashBoard,
+  sliceMatrixPerDirection,
+  propagateTile,
+  attemptMerge,
+};
 },{"lodash":1}]},{},[2]);
