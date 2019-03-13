@@ -1,5 +1,5 @@
 /**
- * Example: sayThat('just wow') => 'that is just wow'
+ * Example: sayThat('just wow') => 'That is just wow.'
  * @param that
  * @returns {string}
  */
