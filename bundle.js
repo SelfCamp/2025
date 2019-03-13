@@ -17134,7 +17134,7 @@ function Board() {
       this.matrix[row].push(new Tile(`#r${row}c${column}`));
     }
   }
-  this.spawnTiles = (howMany, isItTheOneAlready=false) => {
+  this.spawnTiles = (howMany, isItTheOneAlready = false) => {
     for (let i = 0; i < howMany; i++) {
       let emptyTiles = [];
       for (let row of this.matrix) {
@@ -17182,16 +17182,29 @@ function Board() {
       }
     }
     hasEmptySpots = false;
-    if (hasEmptySpots)  {
+    if (hasEmptySpots) {
       return 'ongoing'
     }
+
     // TODO: mock moves in all 4 directions
     //       if any of them .hasChanged(), return 'ongoing'
     //       else return 'lost'
-    let testBoard = new Board();
-    console.log(testBoard);
-  };
-}
+    for (let direction of ["up", "right", "down", "left"]) {
+      let testBoardCopy = createNextBoard(this, direction);
+      if (testBoardCopy.hasChanged()) {
+        return "ongoing"
+      }
+    }
+
+
+    // let testBoardCopy = createNextBoard(this, "left");
+    // if (testBoardCopy.hasChanged()) {
+    //   return "ongoing"
+    // }
+    return "lost";
+    }
+  }
+
 
 
 /* DEFINE BOARD TRANSFORMING FUNCTIONS */
