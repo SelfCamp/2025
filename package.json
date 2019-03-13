@@ -1,0 +1,32 @@
+{
+  "name": "2049",
+  "version": "1.0.0",
+  "description": "2025",
+  "main": "script.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "browserify script.js > bundle.js && browserify tests/tests.js > tests/testbundle.js",
+    "start": "live-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SelfCamp/2049.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SelfCamp/2049/issues"
+  },
+  "homepage": "https://github.com/SelfCamp/2049#readme",
+  "devDependencies": {
+    "browserify": "^16.2.3",
+    "jest": "^24.5.0",
+    "live-server": "^1.2.1",
+    "lodash": "^4.17.11"
+  },
+  "dependencies": {}
+}
