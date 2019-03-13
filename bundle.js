@@ -17181,30 +17181,18 @@ function Board() {
         }
       }
     }
-    hasEmptySpots = false;
     if (hasEmptySpots) {
       return 'ongoing'
     }
-
-    // TODO: mock moves in all 4 directions
-    //       if any of them .hasChanged(), return 'ongoing'
-    //       else return 'lost'
     for (let direction of ["up", "right", "down", "left"]) {
       let testBoardCopy = createNextBoard(this, direction);
       if (testBoardCopy.hasChanged()) {
         return "ongoing"
       }
     }
-
-
-    // let testBoardCopy = createNextBoard(this, "left");
-    // if (testBoardCopy.hasChanged()) {
-    //   return "ongoing"
-    // }
     return "lost";
     }
   }
-
 
 
 /* DEFINE BOARD TRANSFORMING FUNCTIONS */
@@ -17319,6 +17307,12 @@ const squashBoardInDOM = (nextBoard) => {
   }
 };
 
+const changeBackgroundInDOM = (color) => {
+  let body = document.querySelector('body');
+  body.setAttribute('style', `background-color: ${color}`);
+};
+
+
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
 
 const listenForArrowPress = event => {
@@ -17344,7 +17338,16 @@ const handleArrowPress = (key) => {
   updateMvAttributesInDOM(nextBoard, direction);
   nextBoard.resetAnimationProperties();
   setTimeout(() => squashBoardInDOM(nextBoard, direction), ANIMATION_DURATION);
-  console.log(nextBoard.gameStatus());
+  switch (nextBoard.gameStatus()) {
+    case 'ongoing':
+      break;
+    case 'won':
+      changeBackgroundInDOM('green');
+      break;
+    case 'lost':
+      changeBackgroundInDOM('red');
+      break;
+  }
 };
 
 const isArrowPressAllowed = () => {

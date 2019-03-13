@@ -72,7 +72,6 @@ function Board() {
     if (hasEmptySpots) {
       return 'ongoing'
     }
-
     for (let direction of ["up", "right", "down", "left"]) {
       let testBoardCopy = createNextBoard(this, direction);
       if (testBoardCopy.hasChanged()) {
@@ -82,7 +81,6 @@ function Board() {
     return "lost";
     }
   }
-
 
 
 /* DEFINE BOARD TRANSFORMING FUNCTIONS */
@@ -197,6 +195,12 @@ const squashBoardInDOM = (nextBoard) => {
   }
 };
 
+const changeBackgroundInDOM = (color) => {
+  let body = document.querySelector('body');
+  body.setAttribute('style', `background-color: ${color}`);
+};
+
+
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
 
 const listenForArrowPress = event => {
@@ -222,7 +226,16 @@ const handleArrowPress = (key) => {
   updateMvAttributesInDOM(nextBoard, direction);
   nextBoard.resetAnimationProperties();
   setTimeout(() => squashBoardInDOM(nextBoard, direction), ANIMATION_DURATION);
-  console.log(nextBoard.gameStatus());
+  switch (nextBoard.gameStatus()) {
+    case 'ongoing':
+      break;
+    case 'won':
+      changeBackgroundInDOM('green');
+      break;
+    case 'lost':
+      changeBackgroundInDOM('red');
+      break;
+  }
 };
 
 const isArrowPressAllowed = () => {
@@ -235,18 +248,11 @@ const isArrowPressAllowed = () => {
 };
 
 
-/* DEFINE OTHER FUNCTIONS */
-
-
-const handleEndOfGame = () => {
-  // TODO
-};
-
-
 /* DEFINE CONSTANTS */
 
 const ARROW_PRESS_TIMEOUT = 100;  // ms
 const ANIMATION_DURATION = 0;
+
 
 /* INITIALIZE OBJECTS */  //  Will be `resetGame` logic
 
