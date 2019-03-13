@@ -24,6 +24,7 @@
   "homepage": "https://github.com/SelfCamp/2049#readme",
   "devDependencies": {
     "browserify": "^16.2.3",
-    "live-server": "^1.2.1"
+    "live-server": "^1.2.1",
+    "lodash": "^4.17.11"
   }
 }
