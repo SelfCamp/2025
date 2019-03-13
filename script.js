@@ -1,5 +1,7 @@
 'use strict';
 
+const {cloneDeep} = require('lodash');
+
 
 /* DEFINE CLASSES */
 
@@ -61,7 +63,7 @@ const createNextBoard = (currentBoard, direction) => {
 
 const squashBoard = (currentBoard, direction) => {
   let newBoard = new Board();
-  newBoard.matrix = JSON.parse(JSON.stringify(currentBoard.matrix));  // TODO: simpler deep copy if possible
+  newBoard = cloneDeep(currentBoard);
   let temporaryBoardSlices = sliceMatrixPerDirection(newBoard.matrix, direction);
   for (let row of temporaryBoardSlices) {
     squashRow(row)  // mutates tiles in input
