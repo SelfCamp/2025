@@ -1,5 +1,10 @@
 /* DEFINE BOARD TRANSFORMING FUNCTIONS */
 
+const {cloneDeep} = require('lodash');
+
+const {Board} = require('./classes');
+
+
 const createNextBoard = (currentBoard, direction) => {
   let nextBoard = squashBoard(currentBoard, direction);
   if (nextBoard.hasChanged()) {
