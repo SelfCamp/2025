@@ -126,9 +126,11 @@ const handleArrowPress = (key) => {
       break;
     case 'won':
       changeBackgroundInDOM('green');
+      // TODO: handle win
       break;
     case 'lost':
       changeBackgroundInDOM('red');
+      // TODO: handle loss
       break;
   }
 };
@@ -191,8 +193,3 @@ document.addEventListener("keydown", listenForArrowPress);
 // console.log("Before squashRow: ", mockRowCopy);
 // squashRow(mockRow);
 // console.log("After squashRow: ", mockRow);
-
-
-module.exports = {
-  Tile,
-};
