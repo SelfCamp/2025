@@ -7,8 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify script.js > bundle.js",
+    "test": "jest",
+    "build": "browserify script.js > bundle.js && browserify tests/tests.js > tests/testbundle.js",
     "start": "live-server"
   },
   "repository": {
@@ -24,7 +24,9 @@
   "homepage": "https://github.com/SelfCamp/2049#readme",
   "devDependencies": {
     "browserify": "^16.2.3",
+    "jest": "^24.5.0",
     "live-server": "^1.2.1",
     "lodash": "^4.17.11"
-  }
+  },
+  "dependencies": {}
 }
