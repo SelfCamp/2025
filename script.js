@@ -23,7 +23,6 @@ function Board() {
     }
   }
   this.spawnTiles = (howMany, isItTheOneAlready=false) => {
-    console.log('spawning');
     for (let i = 0; i < howMany; i++) {
       let emptyTiles = [];
       for (let row of this.matrix) {
@@ -52,12 +51,10 @@ function Board() {
     for (let row of this.matrix) {
       for (let tile of row) {
         if (tile.previousValueMvLen || tile.wasJustMerged) {
-          console.log('changed');
           return true;
         }
       }
     }
-    console.log('not changed');
     return false;
   }
 }
