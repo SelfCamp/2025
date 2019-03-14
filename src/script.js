@@ -74,31 +74,3 @@ const arrowPressHistory = [];
 let currentBoard = boardHistory[boardHistory.length-1];
 squashBoardInDOM(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
-
-// if (!isGameOngoing(currentBoard)) {
-//   handleEndOfGame();
-// }
-
-
-/* TEST SQUASH-BOARD */
-
-// const mockBoard = new Board();
-// mockBoard.spawnTiles(10);
-// console.log('Before squashBoard: ', mockBoard);
-//
-// let squashedBoard = squashBoard(mockBoard, 'right');
-// console.log('After squashBoard: ', squashedBoard);
-
-
-/* TEST SQUASH-ROW */
-
-// let mockRow = [
-//   new Tile('r0c0', 4),
-//   new Tile('r0c1', null),
-//   new Tile('r0c2', 2),
-//   new Tile('r0c3', 2)
-// ];
-// let mockRowCopy = [...mockRow];
-// console.log("Before squashRow: ", mockRowCopy);
-// squashRow(mockRow);
-// console.log("After squashRow: ", mockRow);
