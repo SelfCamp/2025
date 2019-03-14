@@ -17110,11 +17110,102 @@
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],2:[function(require,module,exports){
+const {Tile} = require('./Tile');
+
+
+function Board() {
+  this.hasChanged = false;
+  this.matrix = [];
+  for (let row = 0; row < 4; row++) {
+    this.matrix[row] = [];
+    for (let column = 0; column < 4; column++) {
+      this.matrix[row].push(new Tile(`#r${row}c${column}`));
+    }
+  }
+  this.spawnTiles = (howMany, isItTheOneAlready = false) => {
+    for (let i = 0; i < howMany; i++) {
+      let emptyTiles = [];
+      for (let row of this.matrix) {
+        emptyTiles.push(...row.filter(tile => !tile.currentValue))
+      }
+      let choiceIndex = Math.floor(Math.random() * emptyTiles.length);
+      emptyTiles[choiceIndex].currentValue =
+          isItTheOneAlready
+              ? 1
+              : Math.random() < 0.9
+              ? 2
+              : 4;
+      emptyTiles[choiceIndex].wasJustSpawned = true;
+    }
+  };
+  this.resetAnimationProperties = () => {
+    for (let row of this.matrix) {
+      for (let tile of row) {
+        tile.wasJustMerged = false;
+        tile.wasJustSpawned = false;
+        tile.previousValueMvLen = null;
+      }
+    }
+  };
+  this.hasChanged = () => {
+    for (let row of this.matrix) {
+      for (let tile of row) {
+        if (tile.previousValueMvLen || tile.wasJustMerged) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+  this.gameStatus = () => {
+    let hasEmptySpots;
+    for (let row of this.matrix) {
+      for (let tile of row) {
+        if (tile.currentValue === 2048) {
+          return 'won';
+        }
+        if (tile.currentValue === null) {
+          hasEmptySpots = true;
+        }
+      }
+    }
+    if (hasEmptySpots) {
+      return 'ongoing'
+    }
+    for (let direction of ["up", "right", "down", "left"]) {
+      let testBoardCopy = createNextBoard(this, direction);
+      if (testBoardCopy.hasChanged()) {
+        return "ongoing"
+      }
+    }
+    return "lost";
+  }
+}
+
+
+module.exports = {
+  Board,
+};
+
+},{"./Tile":3}],3:[function(require,module,exports){
+function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
+  this.currentValue = currentValue;
+  this.wasJustMerged = wasJustMerged;
+  this.wasJustSpawned = wasJustSpawned;
+  this.previousValueMvLen = previousValueMvLen;
+  this.selector = selector;
+}
+
+module.exports = {
+  Tile,
+};
+
+},{}],4:[function(require,module,exports){
 /* DEFINE BOARD TRANSFORMING FUNCTIONS */
 
 const {cloneDeep} = require('lodash');
 
-const {Board} = require('./classes');
+const {Board} = require('./Board');
 
 
 const createNextBoard = (currentBoard, direction) => {
@@ -17214,93 +17305,7 @@ module.exports = {
   attemptMerge,
 };
 
-},{"./classes":3,"lodash":1}],3:[function(require,module,exports){
-/* DEFINE CLASSES */
-
-function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
-  this.currentValue = currentValue;
-  this.wasJustMerged = wasJustMerged;
-  this.wasJustSpawned = wasJustSpawned;
-  this.previousValueMvLen = previousValueMvLen;
-  this.selector = selector;
-}
-
-function Board() {
-  this.hasChanged = false;
-  this.matrix = [];
-  for (let row = 0; row < 4; row++) {
-    this.matrix[row] = [];
-    for (let column = 0; column < 4; column++) {
-      this.matrix[row].push(new Tile(`#r${row}c${column}`));
-    }
-  }
-  this.spawnTiles = (howMany, isItTheOneAlready = false) => {
-    for (let i = 0; i < howMany; i++) {
-      let emptyTiles = [];
-      for (let row of this.matrix) {
-        emptyTiles.push(...row.filter(tile => !tile.currentValue))
-      }
-      let choiceIndex = Math.floor(Math.random() * emptyTiles.length);
-      emptyTiles[choiceIndex].currentValue =
-          isItTheOneAlready
-              ? 1
-              : Math.random() < 0.9
-              ? 2
-              : 4;
-      emptyTiles[choiceIndex].wasJustSpawned = true;
-    }
-  };
-  this.resetAnimationProperties = () => {
-    for (let row of this.matrix) {
-      for (let tile of row) {
-        tile.wasJustMerged = false;
-        tile.wasJustSpawned = false;
-        tile.previousValueMvLen = null;
-      }
-    }
-  };
-  this.hasChanged = () => {
-    for (let row of this.matrix) {
-      for (let tile of row) {
-        if (tile.previousValueMvLen || tile.wasJustMerged) {
-          return true;
-        }
-      }
-    }
-    return false;
-  };
-  this.gameStatus = () => {
-    let hasEmptySpots;
-    for (let row of this.matrix) {
-      for (let tile of row) {
-        if (tile.currentValue === 2048) {
-          return 'won';
-        }
-        if (tile.currentValue === null) {
-          hasEmptySpots = true;
-        }
-      }
-    }
-    if (hasEmptySpots) {
-      return 'ongoing'
-    }
-    for (let direction of ["up", "right", "down", "left"]) {
-      let testBoardCopy = createNextBoard(this, direction);
-      if (testBoardCopy.hasChanged()) {
-        return "ongoing"
-      }
-    }
-    return "lost";
-  }
-}
-
-
-module.exports = {
-  Tile,
-  Board,
-};
-
-},{}],4:[function(require,module,exports){
+},{"./Board":2,"lodash":1}],5:[function(require,module,exports){
 /* DEFINE VIEW HANDLING FUNCTIONS */
 
 const updateMvAttributesInDOM = (board, direction) => {
@@ -17335,10 +17340,10 @@ module.exports = {
   changeBackgroundInDOM,
 };
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
-const {Board} = require('./classes');
+const {Board} = require('./Board');
 const {updateMvAttributesInDOM, squashBoardInDOM, changeBackgroundInDOM} = require('./domManipulation');
 const {createNextBoard} = require('./boardTransformation');
 
@@ -17413,32 +17418,4 @@ let currentBoard = boardHistory[boardHistory.length-1];
 squashBoardInDOM(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
 
-// if (!isGameOngoing(currentBoard)) {
-//   handleEndOfGame();
-// }
-
-
-/* TEST SQUASH-BOARD */
-
-// const mockBoard = new Board();
-// mockBoard.spawnTiles(10);
-// console.log('Before squashBoard: ', mockBoard);
-//
-// let squashedBoard = squashBoard(mockBoard, 'right');
-// console.log('After squashBoard: ', squashedBoard);
-
-
-/* TEST SQUASH-ROW */
-
-// let mockRow = [
-//   new Tile('r0c0', 4),
-//   new Tile('r0c1', null),
-//   new Tile('r0c2', 2),
-//   new Tile('r0c3', 2)
-// ];
-// let mockRowCopy = [...mockRow];
-// console.log("Before squashRow: ", mockRowCopy);
-// squashRow(mockRow);
-// console.log("After squashRow: ", mockRow);
-
-},{"./boardTransformation":2,"./classes":3,"./domManipulation":4}]},{},[5]);
+},{"./Board":2,"./boardTransformation":4,"./domManipulation":5}]},{},[6]);

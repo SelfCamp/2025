@@ -1,6 +1,6 @@
 'use strict';
 
-const {Board} = require('./classes');
+const {Board} = require('./Board');
 const {updateMvAttributesInDOM, squashBoardInDOM, changeBackgroundInDOM} = require('./domManipulation');
 const {createNextBoard} = require('./boardTransformation');
 

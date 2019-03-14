@@ -9,7 +9,7 @@ test("Imported function should work", () => expect(sayThat('just wow')).toBe('Th
 
 /* THE REAL DEAL */
 
-const {Tile} = require('./classes');
+const {Tile} = require('./Tile');
 
 test("Imported Tile should be of type object", () => expect(typeof(new Tile())).toBe('object'));
 

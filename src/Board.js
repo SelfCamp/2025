@@ -1,12 +1,5 @@
-/* DEFINE CLASSES */
+const {Tile} = require('./Tile');
 
-function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
-  this.currentValue = currentValue;
-  this.wasJustMerged = wasJustMerged;
-  this.wasJustSpawned = wasJustSpawned;
-  this.previousValueMvLen = previousValueMvLen;
-  this.selector = selector;
-}
 
 function Board() {
   this.hasChanged = false;
@@ -79,6 +72,5 @@ function Board() {
 
 
 module.exports = {
-  Tile,
   Board,
 };

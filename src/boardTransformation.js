@@ -2,7 +2,7 @@
 
 const {cloneDeep} = require('lodash');
 
-const {Board} = require('./classes');
+const {Board} = require('./Board');
 
 
 const createNextBoard = (currentBoard, direction) => {
