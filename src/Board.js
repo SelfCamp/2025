@@ -78,8 +78,9 @@ function Board() {
     let nextBoard = this.squashBoard(this, direction);
     if (nextBoard.hasChanged()) {
       nextBoard.spawnTiles(1);
+      return nextBoard;
     }
-    return nextBoard;
+    return false;
   };
 
   this.squashBoard = (currentBoard, direction) => {

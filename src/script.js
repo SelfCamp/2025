@@ -16,14 +16,14 @@ const listenForArrowPress = event => {
 const handleArrowPress = (key) => {
   let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
   let direction = directions[key];
-  arrowPressHistory.push({direction: direction, timestamp: new Date()});
-  // console.log(direction);
-
   let currentBoard = boardHistory[boardHistory.length-1];
-  // console.log("Previous board matrix: ", [...currentBoard.matrix]);
 
   let nextBoard = currentBoard.createNextBoard(direction);
-  // console.log("New board matrix: ", nextBoard.matrix);
+  if (!nextBoard) {
+    return false;
+  }
+
+  arrowPressHistory.push({direction: direction, timestamp: new Date()});
   boardHistory.push(nextBoard);
 
   updateMvAttributesInDOM(nextBoard, direction);
