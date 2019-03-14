@@ -17110,6 +17110,8 @@
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],2:[function(require,module,exports){
+const {cloneDeep} = require('lodash');
+
 const {Tile} = require('./Tile');
 
 
@@ -17138,6 +17140,7 @@ function Board() {
       emptyTiles[choiceIndex].wasJustSpawned = true;
     }
   };
+
   this.resetAnimationProperties = () => {
     for (let row of this.matrix) {
       for (let tile of row) {
@@ -17147,6 +17150,7 @@ function Board() {
       }
     }
   };
+
   this.hasChanged = () => {
     for (let row of this.matrix) {
       for (let tile of row) {
@@ -17157,6 +17161,7 @@ function Board() {
     }
     return false;
   };
+
   this.gameStatus = () => {
     let hasEmptySpots;
     for (let row of this.matrix) {
@@ -17179,7 +17184,94 @@ function Board() {
       }
     }
     return "lost";
-  }
+  };
+
+  this.createNextBoard = (direction) => {
+    let nextBoard = this.squashBoard(this, direction);
+    if (nextBoard.hasChanged()) {
+      nextBoard.spawnTiles(1);
+    }
+    return nextBoard;
+  };
+
+  this.squashBoard = (currentBoard, direction) => {
+    let newBoard = new Board();
+    newBoard.matrix = cloneDeep(currentBoard.matrix);
+    let temporaryBoardSlices = this.sliceMatrixPerDirection(newBoard.matrix, direction);
+    for (let row of temporaryBoardSlices) {
+      this.squashRow(row)  // mutates tiles in input
+    }
+    return newBoard;
+  };
+
+  this.sliceMatrixPerDirection = (matrix, direction) => {
+    let temporaryMatrixSlices = [[], [], [], []];
+    switch (direction) {
+      case "up":
+        for (let columnIndex of [0, 1, 2, 3]) {
+          for (let rowIndex of [3, 2, 1, 0]) {
+            temporaryMatrixSlices[columnIndex].push(matrix[rowIndex][columnIndex])
+          }
+        }
+        break;
+      case "down":
+        for (let columnIndex of [0, 1, 2, 3]) {
+          for (let rowIndex of [0, 1, 2, 3]) {
+            temporaryMatrixSlices[columnIndex].push(matrix[rowIndex][columnIndex])
+          }
+        }
+        break;
+      case "left":
+        for (let rowIndex of [0, 1, 2, 3]) {
+          for (let columnIndex of [3, 2, 1, 0]) {
+            temporaryMatrixSlices[rowIndex].push(matrix[rowIndex][columnIndex])
+          }
+        }
+        break;
+      case "right":
+        return matrix
+    }
+    return temporaryMatrixSlices
+  };
+
+  this.squashRow = (row) => {
+    for (let index of [2, 1 ,0]) {
+      if (!row[index].currentValue) {
+        continue
+      }
+      let newIndex = this.propagateTile(row, index);
+      let hasMerged = this.attemptMerge(row, newIndex);
+      row[index].previousValueMvLen = newIndex - index + hasMerged;
+    }
+  };
+
+  this.propagateTile = (row, indexFrom) => {
+    for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {
+      if (!row[indexTo].currentValue) {
+        [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];
+        return indexTo
+      }
+    }
+    return indexFrom
+  };
+
+  this.attemptMerge = (row, index) => {
+    let thisTile = row[index];
+    let nextTile = row[index + 1];
+
+    if (index === 3 || nextTile.wasJustMerged) {
+      return false;
+    }
+
+    if (thisTile.currentValue === nextTile.currentValue) {
+      thisTile.currentValue = null;
+      nextTile.currentValue = nextTile.currentValue * 2;
+      nextTile.wasJustMerged = true;
+      return true;
+    }
+
+    return false;
+  };
 }
 
 
@@ -17187,7 +17279,7 @@ module.exports = {
   Board,
 };
 
-},{"./Tile":3}],3:[function(require,module,exports){
+},{"./Tile":3,"lodash":1}],3:[function(require,module,exports){
 function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
   this.currentValue = currentValue;
   this.wasJustMerged = wasJustMerged;
@@ -17201,111 +17293,6 @@ module.exports = {
 };
 
 },{}],4:[function(require,module,exports){
-/* DEFINE BOARD TRANSFORMING FUNCTIONS */
-
-const {cloneDeep} = require('lodash');
-
-const {Board} = require('./Board');
-
-
-const createNextBoard = (currentBoard, direction) => {
-  let nextBoard = squashBoard(currentBoard, direction);
-  if (nextBoard.hasChanged()) {
-    nextBoard.spawnTiles(1);
-  }
-  return nextBoard;
-};
-
-const squashBoard = (currentBoard, direction) => {
-  let newBoard = new Board();
-  newBoard.matrix = cloneDeep(currentBoard.matrix);
-  let temporaryBoardSlices = sliceMatrixPerDirection(newBoard.matrix, direction);
-  for (let row of temporaryBoardSlices) {
-    squashRow(row)  // mutates tiles in input
-  }
-  return newBoard;
-};
-
-const sliceMatrixPerDirection = (matrix, direction) => {
-  let temporaryMatrixSlices = [[], [], [], []];
-  switch (direction) {
-    case "up":
-      for (let columnIndex of [0, 1, 2, 3]) {
-        for (let rowIndex of [3, 2, 1, 0]) {
-          temporaryMatrixSlices[columnIndex].push(matrix[rowIndex][columnIndex])
-        }
-      }
-      break;
-    case "down":
-      for (let columnIndex of [0, 1, 2, 3]) {
-        for (let rowIndex of [0, 1, 2, 3]) {
-          temporaryMatrixSlices[columnIndex].push(matrix[rowIndex][columnIndex])
-        }
-      }
-      break;
-    case "left":
-      for (let rowIndex of [0, 1, 2, 3]) {
-        for (let columnIndex of [3, 2, 1, 0]) {
-          temporaryMatrixSlices[rowIndex].push(matrix[rowIndex][columnIndex])
-        }
-      }
-      break;
-    case "right":
-      return matrix
-  }
-  return temporaryMatrixSlices
-};
-
-const squashRow = (row) => {
-  for (let index of [2, 1 ,0]) {
-    if (!row[index].currentValue) {
-      continue
-    }
-    let newIndex = propagateTile(row, index);
-    let hasMerged = attemptMerge(row, newIndex);
-    row[index].previousValueMvLen = newIndex - index + hasMerged;
-  }
-};
-
-const propagateTile = (row, indexFrom) => {
-  for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {
-    if (!row[indexTo].currentValue) {
-      [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];
-      return indexTo
-    }
-  }
-  return indexFrom
-};
-
-const attemptMerge = (row, index) => {
-  let thisTile = row[index];
-  let nextTile = row[index + 1];
-
-  if (index === 3 || nextTile.wasJustMerged) {
-    return false;
-  }
-
-  if (thisTile.currentValue === nextTile.currentValue) {
-    thisTile.currentValue = null;
-    nextTile.currentValue = nextTile.currentValue * 2;
-    nextTile.wasJustMerged = true;
-    return true;
-  }
-
-  return false;
-};
-
-
-module.exports = {
-  createNextBoard,
-  squashBoard,
-  sliceMatrixPerDirection,
-  squashRow,
-  propagateTile,
-  attemptMerge,
-};
-
-},{"./Board":2,"lodash":1}],5:[function(require,module,exports){
 /* DEFINE VIEW HANDLING FUNCTIONS */
 
 const updateMvAttributesInDOM = (board, direction) => {
@@ -17340,12 +17327,12 @@ module.exports = {
   changeBackgroundInDOM,
 };
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 const {Board} = require('./Board');
 const {updateMvAttributesInDOM, squashBoardInDOM, changeBackgroundInDOM} = require('./domManipulation');
-const {createNextBoard} = require('./boardTransformation');
+
 
 
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
@@ -17366,7 +17353,7 @@ const handleArrowPress = (key) => {
   let currentBoard = boardHistory[boardHistory.length-1];
   // console.log("Previous board matrix: ", [...currentBoard.matrix]);
 
-  let nextBoard = createNextBoard(currentBoard, direction);
+  let nextBoard = currentBoard.createNextBoard(direction);
   // console.log("New board matrix: ", nextBoard.matrix);
   boardHistory.push(nextBoard);
 
@@ -17418,4 +17405,4 @@ let currentBoard = boardHistory[boardHistory.length-1];
 squashBoardInDOM(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
 
-},{"./Board":2,"./boardTransformation":4,"./domManipulation":5}]},{},[6]);
+},{"./Board":2,"./domManipulation":4}]},{},[5]);

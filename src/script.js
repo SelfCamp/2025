@@ -2,7 +2,6 @@
 
 const {Board} = require('./Board');
 const {updateMvAttributesInDOM, squashBoardInDOM, changeBackgroundInDOM} = require('./domManipulation');
-const {createNextBoard} = require('./boardTransformation');
 
 
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
@@ -23,7 +22,7 @@ const handleArrowPress = (key) => {
   let currentBoard = boardHistory[boardHistory.length-1];
   // console.log("Previous board matrix: ", [...currentBoard.matrix]);
 
-  let nextBoard = createNextBoard(currentBoard, direction);
+  let nextBoard = currentBoard.createNextBoard(direction);
   // console.log("New board matrix: ", nextBoard.matrix);
   boardHistory.push(nextBoard);
 
