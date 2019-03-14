@@ -3,7 +3,10 @@ const {cloneDeep} = require('lodash');
 const {Tile} = require('./Tile');
 const {mockList} = require("./mockBoards")
 
-
+/**
+ * Create new Board object.
+ * @constructor
+ */
 function Board() {
   this.hasChanged = false;
   this.matrix = [];
