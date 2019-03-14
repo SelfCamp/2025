@@ -1,6 +1,7 @@
 const {cloneDeep} = require('lodash');
 
 const {Tile} = require('./Tile');
+const {mockList} = require("./mockBoards")
 
 
 function Board() {
@@ -66,7 +67,7 @@ function Board() {
       return 'ongoing'
     }
     for (let direction of ["up", "right", "down", "left"]) {
-      let testBoardCopy = createNextBoard(this, direction);
+      let testBoardCopy = this.createNextBoard(direction);
       if (testBoardCopy.hasChanged()) {
         return "ongoing"
       }
@@ -78,9 +79,8 @@ function Board() {
     let nextBoard = this.squashBoard(this, direction);
     if (nextBoard.hasChanged()) {
       nextBoard.spawnTiles(1);
-      return nextBoard;
     }
-    return false;
+    return nextBoard;
   };
 
   this.squashBoard = (currentBoard, direction) => {
@@ -138,10 +138,10 @@ function Board() {
     for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {
       if (!row[indexTo].currentValue) {
         [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];
-        return indexTo
+        return indexTo;
       }
     }
-    return indexFrom
+    return indexFrom;
   };
 
   this.attemptMerge = (row, index) => {
@@ -161,6 +161,12 @@ function Board() {
 
     return false;
   };
+  this.mock = (scenario) => {
+    if (scenario !== "noMock") {
+      this.matrix = mockList[scenario]
+    }
+  }
+
 }
 
 

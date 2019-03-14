@@ -17113,6 +17113,7 @@
 const {cloneDeep} = require('lodash');
 
 const {Tile} = require('./Tile');
+const {mockList} = require("./mockBoards")
 
 
 function Board() {
@@ -17178,7 +17179,7 @@ function Board() {
       return 'ongoing'
     }
     for (let direction of ["up", "right", "down", "left"]) {
-      let testBoardCopy = createNextBoard(this, direction);
+      let testBoardCopy = this.createNextBoard(direction);
       if (testBoardCopy.hasChanged()) {
         return "ongoing"
       }
@@ -17190,9 +17191,8 @@ function Board() {
     let nextBoard = this.squashBoard(this, direction);
     if (nextBoard.hasChanged()) {
       nextBoard.spawnTiles(1);
-      return nextBoard;
     }
-    return false;
+    return nextBoard;
   };
 
   this.squashBoard = (currentBoard, direction) => {
@@ -17250,10 +17250,10 @@ function Board() {
     for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {
       if (!row[indexTo].currentValue) {
         [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];
-        return indexTo
+        return indexTo;
       }
     }
-    return indexFrom
+    return indexFrom;
   };
 
   this.attemptMerge = (row, index) => {
@@ -17273,6 +17273,12 @@ function Board() {
 
     return false;
   };
+  this.mock = (scenario) => {
+    if (scenario !== "noMock") {
+      this.matrix = mockList[scenario]
+    }
+  }
+
 }
 
 
@@ -17280,7 +17286,7 @@ module.exports = {
   Board,
 };
 
-},{"./Tile":3,"lodash":1}],3:[function(require,module,exports){
+},{"./Tile":3,"./mockBoards":6,"lodash":1}],3:[function(require,module,exports){
 function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
   this.currentValue = currentValue;
   this.wasJustMerged = wasJustMerged;
@@ -17294,10 +17300,54 @@ module.exports = {
 };
 
 },{}],4:[function(require,module,exports){
+/* DEFINE CONSTANTS */
+
+const ARROW_PRESS_TIMEOUT = 100;  // ms
+const ANIMATION_DURATION = 50;
+
+module.exports = {
+  ARROW_PRESS_TIMEOUT,
+  ANIMATION_DURATION
+};
+},{}],5:[function(require,module,exports){
 /* DEFINE VIEW HANDLING FUNCTIONS */
 
-const updateMvAttributesInDOM = (board, direction) => {
-  for (let row of board.matrix) {
+const {ANIMATION_DURATION} = require("./constants.js");
+
+/**
+ * If no direction is received, we assume this is an undo and animations are ignored
+ * @param newBoard
+ * @param direction
+ */
+const updateView = (newBoard, direction=null) => {
+  if (!direction) {
+    squashBoardInDOM(newBoard)
+  } else {
+    updateMvAttributesInDOM(newBoard, direction);
+    newBoard.resetAnimationProperties();
+    setTimeout(() => squashBoardInDOM(newBoard), ANIMATION_DURATION);
+    let gameStatus = newBoard.gameStatus();
+    if (gameStatus !== "ongoing") {
+      displayEndOfGame(gameStatus);
+    }
+  }
+};
+
+const displayEndOfGame = (gameStatus) => {
+  switch (gameStatus) {
+    case 'ongoing':
+      break;
+    case 'won':
+      changeBackgroundInDOM('green');
+      break;
+    case 'lost':
+      changeBackgroundInDOM('red');
+      break;
+  }
+};
+
+const updateMvAttributesInDOM = (newBoard, direction) => {
+  for (let row of newBoard.matrix) {
     for (let tile of row) {
       let tileElement = document.querySelector(tile.selector);
       tileElement.setAttribute("data-mv-dir", direction);
@@ -17306,8 +17356,8 @@ const updateMvAttributesInDOM = (board, direction) => {
   }
 };
 
-const squashBoardInDOM = (nextBoard) => {
-  for (let row of nextBoard.matrix) {
+const squashBoardInDOM = (newBoard) => {
+  for (let row of newBoard.matrix) {
     for (let tile of row) {
       let tileElement = document.querySelector(tile.selector);
       tileElement.setAttribute("value", tile.currentValue);
@@ -17326,13 +17376,39 @@ module.exports = {
   updateMvAttributesInDOM,
   squashBoardInDOM,
   changeBackgroundInDOM,
+  updateView,
+  displayEndOfGame
 };
 
-},{}],5:[function(require,module,exports){
+},{"./constants.js":4}],6:[function(require,module,exports){
+const {Tile} = require("./Tile.js");
+
+const mockList = {
+  "noMock": false,
+  "almostLost": [
+      [new Tile("#r0c0", 2),    new Tile("#r0c1", 8),    new Tile("#r0c2", 32),   new Tile("#r0c3", 2)],
+      [new Tile("#r1c0", 16),   new Tile("#r1c1", 128),  new Tile("#r1c2", 64),   new Tile("#r1c3", 8)],
+      [new Tile("#r2c0", 4),    new Tile("#r2c1", 32),   new Tile("#r2c2", 128),  new Tile("#r2c3", 4)],
+      [new Tile("#r3c0", 2),    new Tile("#r3c1", 4),    new Tile("#r3c2", 16),   new Tile("#r3c3", null)]
+  ],
+  "almostWon":[
+      [new Tile("#r0c0", 2),    new Tile("#r0c1", 8),    new Tile("#r0c2", 32),   new Tile("#r0c3", 2)],
+      [new Tile("#r1c0", 16),   new Tile("#r1c1", 128),  new Tile("#r1c2", 64),   new Tile("#r1c3", 8)],
+      [new Tile("#r2c0", 4),    new Tile("#r2c1", 32),   new Tile("#r2c2", 128),  new Tile("#r2c3", 4)],
+      [new Tile("#r3c0", 1024), new Tile("#r3c1", 1024), new Tile("#r3c2", 16),   new Tile("#r3c3", null)]
+  ]
+};
+
+module.exports = {
+  mockList,
+};
+
+},{"./Tile.js":3}],7:[function(require,module,exports){
 'use strict';
 
 const {Board} = require('./Board');
-const {updateMvAttributesInDOM, squashBoardInDOM, changeBackgroundInDOM} = require('./domManipulation');
+const {updateView} = require('./domManipulation');
+const {ARROW_PRESS_TIMEOUT} = require("./constants");
 
 
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
@@ -17350,31 +17426,11 @@ const handleArrowPress = (key) => {
   let currentBoard = boardHistory[boardHistory.length-1];
 
   let nextBoard = currentBoard.createNextBoard(direction);
-  if (!nextBoard) {
-    console.log('not doin it');
-    return false;
-  }
-
-  arrowPressHistory.push({direction: direction, timestamp: new Date()});
-  boardHistory.push(nextBoard);
-
-  console.log('did it: ', boardHistory);
-
-  updateMvAttributesInDOM(nextBoard, direction);
-  nextBoard.resetAnimationProperties();
-  setTimeout(() => squashBoardInDOM(nextBoard, direction), ANIMATION_DURATION);
-  switch (nextBoard.gameStatus()) {
-    case 'ongoing':
-      break;
-    case 'won':
-      changeBackgroundInDOM('green');
-      // TODO: handle win
-      break;
-    case 'lost':
-      changeBackgroundInDOM('red');
-      // TODO: handle loss
-      break;
-  }
+    if (nextBoard.hasChanged()) {
+      arrowPressHistory.push({direction: direction, timestamp: new Date()});
+      boardHistory.push(nextBoard);
+      updateView(nextBoard, direction);
+    }
 };
 
 const isArrowPressAllowed = () => {
@@ -17387,16 +17443,14 @@ const isArrowPressAllowed = () => {
 };
 
 
-/* DEFINE CONSTANTS */
-
-const ARROW_PRESS_TIMEOUT = 100;  // ms
-const ANIMATION_DURATION = 0;
-
-
-/* INITIALIZE OBJECTS */  //  Will be `resetGame` logic
+/* INITIALIZE OBJECTS */
 
 const board = new Board();
 board.spawnTiles(2);
+
+board.mock("noMock");
+// board.mock("almostWon");
+// board.mock("almostLost");
 
 const boardHistory = [board];
 const arrowPressHistory = [];
@@ -17405,7 +17459,7 @@ const arrowPressHistory = [];
 /* MAIN LOGIC */
 
 let currentBoard = boardHistory[boardHistory.length-1];
-squashBoardInDOM(currentBoard);
+updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
 
-},{"./Board":2,"./domManipulation":4}]},{},[5]);
+},{"./Board":2,"./constants":4,"./domManipulation":5}]},{},[7]);

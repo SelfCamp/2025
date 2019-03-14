@@ -1,7 +1,8 @@
 'use strict';
 
 const {Board} = require('./Board');
-const {updateMvAttributesInDOM, squashBoardInDOM, changeBackgroundInDOM} = require('./domManipulation');
+const {updateView} = require('./domManipulation');
+const {ARROW_PRESS_TIMEOUT} = require("./constants");
 
 
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
@@ -19,28 +20,11 @@ const handleArrowPress = (key) => {
   let currentBoard = boardHistory[boardHistory.length-1];
 
   let nextBoard = currentBoard.createNextBoard(direction);
-  if (!nextBoard) {
-    return false;
-  }
-
-  arrowPressHistory.push({direction: direction, timestamp: new Date()});
-  boardHistory.push(nextBoard);
-
-  updateMvAttributesInDOM(nextBoard, direction);
-  nextBoard.resetAnimationProperties();
-  setTimeout(() => squashBoardInDOM(nextBoard, direction), ANIMATION_DURATION);
-  switch (nextBoard.gameStatus()) {
-    case 'ongoing':
-      break;
-    case 'won':
-      changeBackgroundInDOM('green');
-      // TODO: handle win
-      break;
-    case 'lost':
-      changeBackgroundInDOM('red');
-      // TODO: handle loss
-      break;
-  }
+    if (nextBoard.hasChanged()) {
+      arrowPressHistory.push({direction: direction, timestamp: new Date()});
+      boardHistory.push(nextBoard);
+      updateView(nextBoard, direction);
+    }
 };
 
 const isArrowPressAllowed = () => {
@@ -53,16 +37,14 @@ const isArrowPressAllowed = () => {
 };
 
 
-/* DEFINE CONSTANTS */
-
-const ARROW_PRESS_TIMEOUT = 100;  // ms
-const ANIMATION_DURATION = 0;
-
-
-/* INITIALIZE OBJECTS */  //  Will be `resetGame` logic
+/* INITIALIZE OBJECTS */
 
 const board = new Board();
 board.spawnTiles(2);
+
+board.mock("noMock");
+// board.mock("almostWon");
+// board.mock("almostLost");
 
 const boardHistory = [board];
 const arrowPressHistory = [];
@@ -71,5 +53,5 @@ const arrowPressHistory = [];
 /* MAIN LOGIC */
 
 let currentBoard = boardHistory[boardHistory.length-1];
-squashBoardInDOM(currentBoard);
+updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
