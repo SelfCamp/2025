@@ -66,7 +66,7 @@ function Board() {
       return 'ongoing'
     }
     for (let direction of ["up", "right", "down", "left"]) {
-      let testBoardCopy = createNextBoard(this, direction);
+      let testBoardCopy = this.createNextBoard(this, direction);
       if (testBoardCopy.hasChanged()) {
         return "ongoing"
       }
@@ -78,9 +78,8 @@ function Board() {
     let nextBoard = this.squashBoard(this, direction);
     if (nextBoard.hasChanged()) {
       nextBoard.spawnTiles(1);
-      return nextBoard;
     }
-    return false;
+    return nextBoard;
   };
 
   this.squashBoard = (currentBoard, direction) => {
