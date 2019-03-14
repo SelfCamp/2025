@@ -1,7 +1,41 @@
 /* DEFINE VIEW HANDLING FUNCTIONS */
 
-const updateMvAttributesInDOM = (board, direction) => {
-  for (let row of board.matrix) {
+const {ANIMATION_DURATION} = require("./constants.js");
+
+/**
+ * If no direction is received, we assume this is an undo
+ * @param newBoard
+ * @param direction
+ */
+const updateView = (newBoard, direction=null) => {
+  if (!direction) {
+    squashBoardInDOM(newBoard, direction)
+  } else {
+    updateMvAttributesInDOM(newBoard, direction);
+    newBoard.resetAnimationProperties();
+    setTimeout(() => squashBoardInDOM(newBoard, direction), ANIMATION_DURATION);
+    let gameStatus = newBoard.gameStatus();
+    if (gameStatus !== "ongoing") {
+      displayEndOfGame(gameStatus);
+    }
+  }
+};
+
+const displayEndOfGame = (gameStatus) => {
+  switch (gameStatus) {
+    case 'ongoing':
+      break;
+    case 'won':
+      changeBackgroundInDOM('green');
+      break;
+    case 'lost':
+      changeBackgroundInDOM('red');
+      break;
+  }
+};
+
+const updateMvAttributesInDOM = (newBoard, direction) => {
+  for (let row of newBoard.matrix) {
     for (let tile of row) {
       let tileElement = document.querySelector(tile.selector);
       tileElement.setAttribute("data-mv-dir", direction);
@@ -10,8 +44,8 @@ const updateMvAttributesInDOM = (board, direction) => {
   }
 };
 
-const squashBoardInDOM = (nextBoard) => {
-  for (let row of nextBoard.matrix) {
+const squashBoardInDOM = (newBoard) => {
+  for (let row of newBoard.matrix) {
     for (let tile of row) {
       let tileElement = document.querySelector(tile.selector);
       tileElement.setAttribute("value", tile.currentValue);
@@ -30,4 +64,6 @@ module.exports = {
   updateMvAttributesInDOM,
   squashBoardInDOM,
   changeBackgroundInDOM,
+  updateView,
+  displayEndOfGame
 };
