@@ -171,7 +171,7 @@ function Board() {
   };
   this.mock = (scenario) => {
     if (scenario !== "noMock") {
-      this.matrix = mockList[scenario]
+      this.matrix = cloneDeep(mockList[scenario]);
     }
   }
 
