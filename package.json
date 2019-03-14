@@ -1,14 +1,14 @@
 {
   "name": "2049",
   "version": "1.0.0",
-  "description": "2025",
-  "main": "script.js",
+  "description": "2048 clone with a twist",
+  "main": "src/script.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
     "test": "jest",
-    "build": "browserify script.js > bundle.js",
+    "build": "browserify src/script.js > bundle.js",
     "start": "live-server"
   },
   "repository": {
