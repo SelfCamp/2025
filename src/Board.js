@@ -1,6 +1,7 @@
 const {cloneDeep} = require('lodash');
 
 const {Tile} = require('./Tile');
+const {mockList} = require("./mockBoards")
 
 
 function Board() {
@@ -160,6 +161,12 @@ function Board() {
 
     return false;
   };
+  this.mock = (scenario) => {
+    if (scenario !== "noMock") {
+      this.matrix = mockList[scenario]
+    }
+  }
+
 }
 
 

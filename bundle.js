@@ -17113,6 +17113,7 @@
 const {cloneDeep} = require('lodash');
 
 const {Tile} = require('./Tile');
+const {mockList} = require("./mockBoards")
 
 
 function Board() {
@@ -17272,6 +17273,12 @@ function Board() {
 
     return false;
   };
+  this.mock = (scenario) => {
+    if (scenario !== "noMock") {
+      this.matrix = mockList[scenario]
+    }
+  }
+
 }
 
 
@@ -17279,7 +17286,7 @@ module.exports = {
   Board,
 };
 
-},{"./Tile":3,"lodash":1}],3:[function(require,module,exports){
+},{"./Tile":3,"./mockBoards":6,"lodash":1}],3:[function(require,module,exports){
 function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
   this.currentValue = currentValue;
   this.wasJustMerged = wasJustMerged;
@@ -17374,6 +17381,20 @@ module.exports = {
 };
 
 },{"./constants.js":4}],6:[function(require,module,exports){
+const {Tile} = require("./Tile.js");
+
+const mockList = {
+  "noMock": false,
+  1: [[new Tile("#r0c0", 2), new Tile("#r0c1", 8), new Tile("#r0c2", 32), new Tile("#r0c3", 2)],
+    [new Tile("#r1c0", 16), new Tile("#r1c1", 128), new Tile("#r1c2", 64), new Tile("#r1c3", 8)],
+    [new Tile("#r2c0", 4), new Tile("#r2c1", 32), new Tile("#r2c2", 128), new Tile("#r2c3", 4)],
+    [new Tile("#r3c0", 2), new Tile("#r3c1", 4), new Tile("#r3c2", 16), new Tile("#r3c3", null)]]
+};
+
+module.exports = {
+  mockList,
+};
+},{"./Tile.js":3}],7:[function(require,module,exports){
 'use strict';
 
 const {Board} = require('./Board');
@@ -17419,6 +17440,7 @@ const isArrowPressAllowed = () => {
 
 const board = new Board();
 board.spawnTiles(2);
+board.mock("1");
 
 const boardHistory = [board];
 const arrowPressHistory = [];
@@ -17431,4 +17453,4 @@ let currentBoard = boardHistory[boardHistory.length-1];
 updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
 
-},{"./Board":2,"./constants.js":4,"./domManipulation":5}]},{},[6]);
+},{"./Board":2,"./constants.js":4,"./domManipulation":5}]},{},[7]);

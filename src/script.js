@@ -43,6 +43,7 @@ const isArrowPressAllowed = () => {
 
 const board = new Board();
 board.spawnTiles(2);
+board.mock("1");
 
 const boardHistory = [board];
 const arrowPressHistory = [];
