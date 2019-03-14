@@ -10,6 +10,15 @@ test("Imported function should work", () => expect(sayThat('just wow')).toBe('Th
 /* THE REAL DEAL */
 
 const {Tile} = require('./Tile');
+const {Board} = require("./Board");
+
+testBoard = new Board();
+
+beforeEach(() => {
+    return testBoard = new Board();
+});
+
+//TILE TEST
 
 test("Imported Tile should be of type object", () => expect(typeof(new Tile())).toBe('object'));
 
