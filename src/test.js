@@ -22,6 +22,31 @@ beforeEach(() => {
 
 test("Imported Tile should be of type object", () => expect(typeof(new Tile())).toBe('object'));
 
+//BOARD TEST
+
+describe("Board object", () => {
+    test("Should be of type object", () => expect(typeof(new Board())).toBe('object'));
+
+    test("Should have matrix property with a 4x4 board",
+        () => {
+            let dimension = [].concat(testBoard.matrix.length, testBoard.matrix.map(row => row.length ));
+            expect(dimension).toEqual([4, 4, 4, 4, 4])
+        }
+    );
+
+    test("Its matrix should only contain Tile objects",
+        () => {
+            //TODO: Hard to understand?
+            let result = [].concat(...testBoard.matrix.map(row => row.map(object => object instanceof Tile )));
+            expect(result.includes(false)).toEqual(false)
+        }
+    );
+});
+
+
+//BOARD/SPAWNTILES TEST
+
+
 
 /* TEST SQUASH-BOARD */
 
