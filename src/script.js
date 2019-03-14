@@ -2,7 +2,7 @@
 
 const {Board} = require('./Board');
 const {updateView} = require('./domManipulation');
-const {ARROW_PRESS_TIMEOUT} = require("./constants.js");
+const {ARROW_PRESS_TIMEOUT} = require("./constants");
 
 
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
@@ -20,13 +20,11 @@ const handleArrowPress = (key) => {
   let currentBoard = boardHistory[boardHistory.length-1];
 
   let nextBoard = currentBoard.createNextBoard(direction);
-    // displayEndOfGame(gameStatus);
     if (nextBoard.hasChanged()) {
       arrowPressHistory.push({direction: direction, timestamp: new Date()});
       boardHistory.push(nextBoard);
       updateView(nextBoard, direction);
     }
-
 };
 
 const isArrowPressAllowed = () => {
@@ -39,7 +37,7 @@ const isArrowPressAllowed = () => {
 };
 
 
-/* INITIALIZE OBJECTS */  //  Will be `resetGame` logic
+/* INITIALIZE OBJECTS */
 
 const board = new Board();
 board.spawnTiles(2);
@@ -51,7 +49,6 @@ const arrowPressHistory = [];
 
 /* MAIN LOGIC */
 
-//TODO: change to update view
 let currentBoard = boardHistory[boardHistory.length-1];
 updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);

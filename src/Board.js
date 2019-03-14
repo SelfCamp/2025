@@ -67,7 +67,7 @@ function Board() {
       return 'ongoing'
     }
     for (let direction of ["up", "right", "down", "left"]) {
-      let testBoardCopy = this.createNextBoard(this, direction);
+      let testBoardCopy = this.createNextBoard(direction);
       if (testBoardCopy.hasChanged()) {
         return "ongoing"
       }
@@ -138,10 +138,10 @@ function Board() {
     for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {
       if (!row[indexTo].currentValue) {
         [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];
-        return indexTo
+        return indexTo;
       }
     }
-    return indexFrom
+    return indexFrom;
   };
 
   this.attemptMerge = (row, index) => {
