@@ -45,8 +45,34 @@ describe("Board object", () => {
 
 
 //BOARD/SPAWNTILES TEST
+describe("spawnTitles method", () => {
+  test("Can create a single new Tile",
+      () => {
+        testBoard.spawnTiles(1);
+        let result = [].concat(...testBoard.matrix.map(row => row.map(object => !!object.currentValue)));
+        expect(result.reduce((acc, val) => acc + val)).toEqual(1)
+      }
+  );
 
+  test("Can create 16 new Tiles",
+      () => {
+        testBoard.spawnTiles(16);
+        let result = [].concat(...testBoard.matrix.map(row => row.map(object => !!object.currentValue)));
+        expect(result.reduce((acc, val) => acc + val)).toEqual(16)
+      }
+  );
 
+  test("Only adds to empty tiles",
+      () => {
+        for (let i = 0; i < 10; i++) {
+          testBoard.mock("testOneMissing");
+          expect(testBoard.matrix[1][1].currentValue).toBe(null);
+          testBoard.spawnTiles(1);
+          expect(testBoard.matrix[1][1].currentValue).not.toEqual(null)
+        }
+      }
+  )
+});
 
 /* TEST SQUASH-BOARD */
 
