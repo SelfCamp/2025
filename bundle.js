@@ -17249,10 +17249,10 @@ function Board() {
     for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {
       if (!row[indexTo].currentValue) {
         [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];
-        return indexTo
+        return indexTo;
       }
     }
-    return indexFrom
+    return indexFrom;
   };
 
   this.attemptMerge = (row, index) => {
@@ -17308,17 +17308,17 @@ module.exports = {
 const {ANIMATION_DURATION} = require("./constants.js");
 
 /**
- * If no direction is received, we assume this is an undo
+ * If no direction is received, we assume this is an undo and animations are ignored
  * @param newBoard
  * @param direction
  */
 const updateView = (newBoard, direction=null) => {
   if (!direction) {
-    squashBoardInDOM(newBoard, direction)
+    squashBoardInDOM(newBoard)
   } else {
     updateMvAttributesInDOM(newBoard, direction);
     newBoard.resetAnimationProperties();
-    setTimeout(() => squashBoardInDOM(newBoard, direction), ANIMATION_DURATION);
+    setTimeout(() => squashBoardInDOM(newBoard), ANIMATION_DURATION);
     let gameStatus = newBoard.gameStatus();
     if (gameStatus !== "ongoing") {
       displayEndOfGame(gameStatus);
@@ -17378,7 +17378,7 @@ module.exports = {
 
 const {Board} = require('./Board');
 const {updateView} = require('./domManipulation');
-const {ARROW_PRESS_TIMEOUT} = require("./constants.js");
+const {ARROW_PRESS_TIMEOUT} = require("./constants");
 
 
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
@@ -17396,13 +17396,11 @@ const handleArrowPress = (key) => {
   let currentBoard = boardHistory[boardHistory.length-1];
 
   let nextBoard = currentBoard.createNextBoard(direction);
-    // displayEndOfGame(gameStatus);
     if (nextBoard.hasChanged()) {
       arrowPressHistory.push({direction: direction, timestamp: new Date()});
       boardHistory.push(nextBoard);
       updateView(nextBoard, direction);
     }
-
 };
 
 const isArrowPressAllowed = () => {
@@ -17415,7 +17413,7 @@ const isArrowPressAllowed = () => {
 };
 
 
-/* INITIALIZE OBJECTS */  //  Will be `resetGame` logic
+/* INITIALIZE OBJECTS */
 
 const board = new Board();
 board.spawnTiles(2);
@@ -17426,9 +17424,8 @@ const arrowPressHistory = [];
 
 /* MAIN LOGIC */
 
-//TODO: change to update view
 let currentBoard = boardHistory[boardHistory.length-1];
 updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
 
-},{"./Board":2,"./constants.js":4,"./domManipulation":5}]},{},[6]);
+},{"./Board":2,"./constants":4,"./domManipulation":5}]},{},[6]);

@@ -137,10 +137,10 @@ function Board() {
     for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {
       if (!row[indexTo].currentValue) {
         [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];
-        return indexTo
+        return indexTo;
       }
     }
-    return indexFrom
+    return indexFrom;
   };
 
   this.attemptMerge = (row, index) => {

@@ -3,17 +3,17 @@
 const {ANIMATION_DURATION} = require("./constants.js");
 
 /**
- * If no direction is received, we assume this is an undo
+ * If no direction is received, we assume this is an undo and animations are ignored
  * @param newBoard
  * @param direction
  */
 const updateView = (newBoard, direction=null) => {
   if (!direction) {
-    squashBoardInDOM(newBoard, direction)
+    squashBoardInDOM(newBoard)
   } else {
     updateMvAttributesInDOM(newBoard, direction);
     newBoard.resetAnimationProperties();
-    setTimeout(() => squashBoardInDOM(newBoard, direction), ANIMATION_DURATION);
+    setTimeout(() => squashBoardInDOM(newBoard), ANIMATION_DURATION);
     let gameStatus = newBoard.gameStatus();
     if (gameStatus !== "ongoing") {
       displayEndOfGame(gameStatus);
