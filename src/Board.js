@@ -66,7 +66,7 @@ function Board() {
       return 'ongoing'
     }
     for (let direction of ["up", "right", "down", "left"]) {
-      let testBoardCopy = this.createNextBoard(this, direction);
+      let testBoardCopy = this.createNextBoard(direction);
       if (testBoardCopy.hasChanged()) {
         return "ongoing"
       }
