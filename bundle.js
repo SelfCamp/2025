@@ -17447,7 +17447,10 @@ const isArrowPressAllowed = () => {
 
 const board = new Board();
 board.spawnTiles(2);
-board.mock("almostWon");
+
+board.mock("noMock");
+// board.mock("almostWon");
+// board.mock("almostLost");
 
 const boardHistory = [board];
 const arrowPressHistory = [];
