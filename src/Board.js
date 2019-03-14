@@ -16,6 +16,11 @@ function Board() {
       this.matrix[row].push(new Tile(`#r${row}c${column}`));
     }
   }
+  /**
+   * Add new tile(s) to the board.
+   * @param {number} howMany - How many tiles to add to the board.
+   * @param {boolean} isItTheOneAlready - Return special tile if param is TRUE.
+   */
   this.spawnTiles = (howMany, isItTheOneAlready = false) => {
     for (let i = 0; i < howMany; i++) {
       let emptyTiles = [];
