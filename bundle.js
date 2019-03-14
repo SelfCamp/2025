@@ -17178,7 +17178,7 @@ function Board() {
       return 'ongoing'
     }
     for (let direction of ["up", "right", "down", "left"]) {
-      let testBoardCopy = createNextBoard(this, direction);
+      let testBoardCopy = this.createNextBoard(this, direction);
       if (testBoardCopy.hasChanged()) {
         return "ongoing"
       }
@@ -17190,9 +17190,8 @@ function Board() {
     let nextBoard = this.squashBoard(this, direction);
     if (nextBoard.hasChanged()) {
       nextBoard.spawnTiles(1);
-      return nextBoard;
     }
-    return false;
+    return nextBoard;
   };
 
   this.squashBoard = (currentBoard, direction) => {
@@ -17294,10 +17293,54 @@ module.exports = {
 };
 
 },{}],4:[function(require,module,exports){
+/* DEFINE CONSTANTS */
+
+const ARROW_PRESS_TIMEOUT = 100;  // ms
+const ANIMATION_DURATION = 50;
+
+module.exports = {
+  ARROW_PRESS_TIMEOUT,
+  ANIMATION_DURATION
+};
+},{}],5:[function(require,module,exports){
 /* DEFINE VIEW HANDLING FUNCTIONS */
 
-const updateMvAttributesInDOM = (board, direction) => {
-  for (let row of board.matrix) {
+const {ANIMATION_DURATION} = require("./constants.js");
+
+/**
+ * If no direction is received, we assume this is an undo
+ * @param newBoard
+ * @param direction
+ */
+const updateView = (newBoard, direction=null) => {
+  if (!direction) {
+    squashBoardInDOM(newBoard, direction)
+  } else {
+    updateMvAttributesInDOM(newBoard, direction);
+    newBoard.resetAnimationProperties();
+    setTimeout(() => squashBoardInDOM(newBoard, direction), ANIMATION_DURATION);
+    let gameStatus = newBoard.gameStatus();
+    if (gameStatus !== "ongoing") {
+      displayEndOfGame(gameStatus);
+    }
+  }
+};
+
+const displayEndOfGame = (gameStatus) => {
+  switch (gameStatus) {
+    case 'ongoing':
+      break;
+    case 'won':
+      changeBackgroundInDOM('green');
+      break;
+    case 'lost':
+      changeBackgroundInDOM('red');
+      break;
+  }
+};
+
+const updateMvAttributesInDOM = (newBoard, direction) => {
+  for (let row of newBoard.matrix) {
     for (let tile of row) {
       let tileElement = document.querySelector(tile.selector);
       tileElement.setAttribute("data-mv-dir", direction);
@@ -17306,8 +17349,8 @@ const updateMvAttributesInDOM = (board, direction) => {
   }
 };
 
-const squashBoardInDOM = (nextBoard) => {
-  for (let row of nextBoard.matrix) {
+const squashBoardInDOM = (newBoard) => {
+  for (let row of newBoard.matrix) {
     for (let tile of row) {
       let tileElement = document.querySelector(tile.selector);
       tileElement.setAttribute("value", tile.currentValue);
@@ -17326,13 +17369,16 @@ module.exports = {
   updateMvAttributesInDOM,
   squashBoardInDOM,
   changeBackgroundInDOM,
+  updateView,
+  displayEndOfGame
 };
 
-},{}],5:[function(require,module,exports){
+},{"./constants.js":4}],6:[function(require,module,exports){
 'use strict';
 
 const {Board} = require('./Board');
-const {updateMvAttributesInDOM, squashBoardInDOM, changeBackgroundInDOM} = require('./domManipulation');
+const {updateView} = require('./domManipulation');
+const {ARROW_PRESS_TIMEOUT} = require("./constants.js");
 
 
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
@@ -17350,31 +17396,13 @@ const handleArrowPress = (key) => {
   let currentBoard = boardHistory[boardHistory.length-1];
 
   let nextBoard = currentBoard.createNextBoard(direction);
-  if (!nextBoard) {
-    console.log('not doin it');
-    return false;
-  }
+    // displayEndOfGame(gameStatus);
+    if (nextBoard.hasChanged()) {
+      arrowPressHistory.push({direction: direction, timestamp: new Date()});
+      boardHistory.push(nextBoard);
+      updateView(nextBoard, direction);
+    }
 
-  arrowPressHistory.push({direction: direction, timestamp: new Date()});
-  boardHistory.push(nextBoard);
-
-  console.log('did it: ', boardHistory);
-
-  updateMvAttributesInDOM(nextBoard, direction);
-  nextBoard.resetAnimationProperties();
-  setTimeout(() => squashBoardInDOM(nextBoard, direction), ANIMATION_DURATION);
-  switch (nextBoard.gameStatus()) {
-    case 'ongoing':
-      break;
-    case 'won':
-      changeBackgroundInDOM('green');
-      // TODO: handle win
-      break;
-    case 'lost':
-      changeBackgroundInDOM('red');
-      // TODO: handle loss
-      break;
-  }
 };
 
 const isArrowPressAllowed = () => {
@@ -17385,12 +17413,6 @@ const isArrowPressAllowed = () => {
     let timeSinceLastArrowPress = new Date() - previousArrowPress.timestamp;
     return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
 };
-
-
-/* DEFINE CONSTANTS */
-
-const ARROW_PRESS_TIMEOUT = 100;  // ms
-const ANIMATION_DURATION = 0;
 
 
 /* INITIALIZE OBJECTS */  //  Will be `resetGame` logic
@@ -17404,8 +17426,9 @@ const arrowPressHistory = [];
 
 /* MAIN LOGIC */
 
+//TODO: change to update view
 let currentBoard = boardHistory[boardHistory.length-1];
-squashBoardInDOM(currentBoard);
+updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
 
-},{"./Board":2,"./domManipulation":4}]},{},[5]);
+},{"./Board":2,"./constants.js":4,"./domManipulation":5}]},{},[6]);
