@@ -1,25 +1,25 @@
-Tiles are propagated...
-- one by one
-- towards last index
-- starting with tile at latest index
+/* squashRow() */
 
+Mutates tiles in input `row` according to following rules:
+
+- Tiles are processed one by one
+- Starting with tile at latest index, each tile tries to:
+  - Move to furthest empty spot towards last index
+  - Merge with next tile if it has the same value and hasn't been merged already in this round
 
 Examples:
 
 → → → →
-4 . 2 .
-4 . . 2
-. . 4 2
-
-→ → → →
 4 2 . 2
-4 . 2 2
-4 . .!4  // flagged on merge
+4 . 2 2  // moved
+4 . .!4  // merged and flagged
+. . 4!4  // moved
 . . 4!4  // can't merge again
 
 → → → →
 2 2 2 2
-2 2 .!4
-2 . 2!4
-. 2 2!4
-. .!4!4
+2 2 .!4  // merged and flagged
+2 . 2!4  // moved
+2 . 2!4  // can't merge different value
+. 2 2!4  // moved
+. .!4!4  // merged and flagged
