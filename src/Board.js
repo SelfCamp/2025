@@ -138,7 +138,7 @@ function Board() {
       }
       let newIndex = this.propagateTile(row, index);
       let hasMerged = this.attemptMerge(row, newIndex);
-      row[index].previousValueMvLen = newIndex - index + hasMerged;
+      row[index].previousValueMvLen = newIndex - index + hasMerged || null;
     }
   };
 
