@@ -1,11 +1,43 @@
 const {cloneDeep} = require('lodash');
 
-const {squashRow, propagateTile, attemptMerge} = require('./BoardStaticMethods');
+const {Board} = require('./Board');
+const {sliceMatrixPerDirection, squashRow, propagateTile, attemptMerge} = require('./BoardStaticMethods');
 const {
   mockRowPairsForSquashRowTest,
   mockRowPairsForPropagateTileTest,
   mockRowPairsForAttemptMergeTest
 } = require('./Board.testFixtures');
+
+
+const createSliceMatrixPerDirectionFixtures = (direction) => {
+  let original = new Board().matrix;
+  let rotated = sliceMatrixPerDirection(original, direction);
+  return {original, rotated};
+};
+
+describe('Board.sliceMatrixPerDirection()', () => {
+
+  test("Should rotate matrix 90° clockwise for direction `up`", () => {
+    let {original, rotated} = createSliceMatrixPerDirectionFixtures('up');
+    expect(original[0][1]).toBe(rotated[1][3]);
+  });
+
+  test("Should preserve original arrangement for direction `right`", () => {
+    let {original, rotated} = createSliceMatrixPerDirectionFixtures('right');
+    expect(original[0][1]).toBe(rotated[0][1]);
+  });
+
+  test("Should rotate matrix 90° counter-clockwise for direction `down`", () => {
+    let {original, rotated} = createSliceMatrixPerDirectionFixtures('down');
+    expect(original[0][1]).toBe(rotated[2][0]);
+  });
+
+  test("Should flip matrix along row axis for direction `left`", () => {
+    let {original, rotated} = createSliceMatrixPerDirectionFixtures('left');
+    expect(original[0][1]).toBe(rotated[0][2]);
+  });
+
+});
 
 
 const testAttemptMergeMutation = (mockRowPair) => {
