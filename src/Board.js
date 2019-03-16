@@ -131,6 +131,14 @@ function Board() {
     return temporaryMatrixSlices
   };
 
+  /**
+   * Mutate input `row` by moving and merging tiles according to game rules
+   *
+   * - Direction-agnostic: works towards last index
+   * - Doesn't care about other rows in `Board.matrix`
+   *
+   * @param row - Array of four `Tile` objects, arranged to be squashed towards end of Array
+   */
   this.squashRow = (row) => {
     for (let index of [2, 1 ,0]) {
       if (!row[index].currentValue) {
@@ -142,6 +150,22 @@ function Board() {
     }
   };
 
+  /**
+   * Mutate input `row` by moving one `Tile` at given index to to furthest empty spot towards last index
+   *
+   * - Handles one `Tile` only
+   * - Implements move by swapping `Tile.currentValue` between two indexes
+   * - Other `Tile` attributes aren't modified (they are assumed to be empty at this point)
+   *
+   * @param row {Array}
+   * Array of four `Tile` objects, arranged to be squashed towards end of Array
+   *
+   * @param indexFrom {number}
+   * Index of `Tile` to be moved
+   *
+   * @returns {number}
+   * Index where `Tile` was moved to
+   */
   this.propagateTile = (row, indexFrom) => {
     let largerIndexes = [3, 2, 1].filter((num => num > indexFrom));
     for (let indexTo of largerIndexes) {
@@ -153,6 +177,22 @@ function Board() {
     return indexFrom;
   };
 
+  /**
+   * Mutate input `row` by merging one `Tile` at given index into the next one, if appropriate
+   *
+   * Appropriate if:
+   *   - next `Tile` is of same value
+   *   - next `Tile` hasn't been merged yet in this move
+   *
+   * @param row {Array}
+   * Array of four `Tile` objects, arranged to be squashed towards end of Array
+   *
+   * @param index {number}
+   * Index of `Tile` to be merged
+   *
+   * @returns {boolean}
+   * Whether merge has been made or not
+   */
   this.attemptMerge = (row, index) => {
     let thisTile = row[index];
     let nextTile = row[index + 1];
@@ -170,6 +210,7 @@ function Board() {
 
     return false;
   };
+
   this.mock = (scenario) => {
     if (scenario !== "noMock") {
       this.matrix = cloneDeep(mockList[scenario]);
