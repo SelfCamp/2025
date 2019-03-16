@@ -11,7 +11,7 @@ const rowFromValues = (...values) => values.map(tileFromValue);
 const tileFromValue = (value, i) => new Tile(`#r0c${i}`, value);
 
 
-const mockRowPairsForPropagateTileTest = {
+const propagateTileFixtures = {
 
   '0,0,0,2 indexFrom=3': {
     original: rowFromValues(0, 0, 0, 2),
@@ -37,7 +37,7 @@ const mockRowPairsForPropagateTileTest = {
 };
 
 
-const mockRowPairsForAttemptMergeTest = {
+const attemptMergeFixtures = {
 
   '0,0,2,2 index=2': {
     original: rowFromValues(0, 0, 2, 2),
@@ -78,7 +78,7 @@ const mockRowPairsForAttemptMergeTest = {
 };
 
 
-const mockRowPairsForSquashRowTest = {
+const squashRowFixtures = {
 
   '0,0,0,2': {
     original: rowFromValues(0, 0, 0, 2),
@@ -154,7 +154,7 @@ const mockRowPairsForSquashRowTest = {
 
 
 module.exports = {
-  mockRowPairsForSquashRowTest,
-  mockRowPairsForPropagateTileTest,
-  mockRowPairsForAttemptMergeTest,
+  mockRowPairsForSquashRowTest: squashRowFixtures,
+  mockRowPairsForPropagateTileTest: propagateTileFixtures,
+  mockRowPairsForAttemptMergeTest: attemptMergeFixtures,
 };
