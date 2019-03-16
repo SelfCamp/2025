@@ -19,8 +19,10 @@ const propagateTileTestReturnValue = (mockRowPair) => {
 };
 
 const squashRowTest = (mockRowPair) => {
-  squashRow(mockRowPair.original);
-  expect(mockRowPair.original).toEqual(mockRowPair.squashedProperly);
+  let {squashedProperly} = mockRowPair;
+  let original = cloneDeep(mockRowPair.original);
+  squashRow(original);
+  expect(original).toEqual(squashedProperly);
 };
 
 
