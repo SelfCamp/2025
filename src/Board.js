@@ -1,7 +1,7 @@
 const {cloneDeep} = require('lodash');
 
 const {Tile} = require('./Tile');
-const {mockList} = require("./mockBoards")
+const {mockList} = require("./mockBoards");
 
 /**
  * Create new Board object.
@@ -143,7 +143,8 @@ function Board() {
   };
 
   this.propagateTile = (row, indexFrom) => {
-    for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {
+    let largerIndexes = [3, 2, 1].filter((num => num > indexFrom));
+    for (let indexTo of largerIndexes) {
       if (!row[indexTo].currentValue) {
         [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];
         return indexTo;
