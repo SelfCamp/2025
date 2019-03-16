@@ -1,7 +1,51 @@
 const {cloneDeep} = require('lodash');
 
 const {squashRow, propagateTile, attemptMerge} = require('./BoardStaticMethods');
-const {mockRowPairsForPropagateTileTest, mockRowPairsForSquashRowTest} = require('./mockRows');
+const {
+  mockRowPairsForSquashRowTest,
+  mockRowPairsForPropagateTileTest,
+  mockRowPairsForAttemptMergeTest
+} = require('./mockRows');
+
+
+const attemptMergeTestMutation = (mockRowPair) => {
+  let {index, mergedProperly} = mockRowPair;
+  let original = cloneDeep(mockRowPair.original);
+  attemptMerge(original, index);
+  expect(original).toEqual(mergedProperly);
+};
+
+const attemptMergeTestReturnValue = (mockRowPair) => {
+  let {index, expectedReturnValue} = mockRowPair;
+  let original = cloneDeep(mockRowPair.original);
+  let returnValue = attemptMerge(original, index);
+  expect(returnValue).toEqual(expectedReturnValue);
+
+};
+
+describe('Board.attemptMerge()', () => {
+
+  test("Should merge two neighboring tiles of identical value", () => {
+    attemptMergeTestMutation(mockRowPairsForAttemptMergeTest["0,0,2,2 index=2"])
+  });
+
+  test("Should return `true` after successful merge", () => {
+    attemptMergeTestReturnValue(mockRowPairsForAttemptMergeTest["0,0,2,2 index=2"])
+  });
+
+  test("Should not merge tiles of non-identical value", () => {
+    attemptMergeTestMutation(mockRowPairsForAttemptMergeTest["0,0,4,2 index=2"])
+  });
+
+  test("Should return `false` after unsuccessful merge", () => {
+    attemptMergeTestReturnValue(mockRowPairsForAttemptMergeTest["0,0,4,2 index=2"])
+  });
+
+  test("Should not merge tile into one that's already been merged", () => {
+    attemptMergeTestMutation(mockRowPairsForAttemptMergeTest["0,0,4,!4 index=2"])
+  });
+
+});
 
 
 const propagateTileTestMutation = (mockRowPair) => {
@@ -18,22 +62,7 @@ const propagateTileTestReturnValue = (mockRowPair) => {
   expect(returnValue).toEqual(expectedReturnValue);
 };
 
-const squashRowTest = (mockRowPair) => {
-  let {squashedProperly} = mockRowPair;
-  let original = cloneDeep(mockRowPair.original);
-  squashRow(original);
-  expect(original).toEqual(squashedProperly);
-};
-
-
-describe('attemptMerge()', () => {
-
-  // TODO
-
-});
-
-
-describe('propagateTile()', () => {
+describe('Board.propagateTile()', () => {
 
   test("Should not move tile from end of row", () => {
     propagateTileTestMutation(mockRowPairsForPropagateTileTest["0,0,0,2 indexFrom=3"])
@@ -62,7 +91,14 @@ describe('propagateTile()', () => {
 });
 
 
-describe('squashRow()', () => {
+const squashRowTest = (mockRowPair) => {
+  let {squashedProperly} = mockRowPair;
+  let original = cloneDeep(mockRowPair.original);
+  squashRow(original);
+  expect(original).toEqual(squashedProperly);
+};
+
+describe('Board.squashRow()', () => {
 
   test("Should not move tile from end of row", () =>
       squashRowTest(mockRowPairsForSquashRowTest['0,0,0,2'])
