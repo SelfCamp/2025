@@ -44,22 +44,22 @@ const mockRowPairs = {
   },
 
   '0,0,2,2': {
-    original: rowFromValues(4, 0, 0, 2),
+    original: rowFromValues(0, 0, 2, 2),
     squashedProperly: [
-      new Tile("#r0c0", 0, false, false, 2),
+      new Tile("#r0c0", 0),
       new Tile("#r0c1", 0),
-      new Tile("#r0c2", 4),
-      new Tile("#r0c3", 2)
+      new Tile("#r0c2", 0, false, false, 1),
+      new Tile("#r0c3", 4, true)
     ],
   },
 
   '2,0,0,2': {
-    original: rowFromValues(4, 0, 0, 2),
+    original: rowFromValues(2, 0, 0, 2),
     squashedProperly: [
-      new Tile("#r0c0", 0, false, false, 2),
+      new Tile("#r0c0", 0, false, false, 3),
       new Tile("#r0c1", 0),
-      new Tile("#r0c2", 4),
-      new Tile("#r0c3", 2)
+      new Tile("#r0c2", 0),
+      new Tile("#r0c3", 4, true)
     ],
   },
 
