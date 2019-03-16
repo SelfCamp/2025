@@ -17113,9 +17113,12 @@
 const {cloneDeep} = require('lodash');
 
 const {Tile} = require('./Tile');
-const {mockList} = require("./mockBoards")
+const {mockList} = require("./mockBoards");
 
-
+/**
+ * Create new Board object.
+ * @constructor
+ */
 function Board() {
   this.hasChanged = false;
   this.matrix = [];
@@ -17125,6 +17128,11 @@ function Board() {
       this.matrix[row].push(new Tile(`#r${row}c${column}`));
     }
   }
+  /**
+   * Add new tile(s) to the board.
+   * @param {number} howMany - How many tiles to add to the board.
+   * @param {boolean} isItTheOneAlready - Return special tile if param is TRUE.
+   */
   this.spawnTiles = (howMany, isItTheOneAlready = false) => {
     for (let i = 0; i < howMany; i++) {
       let emptyTiles = [];
@@ -17242,12 +17250,13 @@ function Board() {
       }
       let newIndex = this.propagateTile(row, index);
       let hasMerged = this.attemptMerge(row, newIndex);
-      row[index].previousValueMvLen = newIndex - index + hasMerged;
+      row[index].previousValueMvLen = newIndex - index + hasMerged || null;
     }
   };
 
   this.propagateTile = (row, indexFrom) => {
-    for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {
+    let largerIndexes = [3, 2, 1].filter((num => num > indexFrom));
+    for (let indexTo of largerIndexes) {
       if (!row[indexTo].currentValue) {
         [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];
         return indexTo;
@@ -17275,7 +17284,7 @@ function Board() {
   };
   this.mock = (scenario) => {
     if (scenario !== "noMock") {
-      this.matrix = mockList[scenario]
+      this.matrix = cloneDeep(mockList[scenario]);
     }
   }
 
@@ -17288,10 +17297,10 @@ module.exports = {
 
 },{"./Tile":3,"./mockBoards":6,"lodash":1}],3:[function(require,module,exports){
 function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
-  this.currentValue = currentValue;
+  this.currentValue = currentValue || null;  // Turns `0` argument into `null`
   this.wasJustMerged = wasJustMerged;
   this.wasJustSpawned = wasJustSpawned;
-  this.previousValueMvLen = previousValueMvLen;
+  this.previousValueMvLen = previousValueMvLen || null;  // Turns `0` argument into `null`
   this.selector = selector;
 }
 
@@ -17396,7 +17405,13 @@ const mockList = {
       [new Tile("#r1c0", 16),   new Tile("#r1c1", 128),  new Tile("#r1c2", 64),   new Tile("#r1c3", 8)],
       [new Tile("#r2c0", 4),    new Tile("#r2c1", 32),   new Tile("#r2c2", 128),  new Tile("#r2c3", 4)],
       [new Tile("#r3c0", 1024), new Tile("#r3c1", 1024), new Tile("#r3c2", 16),   new Tile("#r3c3", null)]
-  ]
+  ],
+  "testOneMissing":[
+      [new Tile("#r0c0", 2),    new Tile("#r0c1", 8),    new Tile("#r0c2", 32),   new Tile("#r0c3", 2)],
+      [new Tile("#r1c0", 16),   new Tile("#r1c1", null),  new Tile("#r1c2", 64),   new Tile("#r1c3", 8)],
+      [new Tile("#r2c0", 4),    new Tile("#r2c1", 32),   new Tile("#r2c2", 128),  new Tile("#r2c3", 4)],
+      [new Tile("#r3c0", 1024), new Tile("#r3c1", 1024), new Tile("#r3c2", 16),   new Tile("#r3c3", 8)]
+  ],
 };
 
 module.exports = {

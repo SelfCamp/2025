@@ -14,11 +14,12 @@ const squashRow = (row) => {  // DON'T MODIFY here, fix in Board and redirect te
 };  // DON'T MODIFY here, fix in Board and redirect tests there
   // DON'T MODIFY here, fix in Board and redirect tests there
 const propagateTile = (row, indexFrom) => {  // DON'T MODIFY here, fix in Board and redirect tests there
-  for (let indexTo of [3, 2, 1].filter((num => num > indexFrom))) {  // DON'T MODIFY here, fix in Board and redirect tests there
-    if (!row[indexTo].currentValue) {  // DON'T MODIFY here, fix in Board and redirect tests there
-      [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];  // DON'T MODIFY here, fix in Board and redirect tests there
-      return indexTo;  // DON'T MODIFY here, fix in Board and redirect tests there
-    }  // DON'T MODIFY here, fix in Board and redirect tests there
+    let largerIndexes = [3, 2, 1].filter((num => num > indexFrom));  // DON'T MODIFY here, fix in Board and redirect tests there
+    for (let indexTo of largerIndexes) {  // DON'T MODIFY here, fix in Board and redirect tests there
+      if (!row[indexTo].currentValue) {  // DON'T MODIFY here, fix in Board and redirect tests there
+        [row[indexFrom].currentValue, row[indexTo].currentValue] = [row[indexTo].currentValue, row[indexFrom].currentValue];  // DON'T MODIFY here, fix in Board and redirect tests there
+        return indexTo;  // DON'T MODIFY here, fix in Board and redirect tests there
+      }  // DON'T MODIFY here, fix in Board and redirect tests there
   }  // DON'T MODIFY here, fix in Board and redirect tests there
   return indexFrom;  // DON'T MODIFY here, fix in Board and redirect tests there
 };  // DON'T MODIFY here, fix in Board and redirect tests there
