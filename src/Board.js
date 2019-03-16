@@ -101,6 +101,20 @@ function Board() {
     return newBoard;
   };
 
+  /**
+   * Return rotated matrix with references to original `Tile` objects
+   *
+   * - Prepares Board.matrix to be squashed direction-agnostically
+   *
+   * @param matrix {Tile[][]}
+   * 4x4 matrix of `Tile` objects
+   *
+   * @param direction {'up'|'right'|'down'|'left'}
+   * Determines which direction will become 'right' in the rotated matrix
+   *
+   * @returns {Tile[][]}
+   * Rotated matrix with references to original `Tile` objects
+   */
   this.sliceMatrixPerDirection = (matrix, direction) => {
     let temporaryMatrixSlices = [[], [], [], []];
     switch (direction) {
