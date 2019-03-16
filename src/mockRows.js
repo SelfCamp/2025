@@ -37,6 +37,47 @@ const mockRowPairsForPropagateTileTest = {
 };
 
 
+const mockRowPairsForAttemptMergeTest = {
+
+  '0,0,2,2 index=2': {
+    original: rowFromValues(0, 0, 2, 2),
+    index: 2,
+    mergedProperly: [
+      new Tile("#r0c0", 0),
+      new Tile("#r0c1", 0),
+      new Tile("#r0c2", 0),
+      new Tile("#r0c3", 4, true)
+    ],
+    expectedReturnValue: true,
+  },
+
+  "0,0,4,2 index=2": {
+    original: rowFromValues(0, 0, 4, 2),
+    index: 2,
+    mergedProperly: rowFromValues(0, 0, 4, 2),
+    expectedReturnValue: false,
+  },
+
+  "0,0,4,!4 index=2": {
+    original: [
+      new Tile("#r0c0", 0),
+      new Tile("#r0c1", 0),
+      new Tile("#r0c2", 4),
+      new Tile("#r0c3", 4, true)
+    ],
+    index: 2,
+    mergedProperly: [
+      new Tile("#r0c0", 0),
+      new Tile("#r0c1", 0),
+      new Tile("#r0c2", 4),
+      new Tile("#r0c3", 4, true)
+    ],
+    expectedReturnValue: false,
+  },
+
+};
+
+
 const mockRowPairsForSquashRowTest = {
 
   '0,0,0,2': {
@@ -115,4 +156,5 @@ const mockRowPairsForSquashRowTest = {
 module.exports = {
   mockRowPairsForSquashRowTest,
   mockRowPairsForPropagateTileTest,
+  mockRowPairsForAttemptMergeTest,
 };
