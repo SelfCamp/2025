@@ -11,7 +11,33 @@ const rowFromValues = (...values) => values.map(tileFromValue);
 const tileFromValue = (value, i) => new Tile(`#r0c${i}`, value);
 
 
-const mockRowPairs = {
+const mockRowPairsForPropagateTileTest = {
+
+  '0,0,0,2 indexFrom=3': {
+    original: rowFromValues(0, 0, 0, 2),
+    indexFrom: 3,
+    propagatedProperly: rowFromValues(0, 0, 0, 2),
+    expectedReturnValue: 3,
+  },
+
+  '2,0,0,0 indexFrom=0': {
+    original: rowFromValues(2, 0, 0, 0),
+    indexFrom: 0,
+    propagatedProperly: rowFromValues(0, 0, 0, 2),
+    expectedReturnValue: 3,
+  },
+
+  '2,0,0,2 indexFrom=0': {
+    original: rowFromValues(2, 0, 0, 2),
+    indexFrom: 0,
+    propagatedProperly: rowFromValues(0, 0, 2, 2),
+    expectedReturnValue: 2,
+  },
+
+};
+
+
+const mockRowPairsForSquashRowTest = {
 
   '0,0,0,2': {
     original: rowFromValues(0, 0, 0, 2),
@@ -87,5 +113,6 @@ const mockRowPairs = {
 
 
 module.exports = {
-  mockRowPairs,
+  mockRowPairsForSquashRowTest,
+  mockRowPairsForPropagateTileTest,
 };
