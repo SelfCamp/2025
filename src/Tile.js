@@ -1,9 +1,9 @@
 /**
  * @param selector {string}
- * @param currentValue {number|object}
+ * @param currentValue {?number}
  * @param wasJustMerged {boolean}
  * @param wasJustSpawned {boolean}
- * @param previousValueMvLen {number|object}
+ * @param previousValueMvLen {?number}
  * @constructor
  */
 function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
