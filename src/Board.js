@@ -117,30 +117,15 @@ function Board() {
    */
   this.sliceMatrixPerDirection = (matrix, direction) => {
     let temporaryMatrixSlices = [[], [], [], []];
-    switch (direction) {
-      case "up":
-        for (let columnIndex of [0, 1, 2, 3]) {
-          for (let rowIndex of [3, 2, 1, 0]) {
-            temporaryMatrixSlices[columnIndex].push(matrix[rowIndex][columnIndex])
-          }
-        }
-        break;
-      case "down":
-        for (let columnIndex of [0, 1, 2, 3]) {
-          for (let rowIndex of [0, 1, 2, 3]) {
-            temporaryMatrixSlices[columnIndex].push(matrix[rowIndex][columnIndex])
-          }
-        }
-        break;
-      case "left":
-        for (let rowIndex of [0, 1, 2, 3]) {
-          for (let columnIndex of [3, 2, 1, 0]) {
-            temporaryMatrixSlices[rowIndex].push(matrix[rowIndex][columnIndex])
-          }
-        }
-        break;
-      case "right":
-        return matrix
+    for (let i of [0, 1, 2, 3]) {
+      for (let j of [0, 1, 2, 3]) {
+        temporaryMatrixSlices[i].push(
+            (direction === 'up')     ? matrix[3-j][i]  // Rotate matrix 90° clockwise
+          : (direction === 'down')   ? matrix[j][3-i]  // Rotate matrix 90° counter-clockwise
+          : (direction === 'left')   ? matrix[i][3-j]  // Flip matrix along row axis
+          :             /* 'right' */  matrix[i][j]    // Leave as is
+        )
+      }
     }
     return temporaryMatrixSlices
   };

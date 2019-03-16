@@ -17213,36 +17213,43 @@ function Board() {
     return newBoard;
   };
 
+  /**
+   * Return rotated matrix with references to original `Tile` objects
+   *
+   * - Prepares Board.matrix to be squashed direction-agnostically
+   *
+   * @param matrix {Tile[][]}
+   * 4x4 matrix of `Tile` objects
+   *
+   * @param direction {'up'|'right'|'down'|'left'}
+   * Determines which direction will become 'right' in the rotated matrix
+   *
+   * @returns {Tile[][]}
+   * Rotated matrix with references to original `Tile` objects
+   */
   this.sliceMatrixPerDirection = (matrix, direction) => {
     let temporaryMatrixSlices = [[], [], [], []];
-    switch (direction) {
-      case "up":
-        for (let columnIndex of [0, 1, 2, 3]) {
-          for (let rowIndex of [3, 2, 1, 0]) {
-            temporaryMatrixSlices[columnIndex].push(matrix[rowIndex][columnIndex])
-          }
-        }
-        break;
-      case "down":
-        for (let columnIndex of [0, 1, 2, 3]) {
-          for (let rowIndex of [0, 1, 2, 3]) {
-            temporaryMatrixSlices[columnIndex].push(matrix[rowIndex][columnIndex])
-          }
-        }
-        break;
-      case "left":
-        for (let rowIndex of [0, 1, 2, 3]) {
-          for (let columnIndex of [3, 2, 1, 0]) {
-            temporaryMatrixSlices[rowIndex].push(matrix[rowIndex][columnIndex])
-          }
-        }
-        break;
-      case "right":
-        return matrix
+    for (let i of [0, 1, 2, 3]) {
+      for (let j of [0, 1, 2, 3]) {
+        temporaryMatrixSlices[i].push(
+            (direction === 'up')     ? matrix[3-j][i]  // Rotate matrix 90° clockwise
+          : (direction === 'down')   ? matrix[j][3-i]  // Rotate matrix 90° counter-clockwise
+          : (direction === 'left')   ? matrix[i][3-j]  // Flip matrix along row axis
+          :             /* 'right' */  matrix[i][j]    // Leave as is
+        )
+      }
     }
     return temporaryMatrixSlices
   };
 
+  /**
+   * Mutate input `row` by moving and merging tiles according to game rules
+   *
+   * - Direction-agnostic: works towards last index
+   * - Doesn't care about other rows in `Board.matrix`
+   *
+   * @param row - Array of four `Tile` objects, arranged to be squashed towards end of Array
+   */
   this.squashRow = (row) => {
     for (let index of [2, 1 ,0]) {
       if (!row[index].currentValue) {
@@ -17254,6 +17261,22 @@ function Board() {
     }
   };
 
+  /**
+   * Mutate input `row` by moving one `Tile` at given index to to furthest empty spot towards last index
+   *
+   * - Handles one `Tile` only
+   * - Implements move by swapping `Tile.currentValue` between two indexes
+   * - Other `Tile` attributes aren't modified (they are assumed to be empty at this point)
+   *
+   * @param row {Array}
+   * Array of four `Tile` objects, arranged to be squashed towards end of Array
+   *
+   * @param indexFrom {number}
+   * Index of `Tile` to be moved
+   *
+   * @returns {number}
+   * Index where `Tile` was moved to
+   */
   this.propagateTile = (row, indexFrom) => {
     let largerIndexes = [3, 2, 1].filter((num => num > indexFrom));
     for (let indexTo of largerIndexes) {
@@ -17265,6 +17288,22 @@ function Board() {
     return indexFrom;
   };
 
+  /**
+   * Mutate input `row` by merging one `Tile` at given index into the next one, if appropriate
+   *
+   * Appropriate if:
+   *   - next `Tile` is of same value
+   *   - next `Tile` hasn't been merged yet in this move
+   *
+   * @param row {Array}
+   * Array of four `Tile` objects, arranged to be squashed towards end of Array
+   *
+   * @param index {number}
+   * Index of `Tile` to be merged
+   *
+   * @returns {boolean}
+   * Whether merge has been made or not
+   */
   this.attemptMerge = (row, index) => {
     let thisTile = row[index];
     let nextTile = row[index + 1];
@@ -17282,6 +17321,7 @@ function Board() {
 
     return false;
   };
+
   this.mock = (scenario) => {
     if (scenario !== "noMock") {
       this.matrix = cloneDeep(mockList[scenario]);
@@ -17296,6 +17336,14 @@ module.exports = {
 };
 
 },{"./Tile":3,"./mockBoards":6,"lodash":1}],3:[function(require,module,exports){
+/**
+ * @param selector {string}
+ * @param currentValue {?number}
+ * @param wasJustMerged {boolean}
+ * @param wasJustSpawned {boolean}
+ * @param previousValueMvLen {?number}
+ * @constructor
+ */
 function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
   this.currentValue = currentValue || null;  // Turns `0` argument into `null`
   this.wasJustMerged = wasJustMerged;
