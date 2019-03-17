@@ -1,7 +1,7 @@
 /* DEFINE CONSTANTS */
 
 const ARROW_PRESS_TIMEOUT = 100;  // ms
-const ANIMATION_DURATION = 50;
+const ANIMATION_DURATION = 250;
 
 module.exports = {
   ARROW_PRESS_TIMEOUT,

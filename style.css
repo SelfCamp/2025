@@ -83,15 +83,20 @@
   background-color: #CCCCCC;
 }
 
-@keyframes spawn {
 
+/* ANIMATION */
+
+.tile {
+  transition-duration: 250ms;
 }
 
 @keyframes slide {
-  /*attr('data-mv-len')*/
-  /*attr('data-mv-dir')*/
 }
 
 @keyframes merge {
+
+}
+
+@keyframes spawn {
 
 }
