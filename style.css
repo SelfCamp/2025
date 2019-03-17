@@ -1,5 +1,8 @@
 :root {
   --board-size: 50vw;
+  --grid-gap: calc(var(--board-size) / 50);
+  --tile-size: calc((var(--board-size) - (var(--grid-gap) * 3)) / 4);
+  --tile-slide-length: calc(var(--tile-size) + var(--grid-gap));
 }
 
 #board, #board-base {
@@ -13,7 +16,7 @@
   grid-template-rows: 1fr 1fr 1fr 1fr;
   justify-content: stretch;
   justify-items: stretch;
-  grid-gap: calc(var(--board-size) / 50);
+  grid-gap: var(--grid-gap);
 }
 
 .tile {
