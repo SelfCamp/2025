@@ -1,7 +1,7 @@
 'use strict';
 
 const {Board} = require('./Board');
-const {updateView} = require('./domManipulation');
+const {updateView, updateSliderInDOM} = require('./domManipulation');
 const {ARROW_PRESS_TIMEOUT} = require("./constants");
 
 
@@ -23,6 +23,7 @@ const handleKeyPress = (key) => {
       if (head !== boardHistory.length - 1) {
         boardHistory = boardHistory.slice(0, head + 1);
         arrowPressHistory = arrowPressHistory.slice(0, head + 1);
+
       }
       let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
       let direction = directions[key];
@@ -33,6 +34,7 @@ const handleKeyPress = (key) => {
         boardHistory.push(nextBoard);
         head += 1;
         updateView(nextBoard, direction, head);
+        updateSliderInDOM(head);
 
       }
       break;
