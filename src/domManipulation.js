@@ -11,7 +11,7 @@ const updateView = (newBoard, direction=null, head=0) => {
   if (!direction) {
     squashBoardInDOM(newBoard)
   } else {
-    updateMvAttributesInDOM(newBoard, direction);
+    updateMvAttributesInDOM(newBoard);
     newBoard.resetAnimationProperties();
     setTimeout(() => squashBoardInDOM(newBoard), ANIMATION_DURATION);
     let gameStatus = newBoard.gameStatus();
@@ -34,12 +34,20 @@ const displayEndOfGame = (gameStatus) => {
   }
 };
 
-const updateMvAttributesInDOM = (newBoard, direction) => {
+const updateMvAttributesInDOM = (newBoard) => {
   for (let row of newBoard.matrix) {
     for (let tile of row) {
       let tileElement = document.querySelector(tile.selector);
-      tileElement.setAttribute("data-mv-dir", direction);
-      tileElement.setAttribute("data-mv-len", tile.previousValueMvLen ? tile.previousValueMvLen : "");
+      let {slideX, slideY} = tile.previousSlideCoordinates;
+      let {wasJustMerged, wasJustSpawned} = tile;
+      let isSliding = slideX || slideY;
+      tileElement.setAttribute("style", `--slide-x: ${slideX}; --slide-y: ${slideY}`);
+      tileElement.setAttribute("data-state",
+          isSliding ? 'sliding'
+              : wasJustMerged ? 'merged'
+              : wasJustSpawned ? 'spawned'
+              : ''
+      );
     }
   }
 };

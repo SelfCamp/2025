@@ -3,14 +3,14 @@
  * @param currentValue {?number}
  * @param wasJustMerged {boolean}
  * @param wasJustSpawned {boolean}
- * @param previousValueMvLen {?number}
+ * @param previousSlideCoordinates {?object}
  * @constructor
  */
-function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
+function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousSlideCoordinates=null) {
   this.currentValue = currentValue || null;  // Turns `0` argument into `null`
   this.wasJustMerged = wasJustMerged;
   this.wasJustSpawned = wasJustSpawned;
-  this.previousValueMvLen = previousValueMvLen || null;  // Turns `0` argument into `null`
+  this.previousSlideCoordinates = previousSlideCoordinates || null;  // Turns `0` argument into `null`
   this.selector = selector;
 }
 

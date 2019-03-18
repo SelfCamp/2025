@@ -43,7 +43,7 @@ function Board() {
       for (let tile of row) {
         tile.wasJustMerged = false;
         tile.wasJustSpawned = false;
-        tile.previousValueMvLen = null;
+        tile.previousSlideCoordinates = null;
       }
     }
   };
@@ -51,7 +51,7 @@ function Board() {
   this.hasChanged = () => {
     for (let row of this.matrix) {
       for (let tile of row) {
-        if (tile.previousValueMvLen || tile.wasJustMerged) {
+        if (tile.previousSlideCoordinates || tile.wasJustMerged) {
           return true;
         }
       }
@@ -96,7 +96,7 @@ function Board() {
     newBoard.matrix = cloneDeep(currentBoard.matrix);
     let temporaryBoardSlices = this.sliceMatrixPerDirection(newBoard.matrix, direction);
     for (let row of temporaryBoardSlices) {
-      this.squashRow(row)  // mutates tiles in input
+      this.squashRow(row, direction)  // mutates tiles in input
     }
     return newBoard;
   };
@@ -137,15 +137,30 @@ function Board() {
    * - Doesn't care about other rows in `Board.matrix`
    *
    * @param row - Array of four `Tile` objects, arranged to be squashed towards end of Array
+   *
+   * @param direction - Used to calculate previousSlideCoordinates
    */
-  this.squashRow = (row) => {
+  this.squashRow = (row, direction) => {
     for (let index of [2, 1 ,0]) {
       if (!row[index].currentValue) {
         continue
       }
       let newIndex = this.propagateTile(row, index);
       let hasMerged = this.attemptMerge(row, newIndex);
-      row[index].previousValueMvLen = newIndex - index + hasMerged || null;
+      let mvLen = newIndex - index + hasMerged || null;
+      switch (direction) {
+        case 'up':
+          row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen * -1};
+          break;
+        case 'right':
+          row[index].previousSlideCoordinates = {slideX: mvLen, slideY: 0};
+          break;
+        case 'down':
+          row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen};
+          break;
+        case 'left':
+          row[index].previousSlideCoordinates = {slideX: mvLen * -1, slideY: 0};
+      }
     }
   };
 
