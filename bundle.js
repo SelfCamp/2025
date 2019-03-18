@@ -17565,8 +17565,9 @@ const isKeyPressAllowed = () => {
 const board = new Board();
 board.spawnTiles(2);
 
-board.mock("noMock");
-// board.mock("almostWon");
+//TODO: Revert before PR
+// board.mock("noMock");
+board.mock("almostWon");
 // board.mock("almostLost");
 
 let boardHistory = [board];
