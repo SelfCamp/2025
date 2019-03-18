@@ -17319,7 +17319,7 @@ const {ANIMATION_DURATION} = require("./constants.js");
  * @param newBoard
  * @param direction
  */
-const updateView = (newBoard, direction=null) => {
+const updateView = (newBoard, direction=null, head=0) => {
   if (!direction) {
     squashBoardInDOM(newBoard)
   } else {
@@ -17371,13 +17371,19 @@ const changeBackgroundInDOM = (color) => {
   body.setAttribute('style', `background-color: ${color}`);
 };
 
+const updateSliderInDOM = (length) => {
+  let slider = document.querySelector("#gameHistory");
+  slider.setAttribute("max", length);
+  slider.setAttribute("value", length);
+};
 
 module.exports = {
   updateMvAttributesInDOM,
   squashBoardInDOM,
   changeBackgroundInDOM,
   updateView,
-  displayEndOfGame
+  displayEndOfGame,
+  updateSliderInDOM
 };
 
 },{"./constants.js":4}],6:[function(require,module,exports){
@@ -17407,7 +17413,7 @@ module.exports = {
 'use strict';
 
 const {Board} = require('./Board');
-const {updateView} = require('./domManipulation');
+const {updateView, updateSliderInDOM} = require('./domManipulation');
 const {ARROW_PRESS_TIMEOUT} = require("./constants");
 
 
@@ -17421,17 +17427,15 @@ const listenForArrowPress = event => {
 };
 
 const handleKeyPress = (key) => {
-  console.log(head);
   switch (key) {
     case "ArrowUp":
     case "ArrowRight":
     case "ArrowDown":
     case "ArrowLeft":
-      console.log(head, boardHistory.length - 1);
-
       if (head !== boardHistory.length - 1) {
         boardHistory = boardHistory.slice(0, head + 1);
         arrowPressHistory = arrowPressHistory.slice(0, head + 1);
+
       }
       let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
       let direction = directions[key];
@@ -17441,7 +17445,9 @@ const handleKeyPress = (key) => {
         arrowPressHistory.push({direction: direction, timestamp: new Date()});
         boardHistory.push(nextBoard);
         head += 1;
-        updateView(nextBoard, direction);
+        updateView(nextBoard, direction, head);
+        updateSliderInDOM(head);
+
       }
       break;
 
@@ -17455,6 +17461,10 @@ const handleKeyPress = (key) => {
 
 
   }
+};
+
+const handleSliderChange = (event) => {
+  browseHistory(+event.target.value)
 };
 
 const browseHistory = (whichBoard) => {
@@ -17506,5 +17516,5 @@ let head = 0;
 let currentBoard = boardHistory[boardHistory.length-1];
 updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
-
+document.querySelector("#gameHistory").addEventListener("change", handleSliderChange);
 },{"./Board":2,"./constants":4,"./domManipulation":5}]},{},[7]);
