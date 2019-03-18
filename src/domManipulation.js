@@ -7,7 +7,7 @@ const {ANIMATION_DURATION} = require("./constants.js");
  * @param newBoard
  * @param direction
  */
-const updateView = (newBoard, direction=null) => {
+const updateView = (newBoard, direction=null, head=0) => {
   if (!direction) {
     squashBoardInDOM(newBoard)
   } else {
@@ -19,6 +19,7 @@ const updateView = (newBoard, direction=null) => {
       displayEndOfGame(gameStatus);
     }
   }
+  updateSliderInDOM(head)
 };
 
 const displayEndOfGame = (gameStatus) => {
@@ -59,11 +60,15 @@ const changeBackgroundInDOM = (color) => {
   body.setAttribute('style', `background-color: ${color}`);
 };
 
+const updateSliderInDOM = (length) => {
+  let slider = document.querySelector("#gameHistory");
+  slider.setAttribute("max", length)
+};
 
 module.exports = {
   updateMvAttributesInDOM,
   squashBoardInDOM,
   changeBackgroundInDOM,
   updateView,
-  displayEndOfGame
+  displayEndOfGame,
 };
