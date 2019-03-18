@@ -71,4 +71,5 @@ module.exports = {
   changeBackgroundInDOM,
   updateView,
   displayEndOfGame,
+  updateSliderInDOM
 };
