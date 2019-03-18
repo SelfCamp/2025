@@ -10,6 +10,16 @@
   grid-gap: 1vw;
 }
 
+#slidecontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#gameHistory {
+  width: 75vw
+}
+
 .tile {
   color: #FFFFFF;
   font-family: monospace;
