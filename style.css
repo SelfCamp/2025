@@ -100,24 +100,17 @@
 
 /* ANIMATION */
 
-
-/*.tile[data-state='sliding'] {*/
-  /*transition-duration: 3000ms;*/
-  /*transform: translateX(calc(var(--tile-slide-length) * var(--slide-x)));*/
-  /*translateY(calc(var(--tile-slide-length) * var(--slide-y)));*/
-/*}*/
-
 .tile[data-state='sliding'] {
   animation-name: slide;
-  animation-duration: 250ms
+  animation-duration: 250ms;
 }
+
 @keyframes slide {
   100% {
     transform: translateX(calc(var(--tile-slide-length) * var(--slide-x)))
                translateY(calc(var(--tile-slide-length) * var(--slide-y)))
   }
 }
-
 
 @keyframes merge {
 
