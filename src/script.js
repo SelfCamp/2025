@@ -32,7 +32,8 @@ const handleKeyPress = (key) => {
         arrowPressHistory.push({direction: direction, timestamp: new Date()});
         boardHistory.push(nextBoard);
         head += 1;
-        updateView(nextBoard, direction);
+        updateView(nextBoard, direction, head);
+
       }
       break;
 
