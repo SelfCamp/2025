@@ -57,6 +57,9 @@ const browseHistory = (whichBoard) => {
         updateView(boardHistory[head])
       }
       break;
+    default:
+      head = whichBoard;
+      updateView(boardHistory[head])
 
   }
 };
