@@ -41,6 +41,10 @@
   border-radius: calc(var(--board-size) / 50);
 }
 
+#board-base .tile {
+  background-color: #888888;
+}
+
 .tile[value='2'] {
   background-color: #000000;
 }
@@ -96,11 +100,15 @@
 
 /* ANIMATION */
 
-.tile {
-  transition-duration: 250ms;
-}
+
+/*.tile[data-mv-dir='left'][data-mv-len='3'] {*/
+  /*transition-duration: 250ms;*/
+  /*transform: translateX(calc(var(--tile-slide-length) * attr('data-slide-x')));*/
+  /*transform: translateY(calc(var(--tile-slide-length) * attr('data-slide-y')));*/
+/*}*/
 
 @keyframes slide {
+
 }
 
 @keyframes merge {
