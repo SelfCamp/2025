@@ -17374,17 +17374,27 @@ module.exports = {
 },{}],4:[function(require,module,exports){
 /* DEFINE CONSTANTS */
 
-const ARROW_PRESS_TIMEOUT = 100;  // ms
-const ANIMATION_DURATION = 250;
+const ARROW_PRESS_TIMEOUT = 400;  // ms
+const ANIMATION_SLIDE_DURATION = 400; // ms
 
 module.exports = {
   ARROW_PRESS_TIMEOUT,
-  ANIMATION_DURATION
+  ANIMATION_SLIDE_DURATION,
 };
+
 },{}],5:[function(require,module,exports){
 /* DEFINE VIEW HANDLING FUNCTIONS */
 
-const {ANIMATION_DURATION} = require("./constants.js");
+const {ANIMATION_SLIDE_DURATION} = require("./constants.js");
+
+
+/**
+ * Updates DOM based on values defined in `constants.js`
+ */
+const applyConfigToDOM = () => {
+  let board = document.querySelector('#board');
+  board.setAttribute('style', `--slide-duration: ${ANIMATION_SLIDE_DURATION}ms`);
+};
 
 /**
  * If no direction is received, we assume this is an undo and animations are ignored
@@ -17397,7 +17407,7 @@ const updateView = (newBoard, direction=null, head=0) => {
   } else {
     updateMvAttributesInDOM(newBoard);
     // newBoard.resetAnimationProperties();
-    setTimeout(() => squashBoardInDOM(newBoard), ANIMATION_DURATION);
+    setTimeout(() => squashBoardInDOM(newBoard), ANIMATION_SLIDE_DURATION);
     let gameStatus = newBoard.gameStatus();
     if (gameStatus !== "ongoing") {
       displayEndOfGame(gameStatus);
@@ -17458,6 +17468,7 @@ const updateSliderInDOM = (length) => {
 };
 
 module.exports = {
+  applyConfigToDOM,
   updateMvAttributesInDOM,
   squashBoardInDOM,
   changeBackgroundInDOM,
@@ -17499,7 +17510,7 @@ module.exports = {
 'use strict';
 
 const {Board} = require('./Board');
-const {updateView, updateSliderInDOM} = require('./domManipulation');
+const {applyConfigToDOM, updateView, updateSliderInDOM} = require('./domManipulation');
 const {ARROW_PRESS_TIMEOUT} = require("./constants");
 
 
@@ -17543,14 +17554,12 @@ const handleKeyPress = (key) => {
 
     case "p":
       browseHistory("previous");
-      break
-
-
+      break;
   }
 };
 
 const handleSliderChange = (event) => {
-  browseHistory(+event.target.value)
+  browseHistory(+event.target.value);
 };
 
 const browseHistory = (whichBoard) => {
@@ -17558,18 +17567,18 @@ const browseHistory = (whichBoard) => {
     case "previous":
       if (head > 0) {
         head -= 1;
-        updateView(boardHistory[head])}
+        updateView(boardHistory[head]);
+      }
       break;
     case "next":
       if (head < boardHistory.length - 1) {
         head += 1;
-        updateView(boardHistory[head])
+        updateView(boardHistory[head]);
       }
       break;
     default:
       head = whichBoard;
-      updateView(boardHistory[head])
-
+      updateView(boardHistory[head]);
   }
 };
 
@@ -17588,7 +17597,6 @@ const isKeyPressAllowed = () => {
 const board = new Board();
 board.spawnTiles(2);
 
-//TODO: Revert before PR
 board.mock("noMock");
 // board.mock("almostWon");
 // board.mock("almostLost");
@@ -17601,7 +17609,9 @@ let head = 0;
 /* MAIN LOGIC */
 
 let currentBoard = boardHistory[boardHistory.length-1];
+applyConfigToDOM();
 updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
 document.querySelector("#gameHistory").addEventListener("change", handleSliderChange);
+
 },{"./Board":2,"./constants":4,"./domManipulation":5}]},{},[7]);

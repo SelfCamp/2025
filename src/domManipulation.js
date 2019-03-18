@@ -1,6 +1,15 @@
 /* DEFINE VIEW HANDLING FUNCTIONS */
 
-const {ANIMATION_DURATION} = require("./constants.js");
+const {ANIMATION_SLIDE_DURATION} = require("./constants.js");
+
+
+/**
+ * Updates DOM based on values defined in `constants.js`
+ */
+const applyConfigToDOM = () => {
+  let board = document.querySelector('#board');
+  board.setAttribute('style', `--slide-duration: ${ANIMATION_SLIDE_DURATION}ms`);
+};
 
 /**
  * If no direction is received, we assume this is an undo and animations are ignored
@@ -13,7 +22,7 @@ const updateView = (newBoard, direction=null, head=0) => {
   } else {
     updateMvAttributesInDOM(newBoard);
     // newBoard.resetAnimationProperties();
-    setTimeout(() => squashBoardInDOM(newBoard), ANIMATION_DURATION);
+    setTimeout(() => squashBoardInDOM(newBoard), ANIMATION_SLIDE_DURATION);
     let gameStatus = newBoard.gameStatus();
     if (gameStatus !== "ongoing") {
       displayEndOfGame(gameStatus);
@@ -74,6 +83,7 @@ const updateSliderInDOM = (length) => {
 };
 
 module.exports = {
+  applyConfigToDOM,
   updateMvAttributesInDOM,
   squashBoardInDOM,
   changeBackgroundInDOM,

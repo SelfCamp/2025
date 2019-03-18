@@ -102,7 +102,7 @@
 
 .tile[data-state='sliding'] {
   animation-name: slide;
-  animation-duration: 500ms;
+  animation-duration: var(--slide-duration);
 }
 
 .tile[data-state='merged'] {
