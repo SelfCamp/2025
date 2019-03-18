@@ -17421,14 +17421,21 @@ const listenForArrowPress = event => {
 };
 
 const handleKeyPress = (key) => {
+  console.log(head);
   switch (key) {
     case "ArrowUp":
     case "ArrowRight":
     case "ArrowDown":
     case "ArrowLeft":
+      console.log(head, boardHistory.length - 1);
+
+      if (head !== boardHistory.length - 1) {
+        boardHistory = boardHistory.slice(0, head + 1);
+        arrowPressHistory = arrowPressHistory.slice(0, head + 1);
+      }
       let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
       let direction = directions[key];
-      let currentBoard = boardHistory[boardHistory.length-1];
+      let currentBoard = boardHistory[head];
       let nextBoard = currentBoard.createNextBoard(direction);
       if (nextBoard.hasChanged()) {
         arrowPressHistory.push({direction: direction, timestamp: new Date()});
@@ -17441,6 +17448,7 @@ const handleKeyPress = (key) => {
     case "n":
       browseHistory("next");
       break;
+
     case "p":
       browseHistory("previous");
       break
@@ -17450,7 +17458,6 @@ const handleKeyPress = (key) => {
 };
 
 const browseHistory = (whichBoard) => {
-  console.log(head);
   switch (whichBoard) {
     case "previous":
       if (head > 0) {
@@ -17463,6 +17470,9 @@ const browseHistory = (whichBoard) => {
         updateView(boardHistory[head])
       }
       break;
+    default:
+      head = whichBoard;
+      updateView(boardHistory[head])
 
   }
 };
@@ -17486,8 +17496,8 @@ board.mock("noMock");
 // board.mock("almostWon");
 // board.mock("almostLost");
 
-const boardHistory = [board];
-const arrowPressHistory = [];
+let boardHistory = [board];
+let arrowPressHistory = [];
 let head = 0;
 
 

@@ -20,9 +20,13 @@ const handleKeyPress = (key) => {
     case "ArrowRight":
     case "ArrowDown":
     case "ArrowLeft":
+      if (head !== boardHistory.length - 1) {
+        boardHistory = boardHistory.slice(0, head + 1);
+        arrowPressHistory = arrowPressHistory.slice(0, head + 1);
+      }
       let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
       let direction = directions[key];
-      let currentBoard = boardHistory[boardHistory.length-1];
+      let currentBoard = boardHistory[head];
       let nextBoard = currentBoard.createNextBoard(direction);
       if (nextBoard.hasChanged()) {
         arrowPressHistory.push({direction: direction, timestamp: new Date()});
@@ -83,8 +87,8 @@ board.mock("noMock");
 // board.mock("almostWon");
 // board.mock("almostLost");
 
-const boardHistory = [board];
-const arrowPressHistory = [];
+let boardHistory = [board];
+let arrowPressHistory = [];
 let head = 0;
 
 
