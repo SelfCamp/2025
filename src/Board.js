@@ -43,7 +43,7 @@ function Board() {
       for (let tile of row) {
         tile.wasJustMerged = false;
         tile.wasJustSpawned = false;
-        tile.previousSlideCoordinates = null;
+        tile.previousSlideCoordinates = {slideX: 0, slideY: 0};
       }
     }
   };

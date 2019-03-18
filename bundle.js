@@ -17155,7 +17155,7 @@ function Board() {
       for (let tile of row) {
         tile.wasJustMerged = false;
         tile.wasJustSpawned = false;
-        tile.previousSlideCoordinates = null;
+        tile.previousSlideCoordinates = {slideX: 0, slideY: 0};
       }
     }
   };
@@ -17419,15 +17419,12 @@ const displayEndOfGame = (gameStatus) => {
 };
 
 const updateMvAttributesInDOM = (newBoard) => {
-  console.log(newBoard);
   for (let row of newBoard.matrix) {
     for (let tile of row) {
-      console.log(tile.previousSlideCoordinates);
       let tileElement = document.querySelector(tile.selector);
       let {slideX, slideY} = tile.previousSlideCoordinates;
       let {wasJustMerged, wasJustSpawned} = tile;
       let isSliding = slideX || slideY;
-      console.log("Is sliding?", isSliding, "slideX:", slideX, "slideY:", slideY);
       tileElement.setAttribute("style", `--slide-x: ${slideX}; --slide-y: ${slideY}`);
       tileElement.setAttribute("data-state",
           isSliding ? 'sliding'
