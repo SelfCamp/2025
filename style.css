@@ -102,20 +102,40 @@
 
 .tile[data-state='sliding'] {
   animation-name: slide;
+  animation-duration: 500ms;
+}
+
+.tile[data-state='merged'] {
+  animation-name: merge;
   animation-duration: 250ms;
+  animation-direction: alternate;
+}
+
+.tile[data-state='spawned'] {
+  animation-name: spawn;
+  animation-delay: 125ms;
+  animation-duration: 250ms;
+  animation-direction: alternate;
 }
 
 @keyframes slide {
   100% {
-    transform: translateX(calc(var(--tile-slide-length) * var(--slide-x)))
-               translateY(calc(var(--tile-slide-length) * var(--slide-y)))
+    transform:
+      translateX(calc(var(--tile-slide-length) * var(--slide-x)))
+      translateY(calc(var(--tile-slide-length) * var(--slide-y)))
   }
 }
 
 @keyframes merge {
-
+  100% {
+    background-color: red;
+    transform: scale(1.1);
+  }
 }
 
 @keyframes spawn {
-
+  100% {
+    background-color: white;
+    transform: scale(1.1);
+  }
 }
