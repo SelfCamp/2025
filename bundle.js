@@ -17359,11 +17359,11 @@ module.exports = {
  * @param previousSlideCoordinates {?object}
  * @constructor
  */
-function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousSlideCoordinates=null) {
+function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousSlideCoordinates={slideX: 0, slideY: 0}) {
   this.currentValue = currentValue || null;  // Turns `0` argument into `null`
   this.wasJustMerged = wasJustMerged;
   this.wasJustSpawned = wasJustSpawned;
-  this.previousSlideCoordinates = previousSlideCoordinates || null;  // Turns `0` argument into `null`
+  this.previousSlideCoordinates = previousSlideCoordinates;  // Turns `0` argument into `null`
   this.selector = selector;
 }
 
@@ -17396,7 +17396,7 @@ const updateView = (newBoard, direction=null, head=0) => {
     squashBoardInDOM(newBoard)
   } else {
     updateMvAttributesInDOM(newBoard);
-    newBoard.resetAnimationProperties();
+    // newBoard.resetAnimationProperties();
     setTimeout(() => squashBoardInDOM(newBoard), ANIMATION_DURATION);
     let gameStatus = newBoard.gameStatus();
     if (gameStatus !== "ongoing") {
@@ -17419,12 +17419,15 @@ const displayEndOfGame = (gameStatus) => {
 };
 
 const updateMvAttributesInDOM = (newBoard) => {
+  console.log(newBoard);
   for (let row of newBoard.matrix) {
     for (let tile of row) {
+      console.log(tile.previousSlideCoordinates);
       let tileElement = document.querySelector(tile.selector);
       let {slideX, slideY} = tile.previousSlideCoordinates;
       let {wasJustMerged, wasJustSpawned} = tile;
       let isSliding = slideX || slideY;
+      console.log("Is sliding?", isSliding, "slideX:", slideX, "slideY:", slideY);
       tileElement.setAttribute("style", `--slide-x: ${slideX}; --slide-y: ${slideY}`);
       tileElement.setAttribute("data-state",
           isSliding ? 'sliding'

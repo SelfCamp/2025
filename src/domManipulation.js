@@ -12,7 +12,7 @@ const updateView = (newBoard, direction=null, head=0) => {
     squashBoardInDOM(newBoard)
   } else {
     updateMvAttributesInDOM(newBoard);
-    newBoard.resetAnimationProperties();
+    // newBoard.resetAnimationProperties();
     setTimeout(() => squashBoardInDOM(newBoard), ANIMATION_DURATION);
     let gameStatus = newBoard.gameStatus();
     if (gameStatus !== "ongoing") {
