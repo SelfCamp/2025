@@ -27,12 +27,23 @@ const handleKeyPress = (key) => {
       if (nextBoard.hasChanged()) {
         arrowPressHistory.push({direction: direction, timestamp: new Date()});
         boardHistory.push(nextBoard);
+        head += 1;
         updateView(nextBoard, direction);
       }
       break;
 
     case "n":
+      browseHistory("next");
+      break;
+
     case "p":
+      browseHistory("previous");
+      break
+
+
+  }
+};
+
 const browseHistory = (whichBoard) => {
   switch (whichBoard) {
     case "previous":
