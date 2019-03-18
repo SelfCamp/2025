@@ -37,12 +37,15 @@
   justify-content: center ;
   align-items: center;
   border: calc(var(--board-size) / 250) solid #444444;
-  background-color: #81caaf;
   border-radius: calc(var(--board-size) / 50);
 }
 
 #board-base .tile {
-  background-color: #888888;
+  background-color: #ffca7f;
+}
+
+#board .tile[value='null'] {
+  visibility: hidden;
 }
 
 .tile[value='2'] {
