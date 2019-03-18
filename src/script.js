@@ -58,6 +58,7 @@ board.mock("noMock");
 
 const boardHistory = [board];
 const arrowPressHistory = [];
+let head = 0;
 
 
 /* MAIN LOGIC */

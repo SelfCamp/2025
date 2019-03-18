@@ -17421,7 +17421,6 @@ const listenForArrowPress = event => {
 };
 
 const handleKeyPress = (key) => {
-  console.log(key);
   switch (key) {
     case "ArrowUp":
     case "ArrowRight":
@@ -17434,13 +17433,36 @@ const handleKeyPress = (key) => {
       if (nextBoard.hasChanged()) {
         arrowPressHistory.push({direction: direction, timestamp: new Date()});
         boardHistory.push(nextBoard);
+        head += 1;
         updateView(nextBoard, direction);
       }
       break;
 
     case "n":
+      browseHistory("next");
+      break;
     case "p":
-      console.log(key)
+      browseHistory("previous");
+      break
+
+
+  }
+};
+
+const browseHistory = (whichBoard) => {
+  console.log(head);
+  switch (whichBoard) {
+    case "previous":
+      if (head > 0) {
+        head -= 1;
+        updateView(boardHistory[head])}
+      break;
+    case "next":
+      if (head < boardHistory.length - 1) {
+        head += 1;
+        updateView(boardHistory[head])
+      }
+      break;
 
   }
 };
@@ -17466,6 +17488,7 @@ board.mock("noMock");
 
 const boardHistory = [board];
 const arrowPressHistory = [];
+let head = 0;
 
 
 /* MAIN LOGIC */
