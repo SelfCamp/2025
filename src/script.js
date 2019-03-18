@@ -103,4 +103,4 @@ let currentBoard = boardHistory[boardHistory.length-1];
 applyConfigToDOM();
 updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
-document.querySelector("#gameHistory").addEventListener("change", handleSliderChange);
+document.querySelector("#game-history").addEventListener("change", handleSliderChange);

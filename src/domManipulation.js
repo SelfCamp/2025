@@ -77,7 +77,7 @@ const changeBackgroundInDOM = (color) => {
 };
 
 const updateSliderInDOM = (length) => {
-  let slider = document.querySelector("#gameHistory");
+  let slider = document.querySelector("#game-history");
   slider.setAttribute("max", length);
   slider.setAttribute("value", length);
 };

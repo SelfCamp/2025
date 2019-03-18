@@ -17462,7 +17462,7 @@ const changeBackgroundInDOM = (color) => {
 };
 
 const updateSliderInDOM = (length) => {
-  let slider = document.querySelector("#gameHistory");
+  let slider = document.querySelector("#game-history");
   slider.setAttribute("max", length);
   slider.setAttribute("value", length);
 };
@@ -17612,6 +17612,6 @@ let currentBoard = boardHistory[boardHistory.length-1];
 applyConfigToDOM();
 updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
-document.querySelector("#gameHistory").addEventListener("change", handleSliderChange);
+document.querySelector("#game-history").addEventListener("change", handleSliderChange);
 
 },{"./Board":2,"./constants":4,"./domManipulation":5}]},{},[7]);
