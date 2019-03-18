@@ -33,6 +33,19 @@ const handleKeyPress = (key) => {
 
     case "n":
     case "p":
+const browseHistory = (whichBoard) => {
+  switch (whichBoard) {
+    case "previous":
+      if (head > 0) {
+        head -= 1;
+        updateView(boardHistory[head])}
+      break;
+    case "next":
+      if (head < boardHistory.length - 1) {
+        head += 1;
+        updateView(boardHistory[head])
+      }
+      break;
 
   }
 };
