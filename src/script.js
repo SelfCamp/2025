@@ -98,3 +98,4 @@ let head = 0;
 let currentBoard = boardHistory[boardHistory.length-1];
 updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
+document.querySelector("#gameHistory").addEventListener("change,");
