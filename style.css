@@ -109,7 +109,7 @@
 
 .tile[data-state='sliding'] {
   animation-name: slide;
-  animation-duration: 2000ms
+  animation-duration: 250ms
 }
 @keyframes slide {
   100% {
