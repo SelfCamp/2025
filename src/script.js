@@ -51,6 +51,10 @@ const handleKeyPress = (key) => {
   }
 };
 
+const handleSliderChange = (event) => {
+  browseHistory(+event.target.value)
+};
+
 const browseHistory = (whichBoard) => {
   switch (whichBoard) {
     case "previous":
@@ -100,4 +104,4 @@ let head = 0;
 let currentBoard = boardHistory[boardHistory.length-1];
 updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
-document.querySelector("#gameHistory").addEventListener("change,");
+document.querySelector("#gameHistory").addEventListener("change", handleSliderChange);
