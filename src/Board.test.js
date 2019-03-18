@@ -1,7 +1,6 @@
 const {cloneDeep} = require('lodash');
 
 const {Board} = require('./Board');
-const {sliceMatrixPerDirection, squashRow, propagateTile, attemptMerge} = require('./BoardStaticMethods');
 const {
   mockRowPairsForSquashRowTest,
   mockRowPairsForPropagateTileTest,
@@ -11,7 +10,7 @@ const {
 
 const createSliceMatrixPerDirectionFixtures = (direction) => {
   let original = new Board().matrix;
-  let rotated = sliceMatrixPerDirection(original, direction);
+  let rotated = new Board().sliceMatrixPerDirection(original, direction);
   return {original, rotated};
 };
 
@@ -43,14 +42,14 @@ describe('Board.sliceMatrixPerDirection()', () => {
 const testAttemptMergeMutation = (mockRowPair) => {
   let {index, mergedProperly} = mockRowPair;
   let original = cloneDeep(mockRowPair.original);
-  attemptMerge(original, index);
+  new Board().attemptMerge(original, index);
   expect(original).toEqual(mergedProperly);
 };
 
 const testAttemptMergeReturnValue = (mockRowPair) => {
   let {index, expectedReturnValue} = mockRowPair;
   let original = cloneDeep(mockRowPair.original);
-  let returnValue = attemptMerge(original, index);
+  let returnValue = new Board().attemptMerge(original, index);
   expect(returnValue).toEqual(expectedReturnValue);
 
 };
@@ -83,14 +82,14 @@ describe('Board.attemptMerge()', () => {
 const testPropagateTileMutation = (mockRowPair) => {
   let {indexFrom, propagatedProperly} = mockRowPair;
   let original = cloneDeep(mockRowPair.original);
-  propagateTile(original, indexFrom);
+  new Board().propagateTile(original, indexFrom);
   expect(original).toEqual(propagatedProperly);
 };
 
 const testPropagateTileReturnValue = (mockRowPair) => {
   let {indexFrom, expectedReturnValue} = mockRowPair;
   let original = cloneDeep(mockRowPair.original);
-  let returnValue = propagateTile(original, indexFrom);
+  let returnValue = new Board().propagateTile(original, indexFrom);
   expect(returnValue).toEqual(expectedReturnValue);
 };
 
@@ -126,7 +125,7 @@ describe('Board.propagateTile()', () => {
 const testSquashRowMutation = (mockRowPair) => {
   let {squashedProperly} = mockRowPair;
   let original = cloneDeep(mockRowPair.original);
-  squashRow(original);
+  new Board().squashRow(original);
   expect(original).toEqual(squashedProperly);
 };
 

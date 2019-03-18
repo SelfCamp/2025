@@ -1,13 +1,22 @@
-#board {
+:root {
+  --board-size: 50vw;
+  --grid-gap: calc(var(--board-size) / 50);
+  --tile-size: calc((var(--board-size) - (var(--grid-gap) * 3)) / 4);
+  --tile-slide-length: calc(var(--tile-size) + var(--grid-gap));
+}
+
+#board, #board-base {
+  position: absolute;
+  top: calc((100vh - var(--board-size)) / 2);
+  left: calc((100vw - var(--board-size)) / 2);
+  width: var(--board-size);
+  height: var(--board-size);
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr;
-  width: 50vw;
-  height: 50vw;
-  margin: calc((100vh - 50vw) / 2) auto;
   justify-content: stretch;
   justify-items: stretch;
-  grid-gap: 1vw;
+  grid-gap: var(--grid-gap);
 }
 
 #slidecontainer {
@@ -23,15 +32,13 @@
 .tile {
   color: #FFFFFF;
   font-family: monospace;
-  font-size: 4vw;
+  font-size: calc(var(--board-size) * 0.08);
   display: flex;
   justify-content: center;
   align-items: center;
-
-  border: 2px solid #444444;
+  border: calc(var(--board-size) / 250) solid #444444;
   background-color: #81caaf;
-
-  border-radius: 1vw;
+  border-radius: calc(var(--board-size) / 50);
 }
 
 .tile[value='2'] {
@@ -86,15 +93,20 @@
   background-color: #CCCCCC;
 }
 
-@keyframes spawn {
 
+/* ANIMATION */
+
+.tile {
+  transition-duration: 250ms;
 }
 
 @keyframes slide {
-  /*attr('data-mv-len')*/
-  /*attr('data-mv-dir')*/
 }
 
 @keyframes merge {
+
+}
+
+@keyframes spawn {
 
 }
