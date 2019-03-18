@@ -19,7 +19,6 @@ const updateView = (newBoard, direction=null, head=0) => {
       displayEndOfGame(gameStatus);
     }
   }
-  updateSliderInDOM(head)
 };
 
 const displayEndOfGame = (gameStatus) => {
