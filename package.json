@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose",
     "build": "browserify src/script.js > bundle.js",
     "start": "live-server"
   },
