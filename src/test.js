@@ -54,7 +54,7 @@ describe("spawnTitles method", () => {
   test("Only adds to empty tiles",
       () => {
         for (let i = 0; i < 10; i++) {
-          testBoard.mock("testOneMissing");
+          testBoard = new Board("testOneMissing");
           expect(testBoard.matrix[1][1].currentValue).toBe(null);
           testBoard.spawnTiles(1);
           expect(testBoard.matrix[1][1].currentValue).not.toEqual(null)

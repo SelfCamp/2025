@@ -7,15 +7,9 @@ const {mockList} = require("./mockBoards");
  * Create new Board object.
  * @constructor
  */
-function Board() {
+function Board(scenario="noMock") {
   this.hasChanged = false;
-  this.matrix = [];
-  for (let row = 0; row < 4; row++) {
-    this.matrix[row] = [];
-    for (let column = 0; column < 4; column++) {
-      this.matrix[row].push(new Tile(`#r${row}c${column}`));
-    }
-  }
+  this.matrix = cloneDeep(mockList[scenario]);
   /**
    * Add new tile(s) to the board.
    * @param {number} howMany - How many tiles to add to the board.
@@ -209,13 +203,6 @@ function Board() {
 
     return false;
   };
-
-  this.mock = (scenario) => {
-    if (scenario !== "noMock") {
-      this.matrix = cloneDeep(mockList[scenario]);
-    }
-  }
-
 }
 
 
