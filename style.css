@@ -105,7 +105,13 @@
 
 .tile[data-state='sliding'] {
   animation-name: slide;
-  animation-duration: var(--slide-duration);
+  animation-duration: calc(var(--slide-duration) * 2);  /* Multiplier adds buffer to prevent flashing back to original
+                                                           position during processing of `initiateMergeSpawnInDOM`.
+
+                                                           Combined with 50% keyframe end, this results in
+                                                           the tile arriving at new location after one `--slide-duration`
+                                                           and then waiting there to be destroyed by
+                                                           `initiateMergeSpawnInDOM` */
 }
 
 .tile[data-state='merged'] {
@@ -116,13 +122,12 @@
 
 .tile[data-state='spawned'] {
   animation-name: spawn;
-  animation-delay: 125ms;
-  animation-duration: 250ms;
+  animation-duration: 500ms;
   animation-direction: alternate;
 }
 
 @keyframes slide {
-  100% {
+  50% {
     transform:
       translateX(calc(var(--tile-slide-length) * var(--slide-x)))
       translateY(calc(var(--tile-slide-length) * var(--slide-y)));
@@ -137,6 +142,17 @@
 }
 
 @keyframes spawn {
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: hidden;
+  }
+  50.01% {
+    visibility: visible;
+    background-color: initial;
+    transform: scale(1);
+  }
   100% {
     background-color: white;
     transform: scale(1.1);
