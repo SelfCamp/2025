@@ -17119,15 +17119,9 @@ const {mockList} = require("./mockBoards");
  * Create new Board object.
  * @constructor
  */
-function Board() {
+function Board(scenario="noMock") {
   this.hasChanged = false;
-  this.matrix = [];
-  for (let row = 0; row < 4; row++) {
-    this.matrix[row] = [];
-    for (let column = 0; column < 4; column++) {
-      this.matrix[row].push(new Tile(`#r${row}c${column}`));
-    }
-  }
+  this.matrix = mockList[scenario];
   /**
    * Add new tile(s) to the board.
    * @param {number} howMany - How many tiles to add to the board.
@@ -17321,13 +17315,6 @@ function Board() {
 
     return false;
   };
-
-  this.mock = (scenario) => {
-    if (scenario !== "noMock") {
-      this.matrix = cloneDeep(mockList[scenario]);
-    }
-  }
-
 }
 
 
@@ -17447,7 +17434,11 @@ module.exports = {
 const {Tile} = require("./Tile.js");
 
 const mockList = {
-  "noMock": false,
+  "noMock": [
+    [new Tile("#r0c0"),    new Tile("#r0c1"),    new Tile("#r0c2"),   new Tile("#r0c3")],
+    [new Tile("#r1c0"),   new Tile("#r1c1"),  new Tile("#r1c2"),   new Tile("#r1c3")],
+    [new Tile("#r2c0"),    new Tile("#r2c1"),   new Tile("#r2c2"),  new Tile("#r2c3")],
+    [new Tile("#r3c0"),    new Tile("#r3c1"),    new Tile("#r3c2"),   new Tile("#r3c3")]],
   "almostLost": [
       [new Tile("#r0c0", 2),    new Tile("#r0c1", 8),    new Tile("#r0c2", 32),   new Tile("#r0c3", 2)],
       [new Tile("#r1c0", 16),   new Tile("#r1c1", 128),  new Tile("#r1c2", 64),   new Tile("#r1c3", 8)],
@@ -17562,12 +17553,10 @@ const isKeyPressAllowed = () => {
 
 /* INITIALIZE OBJECTS */
 
-const board = new Board();
+const board = new Board(); // OPTIONAL PARAMETERS: noMock (default), almostLost, almostWon, testOneMissing
 board.spawnTiles(2);
 
-board.mock("noMock");
-// board.mock("almostWon");
-// board.mock("almostLost");
+
 
 let boardHistory = [board];
 let arrowPressHistory = [];

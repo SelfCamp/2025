@@ -87,12 +87,10 @@ const isKeyPressAllowed = () => {
 
 /* INITIALIZE OBJECTS */
 
-const board = new Board();
+const board = new Board(); // OPTIONAL PARAMETERS: noMock (default), almostLost, almostWon, testOneMissing
 board.spawnTiles(2);
 
-board.mock("noMock");
-// board.mock("almostWon");
-// board.mock("almostLost");
+
 
 let boardHistory = [board];
 let arrowPressHistory = [];
