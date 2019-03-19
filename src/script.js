@@ -38,8 +38,9 @@ const handleArrowKeyPress = (key) => {
 
 const handleHistoryKeyPress = (key) => {
   (key === 'n')
-      ? browseHistory("next")
-      : browseHistory("previous")
+    && browseHistory("next");
+  (key === 'p')
+    && browseHistory("previous");
 };
 
 const handleSliderChange = (event) => {
@@ -50,11 +51,11 @@ const browseHistory = (whichBoard) => {
   switch (whichBoard) {
     case "previous":
       (head > 0)
-      ? updateView(boardHistory[--head]) : {};
+        && updateView(boardHistory[--head]);
       break;
     case "next":
       (head < boardHistory.length - 1)
-      ? updateView(boardHistory[++head]) : {};
+        && updateView(boardHistory[++head]);
       break;
     default:
       updateView(boardHistory[whichBoard]);
@@ -80,6 +81,7 @@ const getDirectionFromKey = (key) => {
   let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
   return directions[key];
 };
+
 
 /* INITIALIZE OBJECTS */
 
