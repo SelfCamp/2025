@@ -148,10 +148,10 @@ function Board() {
       }
       let newIndex = this.propagateTile(row, index);
       let hasMerged = this.attemptMerge(row, newIndex);
-      let mvLen = newIndex - index + hasMerged || null;
+      let mvLen = newIndex - index + hasMerged || 0;
       switch (direction) {
         case 'up':
-          row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen * -1};
+          row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen * -1 + 0}; // +0 to convert possible -0 to 0
           break;
         case 'right':
           row[index].previousSlideCoordinates = {slideX: mvLen, slideY: 0};
@@ -160,7 +160,7 @@ function Board() {
           row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen};
           break;
         case 'left':
-          row[index].previousSlideCoordinates = {slideX: mvLen * -1, slideY: 0};
+          row[index].previousSlideCoordinates = {slideX: mvLen * -1 + 0, slideY: 0};
       }
     }
   };
