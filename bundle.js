@@ -17121,7 +17121,7 @@ const {mockList} = require("./mockBoards");
  */
 function Board(scenario="noMock") {
   this.hasChanged = false;
-  this.matrix = mockList[scenario];
+  this.matrix = cloneDeep(mockList[scenario]);
   /**
    * Add new tile(s) to the board.
    * @param {number} howMany - How many tiles to add to the board.
@@ -17254,10 +17254,10 @@ function Board(scenario="noMock") {
       }
       let newIndex = this.propagateTile(row, index);
       let hasMerged = this.attemptMerge(row, newIndex);
-      let mvLen = newIndex - index + hasMerged || null;
+      let mvLen = newIndex - index + hasMerged || 0;
       switch (direction) {
         case 'up':
-          row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen * -1};
+          row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen * -1 + 0}; // +0 to convert possible -0 to 0
           break;
         case 'right':
           row[index].previousSlideCoordinates = {slideX: mvLen, slideY: 0};
@@ -17266,7 +17266,7 @@ function Board(scenario="noMock") {
           row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen};
           break;
         case 'left':
-          row[index].previousSlideCoordinates = {slideX: mvLen * -1, slideY: 0};
+          row[index].previousSlideCoordinates = {slideX: mvLen * -1 + 0, slideY: 0};
       }
     }
   };
