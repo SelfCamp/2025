@@ -1,5 +1,5 @@
 :root {
-  --board-size: 50vw;
+  --board-size: 40vw;
   --grid-gap: calc(var(--board-size) / 50);
   --tile-size: calc((var(--board-size) - (var(--grid-gap) * 3)) / 4);
   --tile-slide-length: calc(var(--tile-size) + var(--grid-gap));
@@ -7,10 +7,15 @@
 
 /*layout*/
 
+header {
+  margin: auto;
+}
+
 #title {
   text-align: center;
   font-size: 30px;
 }
+
 
 body {
   background-color: blue;
@@ -37,7 +42,9 @@ nav ul li {
   margin: auto;
   display: grid;
   grid-template-columns:  1fr;
+  grid-gap: 1rem;
   width: 50vw;
+  height: 100vh;
   background-color: red;
 }
 
@@ -46,6 +53,9 @@ nav ul li {
   width: 50vw;
   height: 50vw;
   background-color: grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #board, #board-base {
@@ -67,7 +77,8 @@ nav ul li {
 }
 
 #game-history {
-  width: 75vw;
+  position: absolute;
+  bottom: 0;
 }
 
 .tile {
