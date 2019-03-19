@@ -1,7 +1,7 @@
 const {cloneDeep} = require('lodash');
 
 const {Tile} = require('./Tile');
-const {boardFixtures} = require("./Board.testFixtures");
+const {boardMatrixFixtures} = require("./Board.testFixtures");
 
 /**
  * Create new Board object
@@ -10,7 +10,7 @@ const {boardFixtures} = require("./Board.testFixtures");
  */
 function Board(scenario="noMock") {
   this.hasChanged = false;
-  this.matrix = cloneDeep(boardFixtures[scenario]);
+  this.matrix = cloneDeep(boardMatrixFixtures[scenario]);
 
   /**
    * Add new tile(s) to the board.
