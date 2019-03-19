@@ -29,19 +29,6 @@ const updateView = (newBoard, direction=null, head=0) => {
   }
 };
 
-const displayEndOfGame = (gameStatus) => {
-  switch (gameStatus) {
-    case 'ongoing':
-      break;
-    case 'won':
-      changeBackgroundInDOM('green');
-      break;
-    case 'lost':
-      changeBackgroundInDOM('red');
-      break;
-  }
-};
-
 const initiateSlideInDOM = (newBoard) => {
   for (let row of newBoard.matrix) {
     for (let tile of row) {
@@ -70,6 +57,19 @@ const initiateMergeSpawnInDOM = (newBoard) => {
   }
 };
 
+const displayEndOfGame = (gameStatus) => {
+  switch (gameStatus) {
+    case 'ongoing':
+      break;
+    case 'won':
+      changeBackgroundInDOM('green');
+      break;
+    case 'lost':
+      changeBackgroundInDOM('red');
+      break;
+  }
+};
+
 const changeBackgroundInDOM = (color) => {
   let body = document.querySelector('body');
   body.setAttribute('style', `background-color: ${color}`);
@@ -83,10 +83,6 @@ const updateSliderInDOM = (length) => {
 
 module.exports = {
   applyConfigToDOM,
-  initiateSlideInDOM,
-  squashBoardInDOM: initiateMergeSpawnInDOM,
-  changeBackgroundInDOM,
   updateView,
-  displayEndOfGame,
   updateSliderInDOM
 };
