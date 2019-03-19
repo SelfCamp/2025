@@ -17113,21 +17113,23 @@
 const {cloneDeep} = require('lodash');
 
 const {Tile} = require('./Tile');
-const {mockList} = require("./mockBoards");
+const {boardFixtures} = require("./Board.testFixtures");
 
 /**
- * Create new Board object.
+ * Create new Board object
+ * @param scenario {"noMock"|"almostLost"|"almostWon"|"testOneMissing"}
  * @constructor
  */
 function Board(scenario="noMock") {
   this.hasChanged = false;
-  this.matrix = mockList[scenario];
+  this.matrix = cloneDeep(boardFixtures[scenario]);
+
   /**
    * Add new tile(s) to the board.
    * @param {number} howMany - How many tiles to add to the board.
    * @param {boolean} isItTheOneAlready - Return special tile if param is TRUE.
    */
-  this.spawnTiles = (howMany, isItTheOneAlready = false) => {
+  this.spawnTiles = (howMany, isItTheOneAlready=false) => {
     for (let i = 0; i < howMany; i++) {
       let emptyTiles = [];
       for (let row of this.matrix) {
@@ -17254,10 +17256,10 @@ function Board(scenario="noMock") {
       }
       let newIndex = this.propagateTile(row, index);
       let hasMerged = this.attemptMerge(row, newIndex);
-      let mvLen = newIndex - index + hasMerged || null;
+      let mvLen = newIndex - index + hasMerged || 0;
       switch (direction) {
         case 'up':
-          row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen * -1};
+          row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen * -1 + 0}; // +0 to convert possible -0 to 0
           break;
         case 'right':
           row[index].previousSlideCoordinates = {slideX: mvLen, slideY: 0};
@@ -17266,7 +17268,7 @@ function Board(scenario="noMock") {
           row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen};
           break;
         case 'left':
-          row[index].previousSlideCoordinates = {slideX: mvLen * -1, slideY: 0};
+          row[index].previousSlideCoordinates = {slideX: mvLen * -1 + 0, slideY: 0};
       }
     }
   };
@@ -17338,7 +17340,211 @@ module.exports = {
   Board,
 };
 
-},{"./Tile":3,"./mockBoards":6,"lodash":1}],3:[function(require,module,exports){
+},{"./Board.testFixtures":3,"./Tile":4,"lodash":1}],3:[function(require,module,exports){
+const {Tile} = require("./Tile.js");
+
+
+/**
+ * Mocks first row of `Board.matrix`
+ * @param values `currentValue` option of each `Tile`
+ * @returns {(Tile|*)[]} Array of `Tile` objects
+ */
+const rowFromValues = (...values) => values.map(tileFromValue);
+
+const tileFromValue = (value, i) => new Tile(`#r0c${i}`, value);
+
+
+const propagateTileFixtures = {
+
+  '0,0,0,2 indexFrom=3': {
+    original: rowFromValues(0, 0, 0, 2),
+    indexFrom: 3,
+    propagatedProperly: rowFromValues(0, 0, 0, 2),
+    expectedReturnValue: 3,
+  },
+
+  '2,0,0,0 indexFrom=0': {
+    original: rowFromValues(2, 0, 0, 0),
+    indexFrom: 0,
+    propagatedProperly: rowFromValues(0, 0, 0, 2),
+    expectedReturnValue: 3,
+  },
+
+  '2,0,0,2 indexFrom=0': {
+    original: rowFromValues(2, 0, 0, 2),
+    indexFrom: 0,
+    propagatedProperly: rowFromValues(0, 0, 2, 2),
+    expectedReturnValue: 2,
+  },
+
+};
+
+
+const attemptMergeFixtures = {
+
+  '0,0,2,2 index=2': {
+    original: rowFromValues(0, 0, 2, 2),
+    index: 2,
+    mergedProperly: [
+      new Tile("#r0c0", 0),
+      new Tile("#r0c1", 0),
+      new Tile("#r0c2", 0),
+      new Tile("#r0c3", 4, true)
+    ],
+    expectedReturnValue: true,
+  },
+
+  "0,0,4,2 index=2": {
+    original: rowFromValues(0, 0, 4, 2),
+    index: 2,
+    mergedProperly: rowFromValues(0, 0, 4, 2),
+    expectedReturnValue: false,
+  },
+
+  "0,0,4,!4 index=2": {
+    original: [
+      new Tile("#r0c0", 0),
+      new Tile("#r0c1", 0),
+      new Tile("#r0c2", 4),
+      new Tile("#r0c3", 4, true)
+    ],
+    index: 2,
+    mergedProperly: [
+      new Tile("#r0c0", 0),
+      new Tile("#r0c1", 0),
+      new Tile("#r0c2", 4),
+      new Tile("#r0c3", 4, true)
+    ],
+    expectedReturnValue: false,
+  },
+
+};
+
+
+const squashRowFixtures = {
+
+  '0,0,0,2': {
+    original: rowFromValues(0, 0, 0, 2),
+    squashedProperly: rowFromValues(0, 0, 0, 2),
+    direction: "up",
+  },
+
+  '0,0,2,0': {
+    original: rowFromValues(0, 0, 2, 0),
+    squashedProperly: [
+      new Tile("#r0c0", 0),
+      new Tile("#r0c1", 0),
+      new Tile("#r0c2", 0, false, false, {slideX: 1, slideY: 0}),
+      new Tile("#r0c3", 2)
+    ],
+    direction: "right",
+  },
+
+  '0,0,4,2': {
+    original: rowFromValues(0, 0, 4, 2),
+    squashedProperly: rowFromValues(0, 0, 4, 2),
+    direction: "left",
+  },
+
+  '4,0,0,2': {
+    original: rowFromValues(4, 0, 0, 2),
+    squashedProperly: [
+      new Tile("#r0c0", 0, false, false, {slideX: 0, slideY: 2}),
+      new Tile("#r0c1", 0),
+      new Tile("#r0c2", 4),
+      new Tile("#r0c3", 2)
+    ],
+    direction: "down",
+  },
+
+  '0,0,2,2': {
+    original: rowFromValues(0, 0, 2, 2),
+    squashedProperly: [
+      new Tile("#r0c0", 0),
+      new Tile("#r0c1", 0),
+      new Tile("#r0c2", 0, false, false, {slideX: -1, slideY: 0}),
+      new Tile("#r0c3", 4, true)
+    ],
+    direction: "left",
+  },
+
+  '2,0,0,2': {
+    original: rowFromValues(2, 0, 0, 2),
+    squashedProperly: [
+      new Tile("#r0c0", 0, false, false, {slideX: 0, slideY: -3}),
+      new Tile("#r0c1", 0),
+      new Tile("#r0c2", 0),
+      new Tile("#r0c3", 4, true)
+    ],
+    direction: "up",
+  },
+
+  '2,2,4,4': {
+    original: rowFromValues(2, 2, 4, 4),
+    squashedProperly: [
+      new Tile("#r0c0", 0, false, false, {slideX: 2, slideY: 0}),
+      new Tile("#r0c1", 0, false, false, {slideX: 1, slideY: 0}),
+      new Tile("#r0c2", 4, true, false, {slideX: 1, slideY: 0}),
+      new Tile("#r0c3", 8, true)
+    ],
+    direction: "right",
+  },
+
+  '4,0,2,2': {
+    original: rowFromValues(4, 0, 2, 2),
+    squashedProperly: [
+      new Tile("#r0c0", 0, false, false, {slideX: 0, slideY: 2}),
+      new Tile("#r0c1", 0),
+      new Tile("#r0c2", 4, false, false, {slideX: 0, slideY: 1}),
+      new Tile("#r0c3", 4, true)
+    ],
+    direction: "down",
+  },
+
+};
+
+
+const boardFixtures = {
+
+  "noMock": [
+    [new Tile("#r0c0"),       new Tile("#r0c1"),       new Tile("#r0c2"),       new Tile("#r0c3")],
+    [new Tile("#r1c0"),       new Tile("#r1c1"),       new Tile("#r1c2"),       new Tile("#r1c3")],
+    [new Tile("#r2c0"),       new Tile("#r2c1"),       new Tile("#r2c2"),       new Tile("#r2c3")],
+    [new Tile("#r3c0"),       new Tile("#r3c1"),       new Tile("#r3c2"),       new Tile("#r3c3")]
+  ],
+
+  "almostLost": [
+    [new Tile("#r0c0", 2),    new Tile("#r0c1", 8),    new Tile("#r0c2", 32),   new Tile("#r0c3", 2)],
+    [new Tile("#r1c0", 16),   new Tile("#r1c1", 128),  new Tile("#r1c2", 64),   new Tile("#r1c3", 8)],
+    [new Tile("#r2c0", 4),    new Tile("#r2c1", 32),   new Tile("#r2c2", 128),  new Tile("#r2c3", 4)],
+    [new Tile("#r3c0", 2),    new Tile("#r3c1", 4),    new Tile("#r3c2", 16),   new Tile("#r3c3", null)]
+  ],
+
+  "almostWon":[
+    [new Tile("#r0c0", 2),    new Tile("#r0c1", 8),    new Tile("#r0c2", 32),   new Tile("#r0c3", 2)],
+    [new Tile("#r1c0", 16),   new Tile("#r1c1", 128),  new Tile("#r1c2", 64),   new Tile("#r1c3", 8)],
+    [new Tile("#r2c0", 4),    new Tile("#r2c1", 32),   new Tile("#r2c2", 128),  new Tile("#r2c3", 4)],
+    [new Tile("#r3c0", 1024), new Tile("#r3c1", 1024), new Tile("#r3c2", 16),   new Tile("#r3c3", null)]
+  ],
+
+  "testOneMissing":[
+    [new Tile("#r0c0", 2),    new Tile("#r0c1", 8),    new Tile("#r0c2", 32),   new Tile("#r0c3", 2)],
+    [new Tile("#r1c0", 16),   new Tile("#r1c1", null), new Tile("#r1c2", 64),   new Tile("#r1c3", 8)],
+    [new Tile("#r2c0", 4),    new Tile("#r2c1", 32),   new Tile("#r2c2", 128),  new Tile("#r2c3", 4)],
+    [new Tile("#r3c0", 1024), new Tile("#r3c1", 1024), new Tile("#r3c2", 16),   new Tile("#r3c3", 8)]
+  ],
+
+};
+
+
+module.exports = {
+  propagateTileFixtures,
+  attemptMergeFixtures,
+  squashRowFixtures,
+  boardFixtures
+};
+
+},{"./Tile.js":4}],4:[function(require,module,exports){
 /**
  * @param selector {string}
  * @param currentValue {?number}
@@ -17359,7 +17565,7 @@ module.exports = {
   Tile,
 };
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 /* DEFINE CONSTANTS */
 
 const ARROW_PRESS_TIMEOUT = 400;  // ms
@@ -17370,7 +17576,7 @@ module.exports = {
   ANIMATION_SLIDE_DURATION,
 };
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /* DEFINE VIEW HANDLING FUNCTIONS */
 
 const {ANIMATION_SLIDE_DURATION} = require("./constants.js");
@@ -17464,40 +17670,7 @@ module.exports = {
   updateSliderInDOM
 };
 
-},{"./constants.js":4}],6:[function(require,module,exports){
-const {Tile} = require("./Tile.js");
-
-const mockList = {
-  "noMock": [
-    [new Tile("#r0c0"),    new Tile("#r0c1"),    new Tile("#r0c2"),   new Tile("#r0c3")],
-    [new Tile("#r1c0"),   new Tile("#r1c1"),  new Tile("#r1c2"),   new Tile("#r1c3")],
-    [new Tile("#r2c0"),    new Tile("#r2c1"),   new Tile("#r2c2"),  new Tile("#r2c3")],
-    [new Tile("#r3c0"),    new Tile("#r3c1"),    new Tile("#r3c2"),   new Tile("#r3c3")]],
-  "almostLost": [
-      [new Tile("#r0c0", 2),    new Tile("#r0c1", 8),    new Tile("#r0c2", 32),   new Tile("#r0c3", 2)],
-      [new Tile("#r1c0", 16),   new Tile("#r1c1", 128),  new Tile("#r1c2", 64),   new Tile("#r1c3", 8)],
-      [new Tile("#r2c0", 4),    new Tile("#r2c1", 32),   new Tile("#r2c2", 128),  new Tile("#r2c3", 4)],
-      [new Tile("#r3c0", 2),    new Tile("#r3c1", 4),    new Tile("#r3c2", 16),   new Tile("#r3c3", null)]
-  ],
-  "almostWon":[
-      [new Tile("#r0c0", 2),    new Tile("#r0c1", 8),    new Tile("#r0c2", 32),   new Tile("#r0c3", 2)],
-      [new Tile("#r1c0", 16),   new Tile("#r1c1", 128),  new Tile("#r1c2", 64),   new Tile("#r1c3", 8)],
-      [new Tile("#r2c0", 4),    new Tile("#r2c1", 32),   new Tile("#r2c2", 128),  new Tile("#r2c3", 4)],
-      [new Tile("#r3c0", 1024), new Tile("#r3c1", 1024), new Tile("#r3c2", 16),   new Tile("#r3c3", null)]
-  ],
-  "testOneMissing":[
-      [new Tile("#r0c0", 2),    new Tile("#r0c1", 8),    new Tile("#r0c2", 32),   new Tile("#r0c3", 2)],
-      [new Tile("#r1c0", 16),   new Tile("#r1c1", null),  new Tile("#r1c2", 64),   new Tile("#r1c3", 8)],
-      [new Tile("#r2c0", 4),    new Tile("#r2c1", 32),   new Tile("#r2c2", 128),  new Tile("#r2c3", 4)],
-      [new Tile("#r3c0", 1024), new Tile("#r3c1", 1024), new Tile("#r3c2", 16),   new Tile("#r3c3", 8)]
-  ],
-};
-
-module.exports = {
-  mockList,
-};
-
-},{"./Tile.js":3}],7:[function(require,module,exports){
+},{"./constants.js":5}],7:[function(require,module,exports){
 'use strict';
 
 const {Board} = require('./Board');
@@ -17585,10 +17758,8 @@ const isKeyPressAllowed = () => {
 
 /* INITIALIZE OBJECTS */
 
-const board = new Board(); // OPTIONAL PARAMETERS: noMock (default), almostLost, almostWon, testOneMissing
+const board = new Board();
 board.spawnTiles(2);
-
-
 
 let boardHistory = [board];
 let arrowPressHistory = [];
@@ -17603,4 +17774,4 @@ updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
 document.querySelector("#game-history").addEventListener("change", handleSliderChange);
 
-},{"./Board":2,"./constants":4,"./domManipulation":5}]},{},[7]);
+},{"./Board":2,"./constants":5,"./domManipulation":6}]},{},[7]);

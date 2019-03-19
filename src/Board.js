@@ -1,21 +1,23 @@
 const {cloneDeep} = require('lodash');
 
 const {Tile} = require('./Tile');
-const {mockList} = require("./mockBoards");
+const {boardFixtures} = require("./Board.testFixtures");
 
 /**
- * Create new Board object.
+ * Create new Board object
+ * @param scenario {"noMock"|"almostLost"|"almostWon"|"testOneMissing"}
  * @constructor
  */
 function Board(scenario="noMock") {
   this.hasChanged = false;
-  this.matrix = cloneDeep(mockList[scenario]);
+  this.matrix = cloneDeep(boardFixtures[scenario]);
+
   /**
    * Add new tile(s) to the board.
    * @param {number} howMany - How many tiles to add to the board.
    * @param {boolean} isItTheOneAlready - Return special tile if param is TRUE.
    */
-  this.spawnTiles = (howMany, isItTheOneAlready = false) => {
+  this.spawnTiles = (howMany, isItTheOneAlready=false) => {
     for (let i = 0; i < howMany; i++) {
       let emptyTiles = [];
       for (let row of this.matrix) {
