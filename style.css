@@ -7,6 +7,8 @@
 
 /*layout*/
 
+
+
 header {
   margin: auto;
 }
@@ -48,6 +50,7 @@ nav ul li {
   box-shadow: 0 5px 5px black;
   padding: 1vw;
   cursor: pointer;
+  font-size: 2vw;
 }
 
 #front {
@@ -221,4 +224,32 @@ nav ul li {
     background-color: white;
     transform: scale(1.1);
   }
+}
+
+@media only screen and (max-width: 500px) {
+  #front {
+    width: 100vw;
+  }
+
+  #game {
+    width: 100vw;
+    height: 100vw;
+  }
+
+  #title {
+    text-align: center;
+    font-size: 10vw;
+    margin-bottom: 0;
+  }
+
+  nav ul li {
+    font-size: 10vw;
+  }
+  :root {
+    --board-size: 80vw;
+    --grid-gap: calc(var(--board-size) / 50);
+    --tile-size: calc((var(--board-size) - (var(--grid-gap) * 3)) / 4);
+    --tile-slide-length: calc(var(--tile-size) + var(--grid-gap));
+  }
+
 }
