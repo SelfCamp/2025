@@ -7,46 +7,39 @@ const {ARROW_PRESS_TIMEOUT} = require("./constants");
 
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
 
-const listenForArrowPress = event => {
-  let isItAValidKey = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'n', "p"].includes(event.key);
-  if (isItAValidKey && isKeyPressAllowed()) {
-    handleKeyPress(event.key)
+const listenForKeyPress = event => {
+  if (isKeyPressAllowed()) {
+    if (isItAnArrowKey(event.key)) {
+      handleArrowKeyPress(event.key)
+    }
+    else if (isItAHistoryKey(event.key)) {
+      handleHistoryKeyPress(event.key)
+    }
   }
 };
 
-const handleKeyPress = (key) => {
-  switch (key) {
-    case "ArrowUp":
-    case "ArrowRight":
-    case "ArrowDown":
-    case "ArrowLeft":
-      if (head !== boardHistory.length - 1) {
-        boardHistory = boardHistory.slice(0, head + 1);
-        arrowPressHistory = arrowPressHistory.slice(0, head + 1);
-
-      }
-      let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
-      let direction = directions[key];
-      let currentBoard = boardHistory[head];
-      let nextBoard = currentBoard.createNextBoard(direction);
-      if (nextBoard.hasChanged()) {
-        arrowPressHistory.push({direction: direction, timestamp: new Date()});
-        boardHistory.push(nextBoard);
-        head += 1;
-        updateView(nextBoard, direction, head);
-        updateSliderInDOM(head);
-
-      }
-      break;
-
-    case "n":
-      browseHistory("next");
-      break;
-
-    case "p":
-      browseHistory("previous");
-      break;
+const handleArrowKeyPress = (key) => {
+  if (head !== boardHistory.length - 1) {  // FIXME: This doesn't seem to belong here
+    boardHistory = boardHistory.slice(0, head + 1);
+    arrowPressHistory = arrowPressHistory.slice(0, head + 1);
   }
+  let direction = getDirectionFromKey(key);
+  let currentBoard = boardHistory[head];
+  let nextBoard = currentBoard.createNextBoard(direction);
+  if (nextBoard.hasChanged()) {
+    arrowPressHistory.push({direction: direction, timestamp: new Date()});
+    boardHistory.push(nextBoard);
+    head++;
+    updateView(nextBoard, direction, head);
+    updateSliderInDOM(head);
+
+  }
+};
+
+const handleHistoryKeyPress = (key) => {
+  (key === 'n')
+      ? browseHistory("next")
+      : browseHistory("previous")
 };
 
 const handleSliderChange = (event) => {
@@ -57,13 +50,13 @@ const browseHistory = (whichBoard) => {
   switch (whichBoard) {
     case "previous":
       if (head > 0) {
-        head -= 1;
+        head--;
         updateView(boardHistory[head]);
       }
       break;
     case "next":
       if (head < boardHistory.length - 1) {
-        head += 1;
+        head++;
         updateView(boardHistory[head]);
       }
       break;
@@ -82,6 +75,16 @@ const isKeyPressAllowed = () => {
     return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
 };
 
+const isItAnArrowKey = (key) =>
+    ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(key);
+
+const isItAHistoryKey = (key) =>
+    ['n', 'p'].includes(key);
+
+const getDirectionFromKey = (key) => {
+  let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
+  return directions[key];
+};
 
 /* INITIALIZE OBJECTS */
 
@@ -98,5 +101,5 @@ let head = 0;
 let currentBoard = boardHistory[boardHistory.length-1];
 applyConfigToDOM();
 updateView(currentBoard);
-document.addEventListener("keydown", listenForArrowPress);
+document.addEventListener("keydown", listenForKeyPress);
 document.querySelector("#game-history").addEventListener("change", handleSliderChange);
