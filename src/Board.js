@@ -51,7 +51,7 @@ function Board() {
   this.hasChanged = () => {
     for (let row of this.matrix) {
       for (let tile of row) {
-        if (tile.previousSlideCoordinates || tile.wasJustMerged) {
+        if (tile.previousSlideCoordinates.slideY || tile.previousSlideCoordinates.slideX || tile.wasJustMerged) {
           return true;
         }
       }
