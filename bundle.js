@@ -17144,12 +17144,12 @@ function Board(scenario="noMock") {
     }
   };
 
-  this.resetAnimationProperties = () => {
+  this.resetTileAnimationProperties = () => {
     for (let row of this.matrix) {
       for (let tile of row) {
         tile.wasJustMerged = false;
         tile.wasJustSpawned = false;
-        tile.previousValueMvLen = null;
+        tile.previousSlideCoordinates = {slideX: 0, slideY: 0};
       }
     }
   };
@@ -17157,7 +17157,7 @@ function Board(scenario="noMock") {
   this.hasChanged = () => {
     for (let row of this.matrix) {
       for (let tile of row) {
-        if (tile.previousValueMvLen || tile.wasJustMerged) {
+        if (tile.previousSlideCoordinates.slideY || tile.previousSlideCoordinates.slideX || tile.wasJustMerged) {
           return true;
         }
       }
@@ -17190,6 +17190,7 @@ function Board(scenario="noMock") {
   };
 
   this.createNextBoard = (direction) => {
+    this.resetTileAnimationProperties();
     let nextBoard = this.squashBoard(this, direction);
     if (nextBoard.hasChanged()) {
       nextBoard.spawnTiles(1);
@@ -17202,7 +17203,7 @@ function Board(scenario="noMock") {
     newBoard.matrix = cloneDeep(currentBoard.matrix);
     let temporaryBoardSlices = this.sliceMatrixPerDirection(newBoard.matrix, direction);
     for (let row of temporaryBoardSlices) {
-      this.squashRow(row)  // mutates tiles in input
+      this.squashRow(row, direction)  // mutates tiles in input
     }
     return newBoard;
   };
@@ -17243,15 +17244,30 @@ function Board(scenario="noMock") {
    * - Doesn't care about other rows in `Board.matrix`
    *
    * @param row - Array of four `Tile` objects, arranged to be squashed towards end of Array
+   *
+   * @param direction - Used to calculate previousSlideCoordinates
    */
-  this.squashRow = (row) => {
+  this.squashRow = (row, direction) => {
     for (let index of [2, 1 ,0]) {
       if (!row[index].currentValue) {
         continue
       }
       let newIndex = this.propagateTile(row, index);
       let hasMerged = this.attemptMerge(row, newIndex);
-      row[index].previousValueMvLen = newIndex - index + hasMerged || null;
+      let mvLen = newIndex - index + hasMerged || null;
+      switch (direction) {
+        case 'up':
+          row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen * -1};
+          break;
+        case 'right':
+          row[index].previousSlideCoordinates = {slideX: mvLen, slideY: 0};
+          break;
+        case 'down':
+          row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen};
+          break;
+        case 'left':
+          row[index].previousSlideCoordinates = {slideX: mvLen * -1, slideY: 0};
+      }
     }
   };
 
@@ -17328,15 +17344,15 @@ module.exports = {
  * @param currentValue {?number}
  * @param wasJustMerged {boolean}
  * @param wasJustSpawned {boolean}
- * @param previousValueMvLen {?number}
+ * @param previousSlideCoordinates {?object}
  * @constructor
  */
-function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousValueMvLen=null) {
+function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousSlideCoordinates={slideX: 0, slideY: 0}) {
+  this.selector = selector;
   this.currentValue = currentValue || null;  // Turns `0` argument into `null`
   this.wasJustMerged = wasJustMerged;
   this.wasJustSpawned = wasJustSpawned;
-  this.previousValueMvLen = previousValueMvLen || null;  // Turns `0` argument into `null`
-  this.selector = selector;
+  this.previousSlideCoordinates = previousSlideCoordinates;
 }
 
 module.exports = {
@@ -17346,17 +17362,27 @@ module.exports = {
 },{}],4:[function(require,module,exports){
 /* DEFINE CONSTANTS */
 
-const ARROW_PRESS_TIMEOUT = 100;  // ms
-const ANIMATION_DURATION = 250;
+const ARROW_PRESS_TIMEOUT = 400;  // ms
+const ANIMATION_SLIDE_DURATION = 400; // ms
 
 module.exports = {
   ARROW_PRESS_TIMEOUT,
-  ANIMATION_DURATION
+  ANIMATION_SLIDE_DURATION,
 };
+
 },{}],5:[function(require,module,exports){
 /* DEFINE VIEW HANDLING FUNCTIONS */
 
-const {ANIMATION_DURATION} = require("./constants.js");
+const {ANIMATION_SLIDE_DURATION} = require("./constants.js");
+
+
+/**
+ * Updates DOM based on values defined in `constants.js`
+ */
+const applyConfigToDOM = () => {
+  let board = document.querySelector('#board');
+  board.setAttribute('style', `--slide-duration: ${ANIMATION_SLIDE_DURATION}ms`);
+};
 
 /**
  * If no direction is received, we assume this is an undo and animations are ignored
@@ -17365,11 +17391,10 @@ const {ANIMATION_DURATION} = require("./constants.js");
  */
 const updateView = (newBoard, direction=null, head=0) => {
   if (!direction) {
-    squashBoardInDOM(newBoard)
+    initiateMergeSpawnInDOM(newBoard)
   } else {
-    updateMvAttributesInDOM(newBoard, direction);
-    newBoard.resetAnimationProperties();
-    setTimeout(() => squashBoardInDOM(newBoard), ANIMATION_DURATION);
+    initiateSlideInDOM(newBoard);
+    setTimeout(() => initiateMergeSpawnInDOM(newBoard), ANIMATION_SLIDE_DURATION);
     let gameStatus = newBoard.gameStatus();
     if (gameStatus !== "ongoing") {
       displayEndOfGame(gameStatus);
@@ -17390,20 +17415,28 @@ const displayEndOfGame = (gameStatus) => {
   }
 };
 
-const updateMvAttributesInDOM = (newBoard, direction) => {
+const initiateSlideInDOM = (newBoard) => {
   for (let row of newBoard.matrix) {
     for (let tile of row) {
       let tileElement = document.querySelector(tile.selector);
-      tileElement.setAttribute("data-mv-dir", direction);
-      tileElement.setAttribute("data-mv-len", tile.previousValueMvLen ? tile.previousValueMvLen : "");
+      let {slideX, slideY} = tile.previousSlideCoordinates;
+      let isSliding = slideX || slideY;
+      tileElement.setAttribute("style", `--slide-x: ${slideX}; --slide-y: ${slideY}`);
+      tileElement.setAttribute("data-state", isSliding ? 'sliding' : '');
     }
   }
 };
 
-const squashBoardInDOM = (newBoard) => {
+const initiateMergeSpawnInDOM = (newBoard) => {
   for (let row of newBoard.matrix) {
     for (let tile of row) {
       let tileElement = document.querySelector(tile.selector);
+      let {wasJustMerged, wasJustSpawned} = tile;
+      tileElement.setAttribute("data-state",
+              wasJustMerged ? 'merged'
+              : wasJustSpawned ? 'spawned'
+              : ''
+      );
       tileElement.setAttribute("value", tile.currentValue);
       tileElement.textContent = tile.currentValue;
     }
@@ -17416,14 +17449,15 @@ const changeBackgroundInDOM = (color) => {
 };
 
 const updateSliderInDOM = (length) => {
-  let slider = document.querySelector("#gameHistory");
+  let slider = document.querySelector("#game-history");
   slider.setAttribute("max", length);
   slider.setAttribute("value", length);
 };
 
 module.exports = {
-  updateMvAttributesInDOM,
-  squashBoardInDOM,
+  applyConfigToDOM,
+  initiateSlideInDOM,
+  squashBoardInDOM: initiateMergeSpawnInDOM,
   changeBackgroundInDOM,
   updateView,
   displayEndOfGame,
@@ -17467,7 +17501,7 @@ module.exports = {
 'use strict';
 
 const {Board} = require('./Board');
-const {updateView, updateSliderInDOM} = require('./domManipulation');
+const {applyConfigToDOM, updateView, updateSliderInDOM} = require('./domManipulation');
 const {ARROW_PRESS_TIMEOUT} = require("./constants");
 
 
@@ -17511,14 +17545,12 @@ const handleKeyPress = (key) => {
 
     case "p":
       browseHistory("previous");
-      break
-
-
+      break;
   }
 };
 
 const handleSliderChange = (event) => {
-  browseHistory(+event.target.value)
+  browseHistory(+event.target.value);
 };
 
 const browseHistory = (whichBoard) => {
@@ -17526,18 +17558,18 @@ const browseHistory = (whichBoard) => {
     case "previous":
       if (head > 0) {
         head -= 1;
-        updateView(boardHistory[head])}
+        updateView(boardHistory[head]);
+      }
       break;
     case "next":
       if (head < boardHistory.length - 1) {
         head += 1;
-        updateView(boardHistory[head])
+        updateView(boardHistory[head]);
       }
       break;
     default:
       head = whichBoard;
-      updateView(boardHistory[head])
-
+      updateView(boardHistory[head]);
   }
 };
 
@@ -17566,7 +17598,9 @@ let head = 0;
 /* MAIN LOGIC */
 
 let currentBoard = boardHistory[boardHistory.length-1];
+applyConfigToDOM();
 updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
-document.querySelector("#gameHistory").addEventListener("change", handleSliderChange);
+document.querySelector("#game-history").addEventListener("change", handleSliderChange);
+
 },{"./Board":2,"./constants":4,"./domManipulation":5}]},{},[7]);

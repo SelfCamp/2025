@@ -19,14 +19,14 @@
   grid-gap: var(--grid-gap);
 }
 
-#slidecontainer {
+#slide-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-#gameHistory {
-  width: 75vw
+#game-history {
+  width: 75vw;
 }
 
 .tile {
@@ -34,15 +34,18 @@
   font-family: monospace;
   font-size: calc(var(--board-size) * 0.08);
   display: flex;
-  justify-content: center;
+  justify-content: center ;
   align-items: center;
   border: calc(var(--board-size) / 250) solid #444444;
-  background-color: #81caaf;
   border-radius: calc(var(--board-size) / 50);
 }
 
 #board-base .tile {
-  background-color: #888888;
+  background-color: #ffca7f;
+}
+
+#board .tile[value='null'] {
+  visibility: hidden;
 }
 
 .tile[value='2'] {
@@ -100,21 +103,58 @@
 
 /* ANIMATION */
 
+.tile[data-state='sliding'] {
+  animation-name: slide;
+  animation-duration: calc(var(--slide-duration) * 2);  /* Multiplier adds buffer to prevent flashing back to original
+                                                           position during processing of `initiateMergeSpawnInDOM`.
 
-/*.tile[data-mv-dir='left'][data-mv-len='3'] {*/
-  /*transition-duration: 250ms;*/
-  /*transform: translateX(calc(var(--tile-slide-length) * attr('data-slide-x')));*/
-  /*transform: translateY(calc(var(--tile-slide-length) * attr('data-slide-y')));*/
-/*}*/
+                                                           Combined with 50% keyframe end, this results in
+                                                           the tile arriving at new location after one `--slide-duration`
+                                                           and then waiting there to be destroyed by
+                                                           `initiateMergeSpawnInDOM` */
+}
+
+.tile[data-state='merged'] {
+  animation-name: merge;
+  animation-duration: 250ms;
+  animation-direction: alternate;
+}
+
+.tile[data-state='spawned'] {
+  animation-name: spawn;
+  animation-duration: 500ms;
+  animation-direction: alternate;
+}
 
 @keyframes slide {
-
+  50% {
+    transform:
+      translateX(calc(var(--tile-slide-length) * var(--slide-x)))
+      translateY(calc(var(--tile-slide-length) * var(--slide-y)));
+  }
 }
 
 @keyframes merge {
-
+  100% {
+    background-color: red;
+    transform: scale(1.1);
+  }
 }
 
 @keyframes spawn {
-
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: hidden;
+  }
+  50.01% {
+    visibility: visible;
+    background-color: initial;
+    transform: scale(1);
+  }
+  100% {
+    background-color: white;
+    transform: scale(1.1);
+  }
 }

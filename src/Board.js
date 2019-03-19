@@ -32,12 +32,12 @@ function Board(scenario="noMock") {
     }
   };
 
-  this.resetAnimationProperties = () => {
+  this.resetTileAnimationProperties = () => {
     for (let row of this.matrix) {
       for (let tile of row) {
         tile.wasJustMerged = false;
         tile.wasJustSpawned = false;
-        tile.previousValueMvLen = null;
+        tile.previousSlideCoordinates = {slideX: 0, slideY: 0};
       }
     }
   };
@@ -45,7 +45,7 @@ function Board(scenario="noMock") {
   this.hasChanged = () => {
     for (let row of this.matrix) {
       for (let tile of row) {
-        if (tile.previousValueMvLen || tile.wasJustMerged) {
+        if (tile.previousSlideCoordinates.slideY || tile.previousSlideCoordinates.slideX || tile.wasJustMerged) {
           return true;
         }
       }
@@ -78,6 +78,7 @@ function Board(scenario="noMock") {
   };
 
   this.createNextBoard = (direction) => {
+    this.resetTileAnimationProperties();
     let nextBoard = this.squashBoard(this, direction);
     if (nextBoard.hasChanged()) {
       nextBoard.spawnTiles(1);
@@ -90,7 +91,7 @@ function Board(scenario="noMock") {
     newBoard.matrix = cloneDeep(currentBoard.matrix);
     let temporaryBoardSlices = this.sliceMatrixPerDirection(newBoard.matrix, direction);
     for (let row of temporaryBoardSlices) {
-      this.squashRow(row)  // mutates tiles in input
+      this.squashRow(row, direction)  // mutates tiles in input
     }
     return newBoard;
   };
@@ -131,15 +132,30 @@ function Board(scenario="noMock") {
    * - Doesn't care about other rows in `Board.matrix`
    *
    * @param row - Array of four `Tile` objects, arranged to be squashed towards end of Array
+   *
+   * @param direction - Used to calculate previousSlideCoordinates
    */
-  this.squashRow = (row) => {
+  this.squashRow = (row, direction) => {
     for (let index of [2, 1 ,0]) {
       if (!row[index].currentValue) {
         continue
       }
       let newIndex = this.propagateTile(row, index);
       let hasMerged = this.attemptMerge(row, newIndex);
-      row[index].previousValueMvLen = newIndex - index + hasMerged || null;
+      let mvLen = newIndex - index + hasMerged || 0;
+      switch (direction) {
+        case 'up':
+          row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen * -1 + 0}; // +0 to convert possible -0 to 0
+          break;
+        case 'right':
+          row[index].previousSlideCoordinates = {slideX: mvLen, slideY: 0};
+          break;
+        case 'down':
+          row[index].previousSlideCoordinates = {slideX: 0, slideY: mvLen};
+          break;
+        case 'left':
+          row[index].previousSlideCoordinates = {slideX: mvLen * -1 + 0, slideY: 0};
+      }
     }
   };
 

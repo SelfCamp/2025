@@ -1,7 +1,7 @@
 'use strict';
 
 const {Board} = require('./Board');
-const {updateView, updateSliderInDOM} = require('./domManipulation');
+const {applyConfigToDOM, updateView, updateSliderInDOM} = require('./domManipulation');
 const {ARROW_PRESS_TIMEOUT} = require("./constants");
 
 
@@ -45,14 +45,12 @@ const handleKeyPress = (key) => {
 
     case "p":
       browseHistory("previous");
-      break
-
-
+      break;
   }
 };
 
 const handleSliderChange = (event) => {
-  browseHistory(+event.target.value)
+  browseHistory(+event.target.value);
 };
 
 const browseHistory = (whichBoard) => {
@@ -60,18 +58,18 @@ const browseHistory = (whichBoard) => {
     case "previous":
       if (head > 0) {
         head -= 1;
-        updateView(boardHistory[head])}
+        updateView(boardHistory[head]);
+      }
       break;
     case "next":
       if (head < boardHistory.length - 1) {
         head += 1;
-        updateView(boardHistory[head])
+        updateView(boardHistory[head]);
       }
       break;
     default:
       head = whichBoard;
-      updateView(boardHistory[head])
-
+      updateView(boardHistory[head]);
   }
 };
 
@@ -100,6 +98,7 @@ let head = 0;
 /* MAIN LOGIC */
 
 let currentBoard = boardHistory[boardHistory.length-1];
+applyConfigToDOM();
 updateView(currentBoard);
 document.addEventListener("keydown", listenForArrowPress);
-document.querySelector("#gameHistory").addEventListener("change", handleSliderChange);
+document.querySelector("#game-history").addEventListener("change", handleSliderChange);

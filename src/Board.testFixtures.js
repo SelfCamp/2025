@@ -83,6 +83,7 @@ const squashRowFixtures = {
   '0,0,0,2': {
     original: rowFromValues(0, 0, 0, 2),
     squashedProperly: rowFromValues(0, 0, 0, 2),
+    direction: "up",
   },
 
   '0,0,2,0': {
@@ -90,24 +91,27 @@ const squashRowFixtures = {
     squashedProperly: [
       new Tile("#r0c0", 0),
       new Tile("#r0c1", 0),
-      new Tile("#r0c2", 0, false, false, 1),
+      new Tile("#r0c2", 0, false, false, {slideX: 1, slideY: 0}),
       new Tile("#r0c3", 2)
     ],
+    direction: "right",
   },
 
   '0,0,4,2': {
     original: rowFromValues(0, 0, 4, 2),
     squashedProperly: rowFromValues(0, 0, 4, 2),
+    direction: "left",
   },
 
   '4,0,0,2': {
     original: rowFromValues(4, 0, 0, 2),
     squashedProperly: [
-      new Tile("#r0c0", 0, false, false, 2),
+      new Tile("#r0c0", 0, false, false, {slideX: 0, slideY: 2}),
       new Tile("#r0c1", 0),
       new Tile("#r0c2", 4),
       new Tile("#r0c3", 2)
     ],
+    direction: "down",
   },
 
   '0,0,2,2': {
@@ -115,39 +119,43 @@ const squashRowFixtures = {
     squashedProperly: [
       new Tile("#r0c0", 0),
       new Tile("#r0c1", 0),
-      new Tile("#r0c2", 0, false, false, 1),
+      new Tile("#r0c2", 0, false, false, {slideX: -1, slideY: 0}),
       new Tile("#r0c3", 4, true)
     ],
+    direction: "left",
   },
 
   '2,0,0,2': {
     original: rowFromValues(2, 0, 0, 2),
     squashedProperly: [
-      new Tile("#r0c0", 0, false, false, 3),
+      new Tile("#r0c0", 0, false, false, {slideX: 0, slideY: -3}),
       new Tile("#r0c1", 0),
       new Tile("#r0c2", 0),
       new Tile("#r0c3", 4, true)
     ],
+    direction: "up",
   },
 
   '2,2,4,4': {
     original: rowFromValues(2, 2, 4, 4),
     squashedProperly: [
-      new Tile("#r0c0", 0, false, false, 2),
-      new Tile("#r0c1", 0, false, false, 1),
-      new Tile("#r0c2", 4, true, false, 1),
+      new Tile("#r0c0", 0, false, false, {slideX: 2, slideY: 0}),
+      new Tile("#r0c1", 0, false, false, {slideX: 1, slideY: 0}),
+      new Tile("#r0c2", 4, true, false, {slideX: 1, slideY: 0}),
       new Tile("#r0c3", 8, true)
     ],
+    direction: "right",
   },
 
   '4,0,2,2': {
     original: rowFromValues(4, 0, 2, 2),
     squashedProperly: [
-      new Tile("#r0c0", 0, false, false, 2),
+      new Tile("#r0c0", 0, false, false, {slideX: 0, slideY: 2}),
       new Tile("#r0c1", 0),
-      new Tile("#r0c2", 4, false, false, 1),
+      new Tile("#r0c2", 4, false, false, {slideX: 0, slideY: 1}),
       new Tile("#r0c3", 4, true)
     ],
+    direction: "down",
   },
 
 };
