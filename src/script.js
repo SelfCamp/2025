@@ -49,20 +49,15 @@ const handleSliderChange = (event) => {
 const browseHistory = (whichBoard) => {
   switch (whichBoard) {
     case "previous":
-      if (head > 0) {
-        head--;
-        updateView(boardHistory[head]);
-      }
+      (head > 0)
+      ? updateView(boardHistory[--head]) : {};
       break;
     case "next":
-      if (head < boardHistory.length - 1) {
-        head++;
-        updateView(boardHistory[head]);
-      }
+      (head < boardHistory.length - 1)
+      ? updateView(boardHistory[++head]) : {};
       break;
     default:
-      head = whichBoard;
-      updateView(boardHistory[head]);
+      updateView(boardHistory[whichBoard]);
   }
 };
 
