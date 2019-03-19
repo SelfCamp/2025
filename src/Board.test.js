@@ -167,20 +167,22 @@ describe('Board.squashRow()', () => {
 });
 
 
-testBoard = new Board();
 
 beforeEach(() => {
   return testBoard = new Board();
 });
 
-//TILE TEST
 
-test("Imported Tile should be of type object", () => expect(typeof(new Tile())).toBe('object'));
+describe("new Tile()", () => {
 
-//BOARD TEST
+  test("Should be of type object", () => expect(typeof(new Tile())).toBe('object'));
 
-describe("Board object", () => {
-  test("Should be of type object", () => expect(typeof(new Board())).toBe('object'));
+});
+
+
+describe("new Board()", () => {
+
+  test("Should be of type object", () => expect(typeof(testBoard)).toBe('object'));
 
   test("Should have matrix property with a 4x4 board",
       () => {
@@ -196,11 +198,12 @@ describe("Board object", () => {
         expect(result.includes(false)).toEqual(false)
       }
   );
+
 });
 
 
-//BOARD/SPAWNTILES TEST
-describe("spawnTitles method", () => {
+describe("Board.spawnTitles()", () => {
+
   test("Can create a single new Tile",
       () => {
         testBoard.spawnTiles(1);
@@ -227,4 +230,5 @@ describe("spawnTitles method", () => {
         }
       }
   )
+
 });
