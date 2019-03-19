@@ -123,9 +123,9 @@ describe('Board.propagateTile()', () => {
 
 
 const testSquashRowMutation = (mockRowPair) => {
-  let {squashedProperly} = mockRowPair;
+  let {squashedProperly, direction} = mockRowPair;
   let original = cloneDeep(mockRowPair.original);
-  new Board().squashRow(original);
+  new Board().squashRow(original, direction);
   expect(original).toEqual(squashedProperly);
 };
 
