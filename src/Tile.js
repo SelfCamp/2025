@@ -7,11 +7,11 @@
  * @constructor
  */
 function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousSlideCoordinates={slideX: 0, slideY: 0}) {
+  this.selector = selector;
   this.currentValue = currentValue || null;  // Turns `0` argument into `null`
   this.wasJustMerged = wasJustMerged;
   this.wasJustSpawned = wasJustSpawned;
-  this.previousSlideCoordinates = previousSlideCoordinates;  // Turns `0` argument into `null`
-  this.selector = selector;
+  this.previousSlideCoordinates = previousSlideCoordinates;
 }
 
 module.exports = {

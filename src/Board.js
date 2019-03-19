@@ -38,7 +38,7 @@ function Board() {
     }
   };
 
-  this.resetAnimationProperties = () => {
+  this.resetTileAnimationProperties = () => {
     for (let row of this.matrix) {
       for (let tile of row) {
         tile.wasJustMerged = false;
@@ -84,6 +84,7 @@ function Board() {
   };
 
   this.createNextBoard = (direction) => {
+    this.resetTileAnimationProperties();
     let nextBoard = this.squashBoard(this, direction);
     if (nextBoard.hasChanged()) {
       nextBoard.spawnTiles(1);

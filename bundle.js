@@ -17150,7 +17150,7 @@ function Board() {
     }
   };
 
-  this.resetAnimationProperties = () => {
+  this.resetTileAnimationProperties = () => {
     for (let row of this.matrix) {
       for (let tile of row) {
         tile.wasJustMerged = false;
@@ -17196,6 +17196,7 @@ function Board() {
   };
 
   this.createNextBoard = (direction) => {
+    this.resetTileAnimationProperties();
     let nextBoard = this.squashBoard(this, direction);
     if (nextBoard.hasChanged()) {
       nextBoard.spawnTiles(1);
@@ -17360,11 +17361,11 @@ module.exports = {
  * @constructor
  */
 function Tile(selector, currentValue=null, wasJustMerged=false, wasJustSpawned=false, previousSlideCoordinates={slideX: 0, slideY: 0}) {
+  this.selector = selector;
   this.currentValue = currentValue || null;  // Turns `0` argument into `null`
   this.wasJustMerged = wasJustMerged;
   this.wasJustSpawned = wasJustSpawned;
-  this.previousSlideCoordinates = previousSlideCoordinates;  // Turns `0` argument into `null`
-  this.selector = selector;
+  this.previousSlideCoordinates = previousSlideCoordinates;
 }
 
 module.exports = {
@@ -17403,11 +17404,10 @@ const applyConfigToDOM = () => {
  */
 const updateView = (newBoard, direction=null, head=0) => {
   if (!direction) {
-    squashBoardInDOM(newBoard)
+    initiateMergeSpawnInDOM(newBoard)
   } else {
-    updateMvAttributesInDOM(newBoard);
-    // newBoard.resetAnimationProperties();
-    setTimeout(() => squashBoardInDOM(newBoard), ANIMATION_SLIDE_DURATION);
+    initiateSlideInDOM(newBoard);
+    setTimeout(() => initiateMergeSpawnInDOM(newBoard), ANIMATION_SLIDE_DURATION);
     let gameStatus = newBoard.gameStatus();
     if (gameStatus !== "ongoing") {
       displayEndOfGame(gameStatus);
@@ -17428,28 +17428,28 @@ const displayEndOfGame = (gameStatus) => {
   }
 };
 
-const updateMvAttributesInDOM = (newBoard) => {
+const initiateSlideInDOM = (newBoard) => {
   for (let row of newBoard.matrix) {
     for (let tile of row) {
       let tileElement = document.querySelector(tile.selector);
       let {slideX, slideY} = tile.previousSlideCoordinates;
-      let {wasJustMerged, wasJustSpawned} = tile;
       let isSliding = slideX || slideY;
       tileElement.setAttribute("style", `--slide-x: ${slideX}; --slide-y: ${slideY}`);
-      tileElement.setAttribute("data-state",
-          isSliding ? 'sliding'
-              : wasJustMerged ? 'merged'
-              : wasJustSpawned ? 'spawned'
-              : ''
-      );
+      tileElement.setAttribute("data-state", isSliding ? 'sliding' : '');
     }
   }
 };
 
-const squashBoardInDOM = (newBoard) => {
+const initiateMergeSpawnInDOM = (newBoard) => {
   for (let row of newBoard.matrix) {
     for (let tile of row) {
       let tileElement = document.querySelector(tile.selector);
+      let {wasJustMerged, wasJustSpawned} = tile;
+      tileElement.setAttribute("data-state",
+              wasJustMerged ? 'merged'
+              : wasJustSpawned ? 'spawned'
+              : ''
+      );
       tileElement.setAttribute("value", tile.currentValue);
       tileElement.textContent = tile.currentValue;
     }
@@ -17469,8 +17469,8 @@ const updateSliderInDOM = (length) => {
 
 module.exports = {
   applyConfigToDOM,
-  updateMvAttributesInDOM,
-  squashBoardInDOM,
+  initiateSlideInDOM,
+  squashBoardInDOM: initiateMergeSpawnInDOM,
   changeBackgroundInDOM,
   updateView,
   displayEndOfGame,
