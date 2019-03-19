@@ -5,10 +5,30 @@
   --tile-slide-length: calc(var(--tile-size) + var(--grid-gap));
 }
 
+/*layout*/
+
+body {
+  background-color: blue;
+}
+
+#front {
+  margin: auto;
+  display: grid;
+  grid-template-columns:  1fr;
+  justify-items: center;
+  width: 50vw;
+  background-color: red;
+}
+
+#game {
+  position:relative;
+  width: 50vw;
+  height: 50vw;
+  background-color: grey;
+}
+
 #board, #board-base {
   position: absolute;
-  top: calc((100vh - var(--board-size)) / 2);
-  left: calc((100vw - var(--board-size)) / 2);
   width: var(--board-size);
   height: var(--board-size);
   display: grid;
@@ -158,3 +178,4 @@
     transform: scale(1.1);
   }
 }
+
