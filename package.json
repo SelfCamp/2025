@@ -9,6 +9,7 @@
   "scripts": {
     "test": "jest --verbose",
     "build": "browserify -p tinyify src/script.js > bundle.js",
+    "devBuild": "browserify src/script.js > bundle.js",
     "start": "live-server"
   },
   "repository": {
