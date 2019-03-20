@@ -62,6 +62,12 @@ const browseHistory = (whichBoard) => {
   }
 };
 
+/**
+ * Determines whether enough time has passed since last keypress to perform a new one
+ *
+ * - Makes sure board transformation finishes before starting a new one, avoiding UI glitches
+ * @returns {boolean}
+ */
 const isKeyPressAllowed = () => {
     if (!arrowPressHistory.length) {
       return true
@@ -83,20 +89,27 @@ const getDirectionFromKey = (key) => {
 };
 
 
-/* INITIALIZE OBJECTS */
+/* INITIALIZE GAME STATE OBJECTS */
 
-const board = new Board();
-board.spawnTiles(2);
+let boardHistory = [new Board()];
 
-let boardHistory = [board];
+/**
+ * Contains the direction and timestamp of all previous player moves
+ * TODO: Add this to boardHistory as initiatingArrowPress and merge as gameTimeline
+ */
 let arrowPressHistory = [];
+
+/**
+ * Determines current position in `boardHistory`
+ * */
 let head = 0;
 
 
 /* MAIN LOGIC */
 
-let currentBoard = boardHistory[boardHistory.length-1];
+let initialBoard = boardHistory[head];
+initialBoard.spawnTiles(2); // TODO: this should happen inside the Board constructor when it isn't mocked
 applyConfigToDOM();
-updateView(currentBoard);
+updateView(initialBoard);
 document.addEventListener("keydown", listenForKeyPress);
 document.querySelector("#game-history").addEventListener("change", handleSliderChange);
