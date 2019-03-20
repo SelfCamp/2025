@@ -45,8 +45,7 @@ function Game(difficulty=1) {
    * Number of boards in history, including current one (NOT including 'future' boards when browsing history)
    */
   this.length = () =>
-      head + 1
-  this.timeline.slice(0, this.head + 1).length;
+      this.head + 1;
 
   /**
    * @returns {boolean}
