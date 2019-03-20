@@ -36,7 +36,7 @@ function Board(scenario="noMock") {
     }
   };
 
-  this.resetTileAnimationProperties = () => {
+  this.clearTileAnimationProperties = () => {
     for (let row of this.matrix) {
       for (let tile of row) {
         tile.wasJustMerged = false;
@@ -82,7 +82,6 @@ function Board(scenario="noMock") {
   };
 
   this.createNextBoard = (direction) => {
-    this.resetTileAnimationProperties();
     let nextBoard = this.squashBoard(this, direction);
     if (nextBoard.hasChanged()) {
       nextBoard.spawnTiles(1);
@@ -93,6 +92,7 @@ function Board(scenario="noMock") {
   this.squashBoard = (currentBoard, direction) => {
     let newBoard = new Board();
     newBoard.matrix = cloneDeep(currentBoard.matrix);
+    newBoard.clearTileAnimationProperties();
     let temporaryBoardSlices = this.sliceMatrixPerDirection(newBoard.matrix, direction);
     for (let row of temporaryBoardSlices) {
       this.squashRow(row, direction)  // mutates tiles in input
