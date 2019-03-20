@@ -91,6 +91,7 @@ function Board(scenario="noMock") {
 
   this.squashBoard = (currentBoard, direction) => {
     let newBoard = new Board();
+    newBoard.initiatingDirection = direction;
     newBoard.matrix = cloneDeep(currentBoard.matrix);
     newBoard.clearTileAnimationProperties();
     let temporaryBoardSlices = this.sliceMatrixPerDirection(newBoard.matrix, direction);

@@ -26,7 +26,6 @@ const handleArrowKeyPress = (key) => {
   let currentBoard = gameTimeline[head];
   let nextBoard = currentBoard.createNextBoard(direction);
   if (nextBoard.hasChanged()) {
-    nextBoard.initiatingDirection = direction; // TODO: Set this in Board based on direction
     gameTimeline.push(nextBoard);
     head++;
     updateView(nextBoard, direction, head);
