@@ -21,18 +21,12 @@ const listenForKeyPress = event => {
 const handleArrowKeyPress = (key) => {
   if (head !== gameTimeline.length - 1) {  // FIXME: This doesn't seem to belong here
     gameTimeline = gameTimeline.slice(0, head + 1);
-    arrowPressHistory = arrowPressHistory.slice(0, head + 1);  // TODO: remove after testing
   }
   let direction = getDirectionFromKey(key);
   let currentBoard = gameTimeline[head];
   let nextBoard = currentBoard.createNextBoard(direction);
   if (nextBoard.hasChanged()) {
-
-    // BEFORE
-    arrowPressHistory.push({direction: direction, timestamp: new Date()}); // TODO: remove after testing
-    // AFTER
-    // nextBoard.initiatingDirection = direction; // TODO: Test  - next: let Board set this based on direction
-
+    nextBoard.initiatingDirection = direction; // TODO: Set this in Board based on direction
     gameTimeline.push(nextBoard);
     head++;
     updateView(nextBoard, direction, head);
@@ -75,23 +69,10 @@ const browseHistory = (whichBoard) => {
  * @returns {boolean}
  */
 const isKeyPressAllowed = () => {
-
-    // BEFORE
-    if (!arrowPressHistory.length) {  // TODO: remove after testing
-      return true
+   if (!gameTimeline[head].initiatingDirection) {
+      return true;
     }
-    // AFTER
-    // if (!gameTimeline[head].initiatingDirection) {
-    //   return true;
-    // }
-
-    // BEFORE
-    let previousArrowPress = arrowPressHistory[arrowPressHistory.length-1];  // TODO: remove after testing
-    let timeSinceLastArrowPress = new Date() - previousArrowPress.timestamp;  // TODO: remove after testing
-
-    // AFTER
-    // let timeSinceLastArrowPress = new Date() - gameTimeline[head].createdAt;
-
+    let timeSinceLastArrowPress = new Date() - gameTimeline[head].createdAt;
     return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
 };
 
@@ -109,13 +90,10 @@ const getDirectionFromKey = (key) => {
 
 /* INITIALIZE GAME STATE OBJECTS */
 
-/** TODO
- * Will contain all boards, including initiatingDirection and createdAt
+/**
+ * Contains all boards since game start, including `initiatingDirection` and `createdAt` properties
  */
 let gameTimeline = [new Board()];
-
-/** TODO: Merge into gameTimeline */
-let arrowPressHistory = [];
 
 /** Determines current position in `gameTimeline` */
 let head = 0;
