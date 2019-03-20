@@ -12,9 +12,13 @@ const {Board} = require('./Board');
 function Game(difficulty=1) {
   this.difficulty = difficulty;
   this.score = 0;
-  this.gameTimeline = [new Board()];
+  this.timeline = [new Board()];
   this.head = 0;
 
   // TODO: Implement
 
 }
+
+module.exports = {
+  Game,
+};
