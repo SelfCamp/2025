@@ -74,19 +74,26 @@ function Board(scenario="noMock") {
     }
     for (let direction of ["up", "right", "down", "left"]) {
       let testBoardCopy = this.createNextBoard(direction);
-      if (testBoardCopy.hasChanged()) {
+      if (testBoardCopy) {
         return "ongoing"
       }
     }
     return "lost";
   };
 
+  /**
+   * Return clone of current board squashed in given direction, or `false` if squashing results in no change
+   *
+   * @param direction
+   * @returns {*}
+   */
   this.createNextBoard = (direction) => {
     let nextBoard = this.squashBoard(this, direction);
     if (nextBoard.hasChanged()) {
       nextBoard.spawnTiles(1);
+      return nextBoard;
     }
-    return nextBoard;
+    return false;
   };
 
   this.squashBoard = (currentBoard, direction) => {

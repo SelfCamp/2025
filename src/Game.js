@@ -2,6 +2,7 @@ const {Board} = require('./Board');
 const {ARROW_PRESS_TIMEOUT} = require('./constants');
 
 
+// TODO: Implement
 /**
  * Create new Game object
  *
@@ -17,8 +18,6 @@ function Game(difficulty=1) {
   this.timeline = [new Board()];
   /** Determines current position in `Game.timeline` */
   this.head = 0;
-
-  // TODO: Implement
 
   /**
    * Determines whether enough time has passed since last keypress to perform a new one
@@ -41,9 +40,45 @@ function Game(difficulty=1) {
   this.currentBoard = () =>
       this.timeline[this.head];
 
+  /**
+   * @returns {number}
+   * Number of boards in history, including current one (NOT including 'future' boards when browsing history)
+   */
   this.length = () =>
-      this.timeline.slice(0, this.head + 1).length;
+      head + 1
+  this.timeline.slice(0, this.head + 1).length;
+
+  /**
+   * @returns {boolean}
+   * `true` if current board is NOT last in timeline (`head` not at end, redo is possible)
+   * `false` if current board is last in timeline (`head` at end, redo is NOT possible)
+   */
+  this.isBrowsingHistory = () =>
+      this.head !== this.timeline.length - 1;
+
+  /**
+   * Erase all boards after `currentBoard` (killing ability to redo)
+   */
+  this.eraseFuture = () =>
+      this.timeline = this.timeline.slice(0, this.head + 1);
+
+  /**
+   * TODO: write this
+   * @param direction
+   * @returns {boolean}
+   */
+  this.makeMove = (direction) => {
+    let nextBoard = this.currentBoard().createNextBoard(direction);
+    if (nextBoard) {
+      this.timeline.push(nextBoard);
+      this.head++;
+      return true;
+    }
+    return false;
+  };
+
 }
+
 
 module.exports = {
   Game,

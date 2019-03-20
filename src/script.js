@@ -10,7 +10,7 @@ const {ARROW_PRESS_TIMEOUT} = require("./constants");
 const listenForKeyPress = (game, event) => {
   if (game.isKeyPressAllowed()) {
     if (isItAnArrowKey(event.key)) {
-      handleArrowKeyPress(event.key)
+      handleArrowKeyPress(game, event.key)
     }
     else if (isItAHistoryKey(event.key)) {
       handleHistoryKeyPress(event.key)
@@ -18,23 +18,14 @@ const listenForKeyPress = (game, event) => {
   }
 };
 
-const handleArrowKeyPress = (key) => {
-  if (game.head !== game.timeline.length - 1) {  // FIXME: This doesn't seem to belong here
-    game.timeline = game.timeline.slice(0, game.head + 1);
+const handleArrowKeyPress = (game, key) => {
+  if (game.isBrowsingHistory()) {
+    game.eraseFuture();
   }
   let direction = getDirectionFromKey(key);
-
-  // TODO: ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ all of this should be in the Game class
-  let currentBoard = game.timeline[game.head];
-  let nextBoard = currentBoard.createNextBoard(direction);
-  if (nextBoard.hasChanged()) {
-    game.timeline.push(nextBoard);
-    game.head++;
-  // TODO: ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ all of this should be in the Game class
-
-    updateView(nextBoard, direction, game.head);
+  if (game.makeMove(direction)) {
+    updateView(game.currentBoard(), direction, game.head);
     updateSliderInDOM(game.head);
-
   }
 };
 
