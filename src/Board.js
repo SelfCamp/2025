@@ -9,6 +9,8 @@ const {boardMatrixFixtures} = require("./Board.testFixtures");
  * @constructor
  */
 function Board(scenario="noMock") {
+  this.createdAt = new Date();
+  this.initiatingDirection = null;
   this.hasChanged = false;
   this.matrix = cloneDeep(boardMatrixFixtures[scenario]);
 
