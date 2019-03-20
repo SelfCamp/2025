@@ -30,10 +30,19 @@ function Game(difficulty=1) {
     if (this.timeline.length === 1) {
       return true;
     }
-    let timeSinceLastArrowPress = new Date() - this.timeline[this.head].createdAt;
+    let timeSinceLastArrowPress = new Date() - this.currentBoard().createdAt;
     return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
   };
 
+  /**
+   * @returns {Board}
+   * The board `Game.head` is currently pointing to
+   */
+  this.currentBoard = () =>
+      this.timeline[this.head];
+
+  this.length = () =>
+      this.timeline.slice(0, this.head + 1).length;
 }
 
 module.exports = {
