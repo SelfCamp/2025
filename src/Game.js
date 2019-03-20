@@ -1,4 +1,5 @@
 const {Board} = require('./Board');
+const {ARROW_PRESS_TIMEOUT} = require('./constants');
 
 
 /**
@@ -18,6 +19,20 @@ function Game(difficulty=1) {
   this.head = 0;
 
   // TODO: Implement
+
+  /**
+   * Determines whether enough time has passed since last keypress to perform a new one
+   *
+   * - Makes sure board transformation finishes before starting a new one, avoiding UI glitches
+   * @returns {boolean}
+   */
+  this.isKeyPressAllowed = () => {
+    if (this.timeline.length === 1) {
+      return true;
+    }
+    let timeSinceLastArrowPress = new Date() - this.timeline[this.head].createdAt;
+    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
+  };
 
 }
 

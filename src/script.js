@@ -7,8 +7,8 @@ const {ARROW_PRESS_TIMEOUT} = require("./constants");
 
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
 
-const listenForKeyPress = event => {
-  if (isKeyPressAllowed()) {
+const listenForKeyPress = (game, event) => {
+  if (game.isKeyPressAllowed()) {
     if (isItAnArrowKey(event.key)) {
       handleArrowKeyPress(event.key)
     }
@@ -64,21 +64,6 @@ const browseHistory = (whichBoard) => {
   }
 };
 
-/**
- * Determines whether enough time has passed since last keypress to perform a new one
- *
- * - Makes sure board transformation finishes before starting a new one, avoiding UI glitches
- * - TODO: make Game method
- * @returns {boolean}
- */
-const isKeyPressAllowed = () => {
-   if (!game.timeline[game.head].initiatingDirection) {
-      return true;
-    }
-    let timeSinceLastArrowPress = new Date() - game.timeline[game.head].createdAt;
-    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
-};
-
 const isItAnArrowKey = (key) =>
     ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(key);
 
@@ -98,5 +83,5 @@ let initialBoard = game.timeline[game.head];
 initialBoard.spawnTiles(2);
 applyConfigToDOM();
 updateView(initialBoard);
-document.addEventListener("keydown", listenForKeyPress);
+document.addEventListener("keydown", (event) => listenForKeyPress(game, event));
 document.querySelector("#game-history").addEventListener("change", handleSliderChange);
