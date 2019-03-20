@@ -12,7 +12,9 @@ const {Board} = require('./Board');
 function Game(difficulty=1) {
   this.difficulty = difficulty;
   this.score = 0;
+  /** Contains all Board objects created throughout the game (except those destroyed by undo + new move) */
   this.timeline = [new Board()];
+  /** Determines current position in `Game.timeline` */
   this.head = 0;
 
   // TODO: Implement

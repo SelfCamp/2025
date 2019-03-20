@@ -19,21 +19,21 @@ const listenForKeyPress = event => {
 };
 
 const handleArrowKeyPress = (key) => {
-  if (head !== game.timeline.length - 1) {  // FIXME: This doesn't seem to belong here
-    game.timeline = game.timeline.slice(0, head + 1);
+  if (game.head !== game.timeline.length - 1) {  // FIXME: This doesn't seem to belong here
+    game.timeline = game.timeline.slice(0, game.head + 1);
   }
   let direction = getDirectionFromKey(key);
 
   // TODO: ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ all of this should be in the Game class
-  let currentBoard = game.timeline[head];
+  let currentBoard = game.timeline[game.head];
   let nextBoard = currentBoard.createNextBoard(direction);
   if (nextBoard.hasChanged()) {
     game.timeline.push(nextBoard);
-    head++;
+    game.head++;
   // TODO: ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ all of this should be in the Game class
 
-    updateView(nextBoard, direction, head);
-    updateSliderInDOM(head);
+    updateView(nextBoard, direction, game.head);
+    updateSliderInDOM(game.head);
 
   }
 };
@@ -52,12 +52,12 @@ const handleSliderChange = (event) => {
 const browseHistory = (whichBoard) => {
   switch (whichBoard) {
     case "previous":
-      (head > 0)
-        && updateView(game.timeline[--head]);
+      (game.head > 0)
+        && updateView(game.timeline[--game.head]);
       break;
     case "next":
-      (head < game.timeline.length - 1)
-        && updateView(game.timeline[++head]);
+      (game.head < game.timeline.length - 1)
+        && updateView(game.timeline[++game.head]);
       break;
     default:
       updateView(game.timeline[whichBoard]);
@@ -72,10 +72,10 @@ const browseHistory = (whichBoard) => {
  * @returns {boolean}
  */
 const isKeyPressAllowed = () => {
-   if (!game.timeline[head].initiatingDirection) {
+   if (!game.timeline[game.head].initiatingDirection) {
       return true;
     }
-    let timeSinceLastArrowPress = new Date() - game.timeline[head].createdAt;
+    let timeSinceLastArrowPress = new Date() - game.timeline[game.head].createdAt;
     return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
 };
 
@@ -91,16 +91,10 @@ const getDirectionFromKey = (key) => {
 };
 
 
-/* INITIALIZE GAME STATE OBJECTS */
-
-/** Determines current position in `game.timeline` */
-let head = 0;
-
-
 /* MAIN LOGIC */
 
 let game = new Game();
-let initialBoard = game.timeline[head];
+let initialBoard = game.timeline[game.head];
 initialBoard.spawnTiles(2);
 applyConfigToDOM();
 updateView(initialBoard);
