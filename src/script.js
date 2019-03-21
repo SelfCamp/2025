@@ -2,7 +2,6 @@
 
 const {Game} = require('./Game');
 const {applyConfigToDOM, updateView, updateSliderInDOM} = require('./domManipulation');
-const {ARROW_PRESS_TIMEOUT} = require("./constants");
 
 
 /* DEFINE TOP EVENT HANDLING FUNCTIONS */
@@ -30,29 +29,19 @@ const handleArrowKeyPress = (game, key) => {
 };
 
 const handleHistoryKeyPress = (key) => {
-  (key === 'n')
-    && browseHistory("next");
-  (key === 'p')
-    && browseHistory("previous");
+  if (key === 'n') {
+    game.browseHistory("next");
+  } else if (key === 'p') {
+    game.browseHistory("previous");
+  }
+  updateView(game.currentBoard());
 };
 
 const handleSliderChange = (event) => {
-  browseHistory(+event.target.value);
-};
+  let requestedPosition = +event.target.value;
+  game.browseHistory(requestedPosition);
+  updateView(game.currentBoard());
 
-const browseHistory = (whichBoard) => {
-  switch (whichBoard) {
-    case "previous":
-      (game.head > 0)
-        && updateView(game.timeline[--game.head]);
-      break;
-    case "next":
-      (game.head < game.timeline.length - 1)
-        && updateView(game.timeline[++game.head]);
-      break;
-    default:
-      updateView(game.timeline[whichBoard]);
-  }
 };
 
 const isItAnArrowKey = (key) =>
@@ -69,10 +58,10 @@ const getDirectionFromKey = (key) => {
 
 /* MAIN LOGIC */
 
-let game = new Game();
-let initialBoard = game.timeline[game.head];
-initialBoard.spawnTiles(2);
 applyConfigToDOM();
+let game = new Game();
+let initialBoard = game.currentBoard();
+initialBoard.spawnTiles(2);
 updateView(initialBoard);
 document.addEventListener("keydown", (event) => listenForKeyPress(game, event));
 document.querySelector("#game-history").addEventListener("change", handleSliderChange);

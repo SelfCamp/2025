@@ -62,7 +62,6 @@ function Game(difficulty=1) {
       this.timeline = this.timeline.slice(0, this.head + 1);
 
   /**
-   * TODO: write this
    * @param direction
    * @returns {boolean}
    */
@@ -75,6 +74,32 @@ function Game(difficulty=1) {
     }
     return false;
   };
+
+  /**
+   * Move `head` to requested position
+   *
+   * @param whichBoard {number|'previous'|'next'}
+   */
+  this.browseHistory = (whichBoard) => {
+    switch (whichBoard) {
+      case "previous":
+        if (this.canUndo())
+          this.head--;
+        break;
+      case "next":
+        if (this.canRedo())
+          this.head++;
+        break;
+      default:
+        this.head = whichBoard;
+    }
+  };
+
+  this.canUndo = () =>
+      (this.head > 0);
+
+  this.canRedo = () =>
+      (this.head < this.timeline.length - 1);
 
 }
 
