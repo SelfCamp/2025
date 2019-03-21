@@ -2,7 +2,6 @@ const {Board} = require('./Board');
 const {ARROW_PRESS_TIMEOUT} = require('./config');
 
 
-// TODO: Implement
 /**
  * Create new Game object
  *
@@ -48,14 +47,6 @@ function Game(difficulty=1) {
       this.head + 1;
 
   /**
-   * @returns {boolean}
-   * `true` if current board is NOT last in timeline (`head` not at end, redo is possible)
-   * `false` if current board is last in timeline (`head` at end, redo is NOT possible)
-   */
-  this.isBrowsingHistory = () =>
-      this.head !== this.timeline.length - 1;
-
-  /**
    * Erase all boards after `currentBoard` (killing ability to redo)
    */
   this.eraseFuture = () =>
@@ -95,9 +86,19 @@ function Game(difficulty=1) {
     }
   };
 
+  /**
+   * @returns {boolean}
+   * `true` if current board is NOT first in timeline (`head` not at 0, undo is possible)
+   * `false` if current board is first in timeline (`head` at 0, undo is NOT possible)
+   */
   this.canUndo = () =>
       (this.head > 0);
 
+  /**
+   * @returns {boolean}
+   * `true` if current board is NOT last in timeline (`head` not at end, redo is possible)
+   * `false` if current board is last in timeline (`head` at end, redo is NOT possible)
+   */
   this.canRedo = () =>
       (this.head < this.timeline.length - 1);
 

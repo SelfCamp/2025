@@ -13,7 +13,7 @@ const listenForKeyPress = (game, event) => {
 };
 
 const handleArrowKeyPress = (game, key) => {
-  if (game.isBrowsingHistory()) {
+  if (game.canRedo()) {
     game.eraseFuture();
   }
   let direction = getDirectionFromKey(key);
