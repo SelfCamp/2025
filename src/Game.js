@@ -180,9 +180,9 @@ function Game(mockScenario='noMock') {
       for (let j of [0, 1, 2, 3]) {
         temporaryMatrixSlices[i].push(
             (direction === 'up')     ? matrix[3-j][i]  // Rotate matrix 90° clockwise
-                : (direction === 'down')   ? matrix[j][3-i]  // Rotate matrix 90° counter-clockwise
-                : (direction === 'left')   ? matrix[i][3-j]  // Flip matrix along row axis
-                    :             /* 'right' */  matrix[i][j]    // Leave as is
+          : (direction === 'down')   ? matrix[j][3-i]  // Rotate matrix 90° counter-clockwise
+          : (direction === 'left')   ? matrix[i][3-j]  // Flip matrix along row axis
+          :             /* 'right' */  matrix[i][j]    // Leave as is
         )
       }
     }
@@ -309,10 +309,6 @@ function Game(mockScenario='noMock') {
 
     return false;
   };
-
-
-
-
 
 }
 
