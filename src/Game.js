@@ -7,14 +7,12 @@ const {ARROW_PRESS_TIMEOUT} = require('./config');
  *
  * - Contains all state required to play 1 game and move in its history
  *
- * @param difficulty
+ * @param mockScenario {"noMock"|"almostLost"|"almostWon"|"oneMissing"}
  * @constructor
  */
-function Game(difficulty=1) {
-  this.difficulty = difficulty;
-  this.score = 0;
+function Game(mockScenario) {
   /** Contains all Board objects created throughout the game (except those destroyed by undo + new move) */
-  this.timeline = [new Board()];
+  this.timeline = [new Board(mockScenario)];
   /** Determines current position in `Game.timeline` */
   this.head = 0;
 

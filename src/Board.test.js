@@ -223,7 +223,7 @@ describe("Board.spawnTitles()", () => {
   test("Only adds to empty tiles",
       () => {
         for (let i = 0; i < 10; i++) {
-          testBoard = new Board("testOneMissing");
+          testBoard = new Board("oneMissing");
           expect(testBoard.matrix[1][1].currentValue).toBe(null);
           testBoard.spawnTiles(1);
           expect(testBoard.matrix[1][1].currentValue).not.toEqual(null)

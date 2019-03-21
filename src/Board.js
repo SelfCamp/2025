@@ -5,17 +5,19 @@ const {boardMatrixFixtures} = require("./Board.testFixtures");
 
 /**
  * Create new Board object
- * @param scenario {"noMock"|"almostLost"|"almostWon"|"testOneMissing"}
+ *
+ * @param mockScenario {"noMock"|"almostLost"|"almostWon"|"oneMissing"}
  * @constructor
  */
-function Board(scenario="noMock") {
+function Board(mockScenario="noMock") {
   this.createdAt = new Date();
   this.initiatingDirection = null;
   this.hasChanged = false;
-  this.matrix = cloneDeep(boardMatrixFixtures[scenario]);
+  this.matrix = cloneDeep(boardMatrixFixtures[mockScenario]);
 
   /**
-   * Add new tile(s) to the board.
+   * Add starter values to `howMany` empty tiles at random locations
+   *
    * @param {number} howMany - How many tiles to add to the board.
    * @param {boolean} isItTheOneAlready - Return special tile if param is TRUE.
    */
