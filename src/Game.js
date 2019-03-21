@@ -88,17 +88,30 @@ function Game(mockScenario='noMock') {
   this.canRedo = () =>
       (this.head < this.timeline.length - 1);
 
+  /**
+   * Return string describing game status by analyzing board given as input (default: `currentBoard`)
+   *
+   * @param whenBoardIs
+   * @returns {'ongoing'|'timeForTheOne'|'won'|'lost'}
+   */
   this.status = (whenBoardIs=this.currentBoard()) => {
     let hasEmptySpots;
+    let maxValue = 0;
     for (let row of whenBoardIs.matrix) {
       for (let tile of row) {
-        if (tile.currentValue === 2048) {
-          return 'won';
+        if (tile.currentValue > maxValue) {
+          maxValue = tile.currentValue;
         }
-        if (tile.currentValue === null) {
+        if (!tile.currentValue) {
           hasEmptySpots = true;
         }
       }
+    }
+    if (maxValue === 2049) {
+      return 'won'
+    }
+    if (maxValue === 2048 && hasEmptySpots) {
+      return 'timeForTheOne'  // TODO: continue expanding +1 logic outwards from here
     }
     if (hasEmptySpots) {
       return 'ongoing'

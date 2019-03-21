@@ -11,7 +11,7 @@ const applyConfigToDOM = () => {
 
 /**
  * @param newBoard {object}
- * @param gameStatus {'ongoing'|'won'|'lost'}
+ * @param gameStatus {'ongoing'|'timeForTheOne'|'won'|'lost'}
  * @param slide {boolean}
  * Whether slide animation should appear (may be omitted when doing undo/redo)
  */
