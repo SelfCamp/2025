@@ -18,7 +18,7 @@ const handleArrowKeyPress = (game, key) => {
   }
   let direction = getDirectionFromKey(key);
   if (game.makeMove(direction)) {
-    updateView(game.currentBoard(), direction, game.head);
+    updateView(game.currentBoard(), game.currentBoard().gameStatus(), true);  // TODO: move status into game
     updateSliderInDOM(game.head);
   }
 };
@@ -29,13 +29,13 @@ const handleHistoryKeyPress = (game, key) => {
   } else if (key === 'p') {
     game.browseHistory("previous");
   }
-  updateView(game.currentBoard());
+  updateView(game.currentBoard(), game.currentBoard().gameStatus(), false);  // TODO: move status into game
 };
 
 const handleSliderChange = (game, event) => {
   let requestedPosition = +event.target.value;
   game.browseHistory(requestedPosition);
-  updateView(game.currentBoard());
+  updateView(game.currentBoard(), game.currentBoard().gameStatus(), false);  // TODO: move status into game
 
 };
 

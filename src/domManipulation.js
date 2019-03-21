@@ -10,21 +10,19 @@ const applyConfigToDOM = () => {
 };
 
 /**
- * If no direction is received, we assume this is an undo and animations are ignored
- * @param newBoard
- * @param direction
+ * @param newBoard {object}
+ * @param gameStatus {'ongoing'|'won'|'lost'}
+ * @param slide {boolean}
+ * Whether slide animation should appear (may be omitted when doing undo/redo)
  */
-const updateView = (newBoard, direction=null, head=0) => {
-  if (!direction) {
+const updateView = (newBoard, gameStatus, slide=true) => {
+  if (!slide) {
     initiateMergeSpawnInDOM(newBoard)
   } else {
     initiateSlideInDOM(newBoard);
     setTimeout(() => initiateMergeSpawnInDOM(newBoard), ANIMATION_SLIDE_DURATION);
-    let gameStatus = newBoard.gameStatus();
-    if (gameStatus !== "ongoing") {
-      displayEndOfGame(gameStatus);
-    }
   }
+  displayEndOfGame(gameStatus);
 };
 
 const initiateSlideInDOM = (newBoard) => {
@@ -58,6 +56,7 @@ const initiateMergeSpawnInDOM = (newBoard) => {
 const displayEndOfGame = (gameStatus) => {
   switch (gameStatus) {
     case 'ongoing':
+      changeBackgroundInDOM('white');
       break;
     case 'won':
       changeBackgroundInDOM('green');
