@@ -2,6 +2,7 @@ const {cloneDeep} = require('lodash');
 
 const {Tile} = require('./Tile');
 const {Board} = require('./Board');
+const {Game} = require('./Game');
 const {
   squashRowFixtures,
   propagateTileFixtures,
@@ -11,7 +12,7 @@ const {
 
 const createSliceMatrixPerDirectionFixtures = (direction) => {
   let original = new Board().matrix;
-  let rotated = new Board().sliceMatrixPerDirection(original, direction);
+  let rotated = new Game().sliceMatrixPerDirection(original, direction);
   return {original, rotated};
 };
 
@@ -43,14 +44,14 @@ describe('Board.sliceMatrixPerDirection()', () => {
 const testAttemptMergeMutation = (mockRowPair) => {
   let {index, mergedProperly} = mockRowPair;
   let original = cloneDeep(mockRowPair.original);
-  new Board().attemptMerge(original, index);
+  new Game().attemptMerge(original, index);
   expect(original).toEqual(mergedProperly);
 };
 
 const testAttemptMergeReturnValue = (mockRowPair) => {
   let {index, expectedReturnValue} = mockRowPair;
   let original = cloneDeep(mockRowPair.original);
-  let returnValue = new Board().attemptMerge(original, index);
+  let returnValue = new Game().attemptMerge(original, index);
   expect(returnValue).toEqual(expectedReturnValue);
 
 };
@@ -83,14 +84,14 @@ describe('Board.attemptMerge()', () => {
 const testPropagateTileMutation = (mockRowPair) => {
   let {indexFrom, propagatedProperly} = mockRowPair;
   let original = cloneDeep(mockRowPair.original);
-  new Board().propagateTile(original, indexFrom);
+  new Game().propagateTile(original, indexFrom);
   expect(original).toEqual(propagatedProperly);
 };
 
 const testPropagateTileReturnValue = (mockRowPair) => {
   let {indexFrom, expectedReturnValue} = mockRowPair;
   let original = cloneDeep(mockRowPair.original);
-  let returnValue = new Board().propagateTile(original, indexFrom);
+  let returnValue = new Game().propagateTile(original, indexFrom);
   expect(returnValue).toEqual(expectedReturnValue);
 };
 
@@ -126,7 +127,7 @@ describe('Board.propagateTile()', () => {
 const testSquashRowMutation = (mockRowPair) => {
   let {squashedProperly, direction} = mockRowPair;
   let original = cloneDeep(mockRowPair.original);
-  new Board().squashRow(original, direction);
+  new Game().squashRow(original, direction);
   expect(original).toEqual(squashedProperly);
 };
 
