@@ -12,7 +12,7 @@ const listenForKeyPress = (game, event) => {
       handleArrowKeyPress(game, event.key)
     }
     else if (isItAHistoryKey(event.key)) {
-      handleHistoryKeyPress(event.key)
+      handleHistoryKeyPress(game, event.key)
     }
   }
 };
@@ -28,7 +28,7 @@ const handleArrowKeyPress = (game, key) => {
   }
 };
 
-const handleHistoryKeyPress = (key) => {
+const handleHistoryKeyPress = (game, key) => {
   if (key === 'n') {
     game.browseHistory("next");
   } else if (key === 'p') {
@@ -37,7 +37,7 @@ const handleHistoryKeyPress = (key) => {
   updateView(game.currentBoard());
 };
 
-const handleSliderChange = (event) => {
+const handleSliderChange = (game, event) => {
   let requestedPosition = +event.target.value;
   game.browseHistory(requestedPosition);
   updateView(game.currentBoard());
@@ -64,4 +64,5 @@ let initialBoard = game.currentBoard();
 initialBoard.spawnTiles(2);
 updateView(initialBoard);
 document.addEventListener("keydown", (event) => listenForKeyPress(game, event));
-document.querySelector("#game-history").addEventListener("change", handleSliderChange);
+let slider = document.querySelector("#game-history");
+slider.addEventListener("change", (event) => handleSliderChange(game,event));
