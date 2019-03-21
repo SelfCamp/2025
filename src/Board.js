@@ -138,14 +138,40 @@ function Board(scenario="noMock") {
   };
 
   /**
-   * Mutate input `row` by moving and merging tiles according to game rules
+   * Mutate tiles in input `row` by moving and merging tiles according to game rules
    *
-   * - Direction-agnostic: works towards last index
+   * - Direction-agnostic: propagates tiles towards last index
    * - Doesn't care about other rows in `Board.matrix`
+   * - Processes tiles one by one
+   * - Start with tile at latest index
+   * - For each tile:
+   *   - Move to furthest empty spot towards last index
+   *   - Merge with next tile if it has the same value and hasn't been merged already in this round
    *
-   * @param row - Array of four `Tile` objects, arranged to be squashed towards end of Array
+   * Examples:
    *
-   * @param direction - Used to calculate previousSlideCoordinates
+   * ```
+   *   → → → →
+   *   4 2 . 2
+   *   4 . 2 2  // moved
+   *   4 . .!4  // merged and flagged
+   *   . . 4!4  // moved
+   *   . . 4!4  // can't merge again
+   *
+   *   → → → →
+   *   2 2 2 2
+   *   2 2 .!4  // merged and flagged
+   *   2 . 2!4  // moved
+   *   2 . 2!4  // can't merge different value
+   *   . 2 2!4  // moved
+   *   . .!4!4  // merged and flagged
+   * ```
+   *
+   * @param row
+   * Array of four `Tile` objects, arranged to be squashed towards end of Array
+   *
+   * @param direction
+   * Used to calculate `previousSlideCoordinates`
    */
   this.squashRow = (row, direction) => {
     for (let index of [2, 1 ,0]) {
@@ -172,7 +198,7 @@ function Board(scenario="noMock") {
   };
 
   /**
-   * Mutate input `row` by moving one `Tile` at given index to to furthest empty spot towards last index
+   * Mutate input `row` by moving one `Tile` at given index to furthest empty spot towards last index
    *
    * - Handles one `Tile` only
    * - Implements move by swapping `Tile.currentValue` between two indexes
