@@ -12,16 +12,19 @@ const applyConfigToDOM = () => {
 /**
  * @param newBoard {object}
  * @param gameStatus {'ongoing'|'timeForTheOne'|'won'|'lost'}
+ * @param sliderLength {number}
+ * @param sliderPosition {number}
  * @param slide {boolean}
- * Whether slide animation should appear (may be omitted when doing undo/redo)
+ * Whether slide animation should appear (may not want to slide when doing undo/redo)
  */
-const updateView = (newBoard, gameStatus, slide=true) => {
+const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=true) => {
   if (!slide) {
     initiateMergeSpawnInDOM(newBoard)
   } else {
     initiateSlideInDOM(newBoard);
     setTimeout(() => initiateMergeSpawnInDOM(newBoard), ANIMATION_SLIDE_DURATION);
   }
+  updateSliderInDOM(sliderLength, sliderPosition);
   displayEndOfGame(gameStatus);
 };
 
@@ -72,14 +75,19 @@ const changeBackgroundInDOM = (color) => {
   body.setAttribute('style', `background-color: ${color}`);
 };
 
-const updateSliderInDOM = (length) => {
+/**
+ * Sets history slider in DOM based on 1-indexed values it receives
+ *
+ * @param max {!number}
+ * @param value {!number}
+ */
+const updateSliderInDOM = (max, value) => {
   let slider = document.querySelector("#game-history");
-  slider.setAttribute("max", length);
-  slider.setAttribute("value", length);
+  slider.setAttribute("max", max);
+  slider.value = value;
 };
 
 module.exports = {
   applyConfigToDOM,
   updateView,
-  updateSliderInDOM
 };

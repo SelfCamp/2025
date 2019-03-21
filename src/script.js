@@ -14,4 +14,10 @@ document.addEventListener("keydown", (event) => listenForKeyPress(game, event));
 let slider = document.querySelector("#game-history");
 slider.addEventListener("change", (event) => handleSliderChange(game,event));
 
-updateView(game.currentBoard(), game.status(), false);
+updateView(
+    game.currentBoard(),
+    game.status(),
+    game.maxHead(),
+    game.head,
+    false
+);

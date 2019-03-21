@@ -41,10 +41,24 @@ function Game(mockScenario='noMock') {
 
   /**
    * @returns {number}
-   * Number of boards in history, including current one (NOT including 'future' boards when browsing history)
+   * Number of boards in history, up to and including current one (NOT including 'future' boards present after undo)
    */
   this.length = () =>
       this.head + 1;
+
+  /**
+   * @returns {number}
+   * Number of boards in history (including 'future' boards when present after undo)
+   */
+  this.lengthWithFuture = () =>
+      this.timeline.length;
+
+  /**
+   * @returns {number}
+   * Latest position `Game.head` can be set to
+   */
+  this.maxHead = () =>
+      this.timeline.length -1;
 
   /**
    * Erase all boards after `currentBoard` (killing ability to redo)
@@ -68,6 +82,7 @@ function Game(mockScenario='noMock') {
           this.head++;
         break;
       default:
+        console.log(whichBoard);
         this.head = whichBoard;
     }
   };
@@ -124,10 +139,6 @@ function Game(mockScenario='noMock') {
     }
     return "lost";
   };
-
-  if (this.currentBoard().isEmpty()) {
-    this.currentBoard().spawnTiles(2);
-  }
 
   /**
    * @param direction
@@ -322,6 +333,11 @@ function Game(mockScenario='noMock') {
 
     return false;
   };
+
+
+  if (this.currentBoard().isEmpty()) {
+    this.currentBoard().spawnTiles(2);
+  }
 
 }
 

@@ -1,4 +1,4 @@
-const {updateView, updateSliderInDOM} = require('./domManipulation');
+const {updateView} = require('./domManipulation');
 
 
 const listenForKeyPress = (game, event) => {
@@ -18,8 +18,13 @@ const handleArrowKeyPress = (game, key) => {
   }
   let direction = getDirectionFromKey(key);
   if (game.makeMove(direction)) {
-    updateView(game.currentBoard(), game.status(), true);
-    updateSliderInDOM(game.head);
+    updateView(
+        game.currentBoard(),
+        game.status(),
+        game.maxHead(),
+        game.head,
+        true
+    );
   }
 };
 
@@ -29,14 +34,25 @@ const handleHistoryKeyPress = (game, key) => {
   } else if (key === 'p') {
     game.browseHistory("previous");
   }
-  updateView(game.currentBoard(), game.status(), false);
+  updateView(
+      game.currentBoard(),
+      game.status(),
+      game.maxHead(),
+      game.head,
+      false
+  );
 };
 
 const handleSliderChange = (game, event) => {
-  let requestedPosition = +event.target.value;
-  game.browseHistory(requestedPosition);
-  updateView(game.currentBoard(), game.status(), false);
-
+  let requestedHead = +event.target.value;
+  game.browseHistory(requestedHead);
+  updateView(
+      game.currentBoard(),
+      game.status(),
+      game.maxHead(),
+      game.head,
+      false
+  );
 };
 
 const isItAnArrowKey = (key) =>
