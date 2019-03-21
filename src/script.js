@@ -7,8 +7,6 @@ const config = require('./config');
 
 applyConfigToDOM();
 let game = new Game(config.MOCK_SCENARIO);
-let initialBoard = game.currentBoard();
-initialBoard.spawnTiles(2);
 updateView(game.currentBoard(), game.status(), false);
 document.addEventListener("keydown", (event) => listenForKeyPress(game, event));
 let slider = document.querySelector("#game-history");

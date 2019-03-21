@@ -3,6 +3,7 @@ const {cloneDeep} = require('lodash');
 const {Tile} = require('./Tile');
 const {boardMatrixFixtures} = require("./Board.testFixtures");
 
+
 /**
  * Create new Board object
  *
@@ -59,6 +60,17 @@ function Board(mockScenario="noMock") {
     return false;
   };
 
+  this.isEmpty = () => {
+    for (let row of this.matrix) {
+      for (let tile of row) {
+        if (tile.currentValue) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
   /**
    * Return clone of current board squashed in given direction, or `false` if squashing results in no change
    *
@@ -68,7 +80,6 @@ function Board(mockScenario="noMock") {
   this.createNextBoard = (direction) => {
     let nextBoard = this.squashBoard(this, direction);
     if (nextBoard.hasChanged()) {
-      nextBoard.spawnTiles(1);
       return nextBoard;
     }
     return false;

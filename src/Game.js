@@ -57,6 +57,10 @@ function Game(mockScenario) {
   this.makeMove = (direction) => {
     let nextBoard = this.currentBoard().createNextBoard(direction);
     if (nextBoard) {
+      let nextStatus = this.status(nextBoard);
+      if (nextStatus === 'ongoing') {
+        nextBoard.spawnTiles(1);
+      }
       this.timeline.push(nextBoard);
       this.head++;
       return true;
@@ -100,9 +104,9 @@ function Game(mockScenario) {
   this.canRedo = () =>
       (this.head < this.timeline.length - 1);
 
-  this.status = () => {
+  this.status = (whenBoardIs=this.currentBoard()) => {
     let hasEmptySpots;
-    for (let row of this.currentBoard().matrix) {
+    for (let row of whenBoardIs.matrix) {
       for (let tile of row) {
         if (tile.currentValue === 2048) {
           return 'won';
@@ -123,6 +127,10 @@ function Game(mockScenario) {
     }
     return "lost";
   };
+
+  if (this.currentBoard().isEmpty()) {
+    this.currentBoard().spawnTiles(2);
+  }
 
 }
 
