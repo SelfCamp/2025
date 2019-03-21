@@ -1,6 +1,6 @@
 'use strict';
 
-const {Game} = require('./Game');
+const {Game} = require('./classes/Game');
 const {listenForKeyPress, handleSliderChange} = require('./eventHandling');
 const {applyConfigToDOM, updateView} = require('./domManipulation');
 const config = require('./config');

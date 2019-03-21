@@ -1,7 +1,7 @@
 const {cloneDeep} = require('lodash');
 
 const {Board} = require('./Board');
-const {ARROW_PRESS_TIMEOUT} = require('./config');
+const {ARROW_PRESS_TIMEOUT} = require('../config');
 
 
 /**
@@ -48,7 +48,7 @@ function Game(mockScenario='noMock') {
 
   /**
    * @returns {number}
-   * Number of boards in history (including 'future' boards when present after undo)
+   * Number of boards in timeline (including 'future' boards when present after undo)
    */
   this.lengthWithFuture = () =>
       this.timeline.length;
