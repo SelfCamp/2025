@@ -8,9 +8,9 @@
   },
   "scripts": {
     "test": "jest --verbose",
-    "build": "browserify -p tinyify src/script.js > bundle.js",
-    "devBuild": "browserify src/script.js > bundle.js",
-    "start": "live-server"
+    "build": "browserify -p tinyify src/script.js > build/bundle.js  &&  cp index.html build/index.html  &&  cp style.css build/style.css",
+    "devBuild": "browserify src/script.js > build/bundle.js  &&  cp index.html build/index.html  &&  cp style.css build/style.css",
+    "start": "live-server --open=build"
   },
   "repository": {
     "type": "git",
