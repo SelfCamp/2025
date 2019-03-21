@@ -57,30 +57,6 @@ function Board(scenario="noMock") {
     return false;
   };
 
-  this.gameStatus = () => {
-    let hasEmptySpots;
-    for (let row of this.matrix) {
-      for (let tile of row) {
-        if (tile.currentValue === 2048) {
-          return 'won';
-        }
-        if (tile.currentValue === null) {
-          hasEmptySpots = true;
-        }
-      }
-    }
-    if (hasEmptySpots) {
-      return 'ongoing'
-    }
-    for (let direction of ["up", "right", "down", "left"]) {
-      let testBoardCopy = this.createNextBoard(direction);
-      if (testBoardCopy) {
-        return "ongoing"
-      }
-    }
-    return "lost";
-  };
-
   /**
    * Return clone of current board squashed in given direction, or `false` if squashing results in no change
    *

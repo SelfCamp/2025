@@ -102,6 +102,30 @@ function Game(difficulty=1) {
   this.canRedo = () =>
       (this.head < this.timeline.length - 1);
 
+  this.status = () => {
+    let hasEmptySpots;
+    for (let row of this.currentBoard().matrix) {
+      for (let tile of row) {
+        if (tile.currentValue === 2048) {
+          return 'won';
+        }
+        if (tile.currentValue === null) {
+          hasEmptySpots = true;
+        }
+      }
+    }
+    if (hasEmptySpots) {
+      return 'ongoing'
+    }
+    for (let direction of ["up", "right", "down", "left"]) {
+      let testBoardCopy = this.currentBoard().createNextBoard(direction);
+      if (testBoardCopy) {
+        return "ongoing"
+      }
+    }
+    return "lost";
+  };
+
 }
 
 
