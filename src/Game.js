@@ -1,5 +1,5 @@
 const {Board} = require('./Board');
-const {ARROW_PRESS_TIMEOUT} = require('./constants');
+const {ARROW_PRESS_TIMEOUT} = require('./config');
 
 
 // TODO: Implement

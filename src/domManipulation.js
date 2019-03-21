@@ -1,10 +1,8 @@
-/* DEFINE VIEW HANDLING FUNCTIONS */
-
-const {ANIMATION_SLIDE_DURATION} = require("./constants.js");
+const {ANIMATION_SLIDE_DURATION} = require("./config.js");
 
 
 /**
- * Updates DOM based on values defined in `constants.js`
+ * Updates DOM based on values defined in `config.js`
  */
 const applyConfigToDOM = () => {
   let board = document.querySelector('#board');
