@@ -1,10 +1,8 @@
-/* DEFINE VIEW HANDLING FUNCTIONS */
-
-const {ANIMATION_SLIDE_DURATION} = require("./constants.js");
+const {ANIMATION_SLIDE_DURATION} = require("./config.js");
 
 
 /**
- * Updates DOM based on values defined in `constants.js`
+ * Updates DOM based on values defined in `config.js`
  */
 const applyConfigToDOM = () => {
   let board = document.querySelector('#board');
@@ -12,34 +10,22 @@ const applyConfigToDOM = () => {
 };
 
 /**
- * If no direction is received, we assume this is an undo and animations are ignored
- * @param newBoard
- * @param direction
+ * @param newBoard {object}
+ * @param gameStatus {'ongoing'|'timeForTheOne'|'won'|'lost'}
+ * @param sliderLength {number}
+ * @param sliderPosition {number}
+ * @param slide {boolean}
+ * Whether slide animation should appear (may not want to slide when doing undo/redo)
  */
-const updateView = (newBoard, direction=null, head=0) => {
-  if (!direction) {
+const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=true) => {
+  if (!slide) {
     initiateMergeSpawnInDOM(newBoard)
   } else {
     initiateSlideInDOM(newBoard);
     setTimeout(() => initiateMergeSpawnInDOM(newBoard), ANIMATION_SLIDE_DURATION);
-    let gameStatus = newBoard.gameStatus();
-    if (gameStatus !== "ongoing") {
-      displayEndOfGame(gameStatus);
-    }
   }
-};
-
-const displayEndOfGame = (gameStatus) => {
-  switch (gameStatus) {
-    case 'ongoing':
-      break;
-    case 'won':
-      changeBackgroundInDOM('green');
-      break;
-    case 'lost':
-      changeBackgroundInDOM('red');
-      break;
-  }
+  updateSliderInDOM(sliderLength, sliderPosition);
+  displayEndOfGame(gameStatus);
 };
 
 const initiateSlideInDOM = (newBoard) => {
@@ -70,23 +56,38 @@ const initiateMergeSpawnInDOM = (newBoard) => {
   }
 };
 
+const displayEndOfGame = (gameStatus) => {
+  switch (gameStatus) {
+    case 'ongoing':
+      changeBackgroundInDOM('white');
+      break;
+    case 'won':
+      changeBackgroundInDOM('green');
+      break;
+    case 'lost':
+      changeBackgroundInDOM('red');
+      break;
+  }
+};
+
 const changeBackgroundInDOM = (color) => {
   let body = document.querySelector('body');
   body.setAttribute('style', `background-color: ${color}`);
 };
 
-const updateSliderInDOM = (length) => {
+/**
+ * Sets history slider in DOM based on 1-indexed values it receives
+ *
+ * @param max {!number}
+ * @param value {!number}
+ */
+const updateSliderInDOM = (max, value) => {
   let slider = document.querySelector("#game-history");
-  slider.setAttribute("max", length);
-  slider.setAttribute("value", length);
+  slider.setAttribute("max", max);
+  slider.value = value;
 };
 
 module.exports = {
   applyConfigToDOM,
-  initiateSlideInDOM,
-  squashBoardInDOM: initiateMergeSpawnInDOM,
-  changeBackgroundInDOM,
   updateView,
-  displayEndOfGame,
-  updateSliderInDOM
 };

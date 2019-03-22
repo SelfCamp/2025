@@ -8,8 +8,9 @@
   },
   "scripts": {
     "test": "jest --verbose",
-    "build": "browserify src/script.js > bundle.js",
-    "start": "live-server"
+    "build": "browserify -p tinyify src/script.js > docs/bundle.js  &&  cp index.html docs/index.html  &&  cp style.css docs/style.css",
+    "devBuild": "browserify src/script.js > docs/bundle.js  &&  cp index.html docs/index.html  &&  cp style.css docs/style.css",
+    "start": "live-server --open=docs"
   },
   "repository": {
     "type": "git",
@@ -26,7 +27,8 @@
     "browserify": "^16.2.3",
     "jest": "^24.5.0",
     "live-server": "^1.2.1",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.11",
+    "tinyify": "^2.5.0"
   },
   "dependencies": {}
 }
