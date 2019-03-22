@@ -18,6 +18,8 @@ function Game(mockScenario='noMock') {
   /** Determines current position in `Game.timeline` */
   this.head = 0;
 
+  this.createdAt = new Date();
+
   /**
    * Determines whether enough time has passed since last keypress to perform a new one
    *
@@ -334,6 +336,8 @@ function Game(mockScenario='noMock') {
     return false;
   };
 
+  this.elapsedTimeInSeconds = () => parseInt((new Date() - this.createdAt) / 1000)
+  ;
 
   if (this.currentBoard().isEmpty()) {
     this.currentBoard().spawnTiles(2);
