@@ -10,6 +10,7 @@
     "test": "jest --verbose",
     "build": "browserify -p tinyify src/script.js > docs/bundle.js  &&  cp index.html docs/index.html  &&  cp style.css docs/style.css",
     "devBuild": "browserify src/script.js > docs/bundle.js  &&  cp index.html docs/index.html  &&  cp style.css docs/style.css",
+    "winBuild": "browserify src/script.js > docs/bundle.js",
     "start": "live-server --open=docs"
   },
   "repository": {
