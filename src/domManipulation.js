@@ -87,7 +87,25 @@ const updateSliderInDOM = (max, value) => {
   slider.value = value;
 };
 
+const updateTimerInDOM = (gameTime) => {
+  console.log(prettifySeconds(gameTime))
+};
+
+const prettifySeconds = (secondsToCalc) => {
+  let hours = parseInt( secondsToCalc / 3600);
+  secondsToCalc -= hours * 3600;
+  let minutes = parseInt( secondsToCalc / 60);
+  secondsToCalc -= minutes * 60;
+  let seconds = secondsToCalc;
+  return (
+      hours ? `${hours}:` : "" +
+          `${String(minutes).padStart(2, '0')}:` +
+          String(seconds).padStart(2, '0')
+  )
+};
+
 module.exports = {
   applyConfigToDOM,
   updateView,
+  updateTimerInDOM
 };
