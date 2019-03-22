@@ -10,7 +10,9 @@
 
 
 header {
-  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 footer p {
@@ -21,7 +23,7 @@ footer p {
 #title {
   text-align: center;
   font-size: 5vw;
-  margin-bottom: 0;
+  margin: 1vw;
 }
 
 
@@ -56,9 +58,14 @@ nav ul li {
 #front {
   margin: auto;
   display: grid;
-  grid-template-columns:  1fr;
+  grid-template-areas:
+          "title title title"
+          "game rules about"
+          "game game game"
+          "footer footer footer";
   width: 50vw;
   background-color: #FF6700;
+  max-height: 100vh;
 }
 
 
@@ -69,6 +76,15 @@ nav ul li {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+#board-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
 }
 
 #board, #board-base {
@@ -247,9 +263,35 @@ nav ul li {
   }
   :root {
     --board-size: 80vw;
-    --grid-gap: calc(var(--board-size) / 50);
-    --tile-size: calc((var(--board-size) - (var(--grid-gap) * 3)) / 4);
-    --tile-slide-length: calc(var(--tile-size) + var(--grid-gap));
   }
 
+}
+
+@media only screen and (min-width: 1200px) {
+  #front {
+    width: 609px;
+  }
+
+  #game {
+    width: 487px;
+    height: 487px;
+    position: relative;
+    margin: auto;
+  }
+
+  #title {
+    font-size: 58px;
+  }
+
+  nav ul li {
+    font-size: 23px;
+  }
+  :root {
+    --board-size: 487px;
+  }
+
+  footer p {
+    padding: 0 20px;
+    font-size: 18px;
+  }
 }
