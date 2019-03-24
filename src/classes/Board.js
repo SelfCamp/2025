@@ -70,12 +70,14 @@ function Board(mockScenario='noMock') {
     return true;
   };
 
-  this.forEachTile = callback => {
+  this.forEachTile = () => {
+    let listOfTiles = [];
     for (let row of this.matrix) {
       for (let tile of row) {
-        callback(tile)
+        listOfTiles.push(tile)
       }
     }
+    return listOfTiles
   }
 }
 
