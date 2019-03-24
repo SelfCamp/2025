@@ -1,4 +1,4 @@
-const {ANIMATION_SLIDE_DURATION} = require("./config.js");
+const {ANIMATION_SLIDE_DURATION, ANIMATION_NEEDED} = require("./config.js");
 
 
 /**
@@ -21,7 +21,9 @@ const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=tr
   if (!slide) {
     initiateMergeSpawnInDOM(newBoard)
   } else {
-    initiateSlideInDOM(newBoard);
+    if (ANIMATION_NEEDED) {
+      initiateSlideInDOM(newBoard);
+    }
     setTimeout(() => initiateMergeSpawnInDOM(newBoard), ANIMATION_SLIDE_DURATION);
   }
   updateSliderInDOM(sliderLength, sliderPosition);

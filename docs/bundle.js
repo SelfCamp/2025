@@ -17771,16 +17771,18 @@ module.exports = {
 const ANIMATION_SLIDE_DURATION = 400;  // ms
 const ARROW_PRESS_TIMEOUT = ANIMATION_SLIDE_DURATION;
 const MOCK_SCENARIO = 'noMock';  // {"noMock"|"almostLost"|"almostWon"|"oneMissing"}
+const ANIMATION_NEEDED = false;
 
 
 module.exports = {
   ARROW_PRESS_TIMEOUT,
   ANIMATION_SLIDE_DURATION,
-  MOCK_SCENARIO
+  MOCK_SCENARIO,
+  ANIMATION_NEEDED
 };
 
 },{}],7:[function(require,module,exports){
-const {ANIMATION_SLIDE_DURATION} = require("./config.js");
+const {ANIMATION_SLIDE_DURATION, ANIMATION_NEEDED} = require("./config.js");
 
 
 /**
@@ -17803,7 +17805,9 @@ const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=tr
   if (!slide) {
     initiateMergeSpawnInDOM(newBoard)
   } else {
-    initiateSlideInDOM(newBoard);
+    if (ANIMATION_NEEDED) {
+      initiateSlideInDOM(newBoard);
+    }
     setTimeout(() => initiateMergeSpawnInDOM(newBoard), ANIMATION_SLIDE_DURATION);
   }
   updateSliderInDOM(sliderLength, sliderPosition);
@@ -17879,8 +17883,11 @@ const prettifySeconds = (secondsToCalc) => {
   let minutes = parseInt( secondsToCalc / 60);
   secondsToCalc -= minutes * 60;
   let seconds = secondsToCalc;
-  return !!hours ? `${hours}:` : "" +
-  `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+  return (
+      hours ? `${hours}:` : "" +
+          `${String(minutes).padStart(2, '0')}:` +
+          String(seconds).padStart(2, '0')
+  )
 };
 
 module.exports = {
