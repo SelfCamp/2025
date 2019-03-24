@@ -24,7 +24,7 @@ const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=tr
     if (ANIMATION_NEEDED) {
       initiateSlideInDOM(newBoard);
     }
-    setTimeout(() => initiateMergeSpawnInDOM(newBoard), ANIMATION_SLIDE_DURATION);
+    setTimeout(() => initiateMergeSpawnInDOM(newBoard, ANIMATION_NEEDED), ANIMATION_SLIDE_DURATION);
   }
   updateSliderInDOM(sliderLength, sliderPosition);
   displayEndOfGame(gameStatus);
@@ -42,16 +42,18 @@ const initiateSlideInDOM = (newBoard) => {
   }
 };
 
-const initiateMergeSpawnInDOM = (newBoard) => {
+const initiateMergeSpawnInDOM = (newBoard, ANIMATION_NEEDED=false) => {
   for (let row of newBoard.matrix) {
     for (let tile of row) {
       let tileElement = document.querySelector(tile.selector);
-      let {wasJustMerged, wasJustSpawned} = tile;
-      tileElement.setAttribute("data-state",
-              wasJustMerged ? 'merged'
-              : wasJustSpawned ? 'spawned'
-              : ''
-      );
+      if (ANIMATION_NEEDED) {
+        let {wasJustMerged, wasJustSpawned} = tile;
+        tileElement.setAttribute("data-state",
+            wasJustMerged ? 'merged'
+                : wasJustSpawned ? 'spawned'
+                : ''
+        );
+      }
       tileElement.setAttribute("value", tile.currentValue);
       tileElement.textContent = tile.currentValue;
     }
