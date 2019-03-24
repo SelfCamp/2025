@@ -31,7 +31,7 @@ function Game(mockScenario='noMock') {
       return true;
     }
     let timeSinceLastArrowPress = new Date() - this.currentBoard().createdAt;
-    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
+    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT && this.status() === "ongoing";
   };
 
   /**
