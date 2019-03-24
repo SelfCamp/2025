@@ -17151,37 +17151,40 @@ function Board(mockScenario='noMock') {
   };
 
   this.clearTileAnimationProperties = () => {
-    for (let row of this.matrix) {
-      for (let tile of row) {
+    for (let tile of this.tiles()) {
         tile.wasJustMerged = false;
         tile.wasJustSpawned = false;
         tile.previousSlideCoordinates = {slideX: 0, slideY: 0};
       }
-    }
   };
 
   this.hasChanged = () => {
-    for (let row of this.matrix) {
-      for (let tile of row) {
+    for (let tile of this.tiles()) {
         if (tile.previousSlideCoordinates.slideY || tile.previousSlideCoordinates.slideX || tile.wasJustMerged) {
           return true;
         }
       }
-    }
     return false;
   };
 
   this.isEmpty = () => {
-    for (let row of this.matrix) {
-      for (let tile of row) {
+    for (let tile of this.tiles()) {
         if (tile.currentValue) {
           return false;
         }
       }
-    }
     return true;
   };
 
+  this.tiles = () => {
+    let listOfTiles = [];
+    for (let row of this.matrix) {
+      for (let tile of row) {
+        listOfTiles.push(tile)
+      }
+    }
+    return listOfTiles
+  }
 }
 
 
@@ -17808,37 +17811,35 @@ const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=tr
     if (ANIMATION_NEEDED) {
       initiateSlideInDOM(newBoard);
     }
-    setTimeout(() => initiateMergeSpawnInDOM(newBoard), ANIMATION_SLIDE_DURATION);
+    setTimeout(() => initiateMergeSpawnInDOM(newBoard, ANIMATION_NEEDED), ANIMATION_SLIDE_DURATION);
   }
   updateSliderInDOM(sliderLength, sliderPosition);
   displayEndOfGame(gameStatus);
 };
 
 const initiateSlideInDOM = (newBoard) => {
-  for (let row of newBoard.matrix) {
-    for (let tile of row) {
-      let tileElement = document.querySelector(tile.selector);
-      let {slideX, slideY} = tile.previousSlideCoordinates;
-      let isSliding = slideX || slideY;
-      tileElement.setAttribute("style", `--slide-x: ${slideX}; --slide-y: ${slideY}`);
-      tileElement.setAttribute("data-state", isSliding ? 'sliding' : '');
-    }
+  for (let tile of newBoard.tiles()) {
+    let tileElement = document.querySelector(tile.selector);
+    let {slideX, slideY} = tile.previousSlideCoordinates;
+    let isSliding = slideX || slideY;
+    tileElement.setAttribute("style", `--slide-x: ${slideX}; --slide-y: ${slideY}`);
+    tileElement.setAttribute("data-state", isSliding ? 'sliding' : '');
   }
 };
 
-const initiateMergeSpawnInDOM = (newBoard) => {
-  for (let row of newBoard.matrix) {
-    for (let tile of row) {
-      let tileElement = document.querySelector(tile.selector);
+const initiateMergeSpawnInDOM = (newBoard, ANIMATION_NEEDED=false) => {
+  for (let tile of newBoard.tiles()) {
+    let tileElement = document.querySelector(tile.selector);
+    if (ANIMATION_NEEDED) {
       let {wasJustMerged, wasJustSpawned} = tile;
       tileElement.setAttribute("data-state",
-              wasJustMerged ? 'merged'
+          wasJustMerged ? 'merged'
               : wasJustSpawned ? 'spawned'
               : ''
       );
-      tileElement.setAttribute("value", tile.currentValue);
-      tileElement.textContent = tile.currentValue;
     }
+    tileElement.setAttribute("value", tile.currentValue);
+    tileElement.textContent = tile.currentValue;
   }
 };
 

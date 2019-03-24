@@ -39,7 +39,7 @@ function Board(mockScenario='noMock') {
   };
 
   this.clearTileAnimationProperties = () => {
-    for (let tile of this.forEachTile()) {
+    for (let tile of this.tiles()) {
         tile.wasJustMerged = false;
         tile.wasJustSpawned = false;
         tile.previousSlideCoordinates = {slideX: 0, slideY: 0};
@@ -47,7 +47,7 @@ function Board(mockScenario='noMock') {
   };
 
   this.hasChanged = () => {
-    for (let tile of this.forEachTile()) {
+    for (let tile of this.tiles()) {
         if (tile.previousSlideCoordinates.slideY || tile.previousSlideCoordinates.slideX || tile.wasJustMerged) {
           return true;
         }
@@ -56,7 +56,7 @@ function Board(mockScenario='noMock') {
   };
 
   this.isEmpty = () => {
-    for (let tile of this.forEachTile()) {
+    for (let tile of this.tiles()) {
         if (tile.currentValue) {
           return false;
         }
@@ -64,7 +64,7 @@ function Board(mockScenario='noMock') {
     return true;
   };
 
-  this.forEachTile = () => {
+  this.tiles = () => {
     let listOfTiles = [];
     for (let row of this.matrix) {
       for (let tile of row) {

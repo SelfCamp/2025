@@ -31,7 +31,7 @@ const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=tr
 };
 
 const initiateSlideInDOM = (newBoard) => {
-  for (let tile of newBoard.forEachTile()) {
+  for (let tile of newBoard.tiles()) {
     let tileElement = document.querySelector(tile.selector);
     let {slideX, slideY} = tile.previousSlideCoordinates;
     let isSliding = slideX || slideY;
@@ -41,7 +41,7 @@ const initiateSlideInDOM = (newBoard) => {
 };
 
 const initiateMergeSpawnInDOM = (newBoard, ANIMATION_NEEDED=false) => {
-  for (let tile of newBoard.forEachTile()) {
+  for (let tile of newBoard.tiles()) {
     let tileElement = document.querySelector(tile.selector);
     if (ANIMATION_NEEDED) {
       let {wasJustMerged, wasJustSpawned} = tile;
