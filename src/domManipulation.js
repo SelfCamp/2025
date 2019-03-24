@@ -31,32 +31,28 @@ const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=tr
 };
 
 const initiateSlideInDOM = (newBoard) => {
-  for (let row of newBoard.matrix) {
-    for (let tile of row) {
-      let tileElement = document.querySelector(tile.selector);
-      let {slideX, slideY} = tile.previousSlideCoordinates;
-      let isSliding = slideX || slideY;
-      tileElement.setAttribute("style", `--slide-x: ${slideX}; --slide-y: ${slideY}`);
-      tileElement.setAttribute("data-state", isSliding ? 'sliding' : '');
-    }
+  for (let tile of newBoard.forEachTile()) {
+    let tileElement = document.querySelector(tile.selector);
+    let {slideX, slideY} = tile.previousSlideCoordinates;
+    let isSliding = slideX || slideY;
+    tileElement.setAttribute("style", `--slide-x: ${slideX}; --slide-y: ${slideY}`);
+    tileElement.setAttribute("data-state", isSliding ? 'sliding' : '');
   }
 };
 
 const initiateMergeSpawnInDOM = (newBoard, ANIMATION_NEEDED=false) => {
-  for (let row of newBoard.matrix) {
-    for (let tile of row) {
-      let tileElement = document.querySelector(tile.selector);
-      if (ANIMATION_NEEDED) {
-        let {wasJustMerged, wasJustSpawned} = tile;
-        tileElement.setAttribute("data-state",
-            wasJustMerged ? 'merged'
-                : wasJustSpawned ? 'spawned'
-                : ''
-        );
-      }
-      tileElement.setAttribute("value", tile.currentValue);
-      tileElement.textContent = tile.currentValue;
+  for (let tile of newBoard.forEachTile()) {
+    let tileElement = document.querySelector(tile.selector);
+    if (ANIMATION_NEEDED) {
+      let {wasJustMerged, wasJustSpawned} = tile;
+      tileElement.setAttribute("data-state",
+          wasJustMerged ? 'merged'
+              : wasJustSpawned ? 'spawned'
+              : ''
+      );
     }
+    tileElement.setAttribute("value", tile.currentValue);
+    tileElement.textContent = tile.currentValue;
   }
 };
 
