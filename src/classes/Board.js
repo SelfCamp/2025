@@ -39,34 +39,28 @@ function Board(mockScenario='noMock') {
   };
 
   this.clearTileAnimationProperties = () => {
-    for (let row of this.matrix) {
-      for (let tile of row) {
+    for (let tile of this.forEachTile()) {
         tile.wasJustMerged = false;
         tile.wasJustSpawned = false;
         tile.previousSlideCoordinates = {slideX: 0, slideY: 0};
       }
-    }
   };
 
   this.hasChanged = () => {
-    for (let row of this.matrix) {
-      for (let tile of row) {
+    for (let tile of this.forEachTile()) {
         if (tile.previousSlideCoordinates.slideY || tile.previousSlideCoordinates.slideX || tile.wasJustMerged) {
           return true;
         }
       }
-    }
     return false;
   };
 
   this.isEmpty = () => {
-    for (let row of this.matrix) {
-      for (let tile of row) {
+    for (let tile of this.forEachTile()) {
         if (tile.currentValue) {
           return false;
         }
       }
-    }
     return true;
   };
 
