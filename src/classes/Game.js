@@ -114,14 +114,12 @@ function Game(mockScenario='noMock') {
   this.status = (whenBoardIs=this.currentBoard()) => {
     let hasEmptySpots;
     let maxValue = 0;
-    for (let row of whenBoardIs.matrix) {
-      for (let tile of row) {
-        if (tile.currentValue > maxValue) {
-          maxValue = tile.currentValue;
-        }
-        if (!tile.currentValue) {
-          hasEmptySpots = true;
-        }
+    for (let tile of whenBoardIs.tiles()) {
+      if (tile.currentValue > maxValue) {
+        maxValue = tile.currentValue;
+      }
+      if (!tile.currentValue) {
+        hasEmptySpots = true;
       }
     }
     if (maxValue === 2049) {
