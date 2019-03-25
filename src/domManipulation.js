@@ -62,10 +62,11 @@ const displayEndOfGame = (gameStatus) => {
       changeBackgroundInDOM('white');
       break;
     case 'won':
-      changeBackgroundInDOM('green');
+      setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + 1000);
+      // +1 additional second added for a more dramatic effect
       break;
     case 'lost':
-      changeBackgroundInDOM('red');
+      setTimeout(() => changeBackgroundInDOM('red'), ANIMATION_SLIDE_DURATION + 1000);
       break;
   }
 };
