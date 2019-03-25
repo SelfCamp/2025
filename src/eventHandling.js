@@ -1,5 +1,5 @@
 const {updateView} = require('./domManipulation');
-
+const {ANIMATION_SLIDE_DURATION} = require("./config.js");
 
 const listenForKeyPress = (game, event) => {
   if (game.isKeyPressAllowed()) {
