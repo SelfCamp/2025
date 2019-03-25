@@ -17865,7 +17865,6 @@ const initiateMergeSpawnInDOM = (newBoard, ANIMATION_NEEDED=false) => {
 const displayEndOfGame = (gameStatus) => {
   switch (gameStatus) {
     case 'ongoing':
-      changeBackgroundInDOM('white');
       break;
     case 'won':
       setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + 1000);
