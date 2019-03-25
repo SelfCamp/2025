@@ -17823,7 +17823,8 @@ const applyConfigToDOM = () => {
  * @param slide {boolean}
  * Whether slide animation should appear (may not want to slide when doing undo/redo)
  */
-const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=true) => {
+const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=true, score=0) => {
+  console.log(score)
   if (!slide) {
     initiateMergeSpawnInDOM(newBoard)
   } else {
@@ -17833,6 +17834,7 @@ const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=tr
     setTimeout(() => initiateMergeSpawnInDOM(newBoard, ANIMATION_NEEDED), ANIMATION_SLIDE_DURATION);
   }
   updateSliderInDOM(sliderLength, sliderPosition);
+  updateScoreInDOM(score);
   displayEndOfGame(gameStatus);
 };
 
@@ -17898,6 +17900,11 @@ const updateTimerInDOM = (gameTime) => {
   timer.innerHTML = prettifySeconds(gameTime)
 };
 
+const updateScoreInDOM = (score) => {
+  let scoreTab = document.querySelector("#score");
+  scoreTab.innerHTML = score
+};
+
 const prettifySeconds = (secondsToCalc) => {
   let hours = parseInt( secondsToCalc / 3600);
   secondsToCalc -= hours * 3600;
@@ -17946,7 +17953,8 @@ const handleArrowKeyPress = (game, key) => {
         game.status(),
         game.maxHead(),
         game.head,
-        true
+        true,
+        game.score
     );
   }
 };
@@ -18042,7 +18050,7 @@ updateView(
     game.status(),
     game.maxHead(),
     game.head,
-    false
+    false,
 );
 
 },{"./classes/Game":4,"./config":6,"./domManipulation":7,"./eventHandling":8}]},{},[9]);
