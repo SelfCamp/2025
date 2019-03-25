@@ -26,7 +26,8 @@ const handleArrowKeyPress = (game, key) => {
         game.status(),
         game.maxHead(),
         game.head,
-        true
+        true,
+        game.score
     );
   }
 };
