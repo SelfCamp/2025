@@ -341,6 +341,13 @@ function Game(mockScenario='noMock') {
       nextTile.wasJustMerged = true;
       return true;
     }
+    else if (thisTile.currentValue === 2048 && nextTile.currentValue === 1 || thisTile.currentValue === 1 && nextTile.currentValue === 2048) {
+      thisTile.currentValue = null;
+      nextTile.currentValue = 2049;
+      nextTile.wasJustMerged = true;
+      this.score += 1;
+      return true;
+    }
 
     return false;
   };
