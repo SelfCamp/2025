@@ -82,7 +82,7 @@ const changeBackgroundInDOM = (color) => {
  * @param value {!number}
  */
 const updateSliderInDOM = (max, value) => {
-  let slider = document.querySelector("#game-history");
+  let slider = document.querySelector("#game-history-slider");
   slider.setAttribute("max", max);
   slider.value = value;
 };

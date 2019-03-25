@@ -11,7 +11,7 @@ applyConfigToDOM();
 let game = new Game(config.MOCK_SCENARIO);
 
 document.addEventListener("keydown", (event) => listenForKeyPress(game, event));
-let slider = document.querySelector("#game-history");
+let slider = document.querySelector("#game-history-slider");
 slider.addEventListener("change", (event) => handleSliderChange(game,event));
 window.setInterval(() => updateTimerInDOM(game.elapsedTimeInSeconds()), 1000);
 
