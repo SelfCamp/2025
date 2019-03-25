@@ -89,7 +89,6 @@ const updateSliderInDOM = (max, value) => {
 };
 
 const updateTimerInDOM = (gameTime) => {
-  console.log(prettifySeconds(gameTime))
 };
 
 const prettifySeconds = (secondsToCalc) => {
