@@ -88,6 +88,8 @@ const updateSliderInDOM = (max, value) => {
 };
 
 const updateTimerInDOM = (gameTime) => {
+  let timer = document.querySelector("#time");
+  timer.innerHTML = prettifySeconds(gameTime)
 };
 
 const prettifySeconds = (secondsToCalc) => {
