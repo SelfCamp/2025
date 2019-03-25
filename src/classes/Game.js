@@ -113,6 +113,7 @@ function Game(mockScenario='noMock') {
    */
   this.status = (whenBoardIs=this.currentBoard()) => {
     let hasEmptySpots;
+    let hasOne;
     let maxValue = 0;
     for (let tile of whenBoardIs.tiles()) {
       if (tile.currentValue > maxValue) {
@@ -121,9 +122,15 @@ function Game(mockScenario='noMock') {
       if (!tile.currentValue) {
         hasEmptySpots = true;
       }
+      if (tile.currentValue === 1) {
+        hasOne = true;
+      }
     }
     if (maxValue === 2049) {
       return 'won'
+    }
+    if (maxValue === 2048 && hasOne && hasEmptySpots) {
+      return "finale"
     }
     if (maxValue === 2048 && hasEmptySpots) {
       return 'timeForTheOne'  // TODO: continue expanding +1 logic outwards from here
