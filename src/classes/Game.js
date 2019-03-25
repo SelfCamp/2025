@@ -19,6 +19,7 @@ function Game(mockScenario='noMock') {
   this.head = 0;
   this.createdAt = new Date();
   this.score = 0;
+  this.onReplay = false;
 
   /**
    * Determines whether enough time has passed since last keypress to perform a new one
@@ -31,7 +32,9 @@ function Game(mockScenario='noMock') {
       return true;
     }
     let timeSinceLastArrowPress = new Date() - this.currentBoard().createdAt;
-    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT && (this.status() === "ongoing" || this.status() === "finale");
+    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT &&
+        (this.status() === "ongoing" || this.status() === "finale") &&
+        !this.onReplay;
   };
 
   /**
