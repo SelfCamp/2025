@@ -17,8 +17,8 @@ function Game(mockScenario='noMock') {
   this.timeline = [new Board(mockScenario)];
   /** Determines current position in `Game.timeline` */
   this.head = 0;
-
   this.createdAt = new Date();
+  this.score = 0;
 
   /**
    * Determines whether enough time has passed since last keypress to perform a new one
@@ -327,6 +327,7 @@ function Game(mockScenario='noMock') {
     if (thisTile.currentValue === nextTile.currentValue) {
       thisTile.currentValue = null;
       nextTile.currentValue = nextTile.currentValue * 2;
+      this.score += nextTile.currentValue;
       nextTile.wasJustMerged = true;
       return true;
     }
