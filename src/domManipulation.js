@@ -92,6 +92,11 @@ const updateTimerInDOM = (gameTime) => {
   timer.innerHTML = prettifySeconds(gameTime)
 };
 
+const updateScoreInDOM = (score) => {
+  let scoreTab = document.querySelector("#score");
+  scoreTab.innerHTML = score
+};
+
 const prettifySeconds = (secondsToCalc) => {
   let hours = parseInt( secondsToCalc / 3600);
   secondsToCalc -= hours * 3600;
