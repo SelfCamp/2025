@@ -13,12 +13,25 @@
     </header>
     <nav>
         <ul>
-            <li>Game</li>
+            <li class="button-green">Game</li>
             <li>Rules</li>
             <li>About</li>
         </ul>
     </nav>
     <div id="game">
+        <div id="board-header">
+            <ul>
+                <li>
+                    <div>Timer:</div>
+                    <div id="time"></div>
+                </li>
+                <li>
+                    <div>Score</div>
+                    <div id="score"></div>
+                </li>
+                <li>Replay</li>
+            </ul>
+        </div>
         <div id="board-container">
             <div id="board-base">
 
@@ -69,13 +82,12 @@
             </div>
         </div>
         <div id="slide-container">
-            <input type="range" min="0" max="0" value="0" class="slider" id="game-history" onkeydown="return false;">
+            <input type="range" min="0" max="0" value="0" class="slider" id="game-history-slider" onkeydown="return false;">
         </div>
     </div>
     <footer>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur culpa eos explicabo magnam maxime
-            molestias nam nesciunt provident quisquam rerum. Aliquid eaque exercitationem repudiandae? Ab
-            dignissimos harum mollitia perferendis quod?</p>
+        <p>Created by Adam Hosman and Oliver Juhasz. Shamelessly based on 2048 game. Play the original
+            <a href="https://play2048.co/">here!</a></p>
     </footer>
 </div>
 
