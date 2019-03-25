@@ -99,7 +99,7 @@ const prettifySeconds = (secondsToCalc) => {
   secondsToCalc -= minutes * 60;
   let seconds = secondsToCalc;
   return (
-      hours ? `${hours}:` : "" +
+      (hours ? `${hours}:` : "") +
           `${String(minutes).padStart(2, '0')}:` +
           String(seconds).padStart(2, '0')
   )
