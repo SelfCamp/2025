@@ -17373,10 +17373,10 @@ const boardMatrixFixtures = {
   ],
 
   "almostWon":[
-    [new Tile("#r0c0", 2),    new Tile("#r0c1", 8),    new Tile("#r0c2", 32),   new Tile("#r0c3", 2)],
-    [new Tile("#r1c0", 16),   new Tile("#r1c1", 128),  new Tile("#r1c2", 64),   new Tile("#r1c3", 8)],
-    [new Tile("#r2c0", 4),    new Tile("#r2c1", 32),   new Tile("#r2c2", 128),  new Tile("#r2c3", 4)],
-    [new Tile("#r3c0", 1024), new Tile("#r3c1", 1024), new Tile("#r3c2", 16),   new Tile("#r3c3", null)],
+    [new Tile("#r0c0", null),    new Tile("#r0c1", null),    new Tile("#r0c2", 32),   new Tile("#r0c3", 2)],
+    [new Tile("#r1c0", null),   new Tile("#r1c1", null),  new Tile("#r1c2", 64),   new Tile("#r1c3", 8)],
+    [new Tile("#r2c0", null),    new Tile("#r2c1", null),   new Tile("#r2c2", 128),  new Tile("#r2c3", 4)],
+    [new Tile("#r3c0", 1024), new Tile("#r3c1", 1024), new Tile("#r3c2", null),   new Tile("#r3c3", null)],
   ],
 
   "oneMissing":[
@@ -17416,8 +17416,8 @@ function Game(mockScenario='noMock') {
   this.timeline = [new Board(mockScenario)];
   /** Determines current position in `Game.timeline` */
   this.head = 0;
-
   this.createdAt = new Date();
+  this.score = 0;
 
   /**
    * Determines whether enough time has passed since last keypress to perform a new one
@@ -17430,7 +17430,7 @@ function Game(mockScenario='noMock') {
       return true;
     }
     let timeSinceLastArrowPress = new Date() - this.currentBoard().createdAt;
-    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
+    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT && (this.status() === "ongoing" || this.status() === "finale");
   };
 
   /**
@@ -17512,19 +17512,24 @@ function Game(mockScenario='noMock') {
    */
   this.status = (whenBoardIs=this.currentBoard()) => {
     let hasEmptySpots;
+    let hasOne;
     let maxValue = 0;
-    for (let row of whenBoardIs.matrix) {
-      for (let tile of row) {
-        if (tile.currentValue > maxValue) {
-          maxValue = tile.currentValue;
-        }
-        if (!tile.currentValue) {
-          hasEmptySpots = true;
-        }
+    for (let tile of whenBoardIs.tiles()) {
+      if (tile.currentValue > maxValue) {
+        maxValue = tile.currentValue;
+      }
+      if (!tile.currentValue) {
+        hasEmptySpots = true;
+      }
+      if (tile.currentValue === 1) {
+        hasOne = true;
       }
     }
     if (maxValue === 2049) {
       return 'won'
+    }
+    if (maxValue === 2048 && hasOne && hasEmptySpots) {
+      return "finale"
     }
     if (maxValue === 2048 && hasEmptySpots) {
       return 'timeForTheOne'  // TODO: continue expanding +1 logic outwards from here
@@ -17549,7 +17554,10 @@ function Game(mockScenario='noMock') {
     let nextBoard = this.nextBoard(direction);
     if (nextBoard) {
       let nextStatus = this.status(nextBoard);
-      if (nextStatus === 'ongoing') {
+      if (nextStatus === "timeForTheOne") {
+        nextBoard.spawnTiles(1, true)
+      }
+      else if (nextStatus === 'ongoing' || "finale") {
         nextBoard.spawnTiles(1);
       }
       this.timeline.push(nextBoard);
@@ -17728,7 +17736,15 @@ function Game(mockScenario='noMock') {
     if (thisTile.currentValue === nextTile.currentValue) {
       thisTile.currentValue = null;
       nextTile.currentValue = nextTile.currentValue * 2;
+      this.score += nextTile.currentValue;
       nextTile.wasJustMerged = true;
+      return true;
+    }
+    else if (thisTile.currentValue === 2048 && nextTile.currentValue === 1 || thisTile.currentValue === 1 && nextTile.currentValue === 2048) {
+      thisTile.currentValue = null;
+      nextTile.currentValue = 2049;
+      nextTile.wasJustMerged = true;
+      this.score += 1;
       return true;
     }
 
@@ -17773,8 +17789,8 @@ module.exports = {
 },{}],6:[function(require,module,exports){
 const ANIMATION_SLIDE_DURATION = 400;  // ms
 const ARROW_PRESS_TIMEOUT = ANIMATION_SLIDE_DURATION;
-const MOCK_SCENARIO = 'noMock';  // {"noMock"|"almostLost"|"almostWon"|"oneMissing"}
-const ANIMATION_NEEDED = false;
+const MOCK_SCENARIO = 'almostWon';  // {"noMock"|"almostLost"|"almostWon"|"oneMissing"}
+const ANIMATION_NEEDED = true;
 
 
 module.exports = {
@@ -17849,10 +17865,11 @@ const displayEndOfGame = (gameStatus) => {
       changeBackgroundInDOM('white');
       break;
     case 'won':
-      changeBackgroundInDOM('green');
+      setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + 1000);
+      // +1 additional second added for a more dramatic effect
       break;
     case 'lost':
-      changeBackgroundInDOM('red');
+      setTimeout(() => changeBackgroundInDOM('red'), ANIMATION_SLIDE_DURATION + 1000);
       break;
   }
 };
