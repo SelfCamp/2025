@@ -17418,6 +17418,7 @@ function Game(mockScenario='noMock') {
   this.head = 0;
   this.createdAt = new Date();
   this.score = 0;
+  this.onReplay = false;
 
   /**
    * Determines whether enough time has passed since last keypress to perform a new one
@@ -17430,7 +17431,9 @@ function Game(mockScenario='noMock') {
       return true;
     }
     let timeSinceLastArrowPress = new Date() - this.currentBoard().createdAt;
-    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT && (this.status() === "ongoing" || this.status() === "finale");
+    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT &&
+        (this.status() === "ongoing" || this.status() === "finale") &&
+        !this.onReplay;
   };
 
   /**
@@ -17892,7 +17895,6 @@ const updateSliderInDOM = (max, value) => {
 };
 
 const updateTimerInDOM = (gameTime) => {
-  console.log(prettifySeconds(gameTime))
 };
 
 const prettifySeconds = (secondsToCalc) => {
@@ -17902,7 +17904,7 @@ const prettifySeconds = (secondsToCalc) => {
   secondsToCalc -= minutes * 60;
   let seconds = secondsToCalc;
   return (
-      hours ? `${hours}:` : "" +
+      (hours ? `${hours}:` : "") +
           `${String(minutes).padStart(2, '0')}:` +
           String(seconds).padStart(2, '0')
   )
@@ -17916,7 +17918,7 @@ module.exports = {
 
 },{"./config.js":6}],8:[function(require,module,exports){
 const {updateView} = require('./domManipulation');
-
+const {ANIMATION_SLIDE_DURATION} = require("./config.js");
 
 const listenForKeyPress = (game, event) => {
   if (game.isKeyPressAllowed()) {
@@ -17925,6 +17927,9 @@ const listenForKeyPress = (game, event) => {
     }
     else if (isItAHistoryKey(event.key)) {
       handleHistoryKeyPress(game, event.key)
+    }
+    else if (isItReplay(event.key)) {
+      replay(game)
     }
   }
 };
@@ -17960,6 +17965,27 @@ const handleHistoryKeyPress = (game, key) => {
   );
 };
 
+const replay = (game) => {
+  let frame = 0;
+  let totalFrames = game.timeline.length;
+  game.onReplay = true;
+  let replay = setInterval(() => {
+    game.browseHistory(frame);
+    updateView(
+        game.currentBoard(),
+        game.status(),
+        game.maxHead(),
+        game.head,
+        true);
+    frame +=1;
+    if (frame === totalFrames) {
+      game.onReplay = false;
+      clearInterval(replay);
+    }
+  }, ANIMATION_SLIDE_DURATION + 100 );
+};
+
+
 const handleSliderChange = (game, event) => {
   let requestedHead = +event.target.value;
   game.browseHistory(requestedHead);
@@ -17976,7 +18002,10 @@ const isItAnArrowKey = (key) =>
     ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(key);
 
 const isItAHistoryKey = (key) =>
-    ['n', 'p'].includes(key);
+    ['n', 'p',].includes(key);
+
+const isItReplay = (key) =>
+    ['r'].includes(key);
 
 const getDirectionFromKey = (key) => {
   let directions = {'ArrowUp': 'up', 'ArrowRight': 'right', 'ArrowDown': 'down', 'ArrowLeft': 'left'};
@@ -17989,7 +18018,7 @@ module.exports = {
   handleSliderChange,
 };
 
-},{"./domManipulation":7}],9:[function(require,module,exports){
+},{"./config.js":6,"./domManipulation":7}],9:[function(require,module,exports){
 'use strict';
 
 const {Game} = require('./classes/Game');
