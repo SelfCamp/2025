@@ -33,7 +33,6 @@ function Game(mockScenario='noMock') {
     }
     let timeSinceLastArrowPress = new Date() - this.currentBoard().createdAt;
     return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT &&
-        (this.status() === "ongoing" || this.status() === "finale") &&
         !this.onReplay;
   };
 
