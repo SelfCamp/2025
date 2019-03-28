@@ -49,7 +49,7 @@ const handleHistoryKeyPress = (game, key) => {
 
 const replay = (game) => {
   let frame = 0;
-  let totalFrames = game.timeline.length;
+  let totalFrames = game.length();
   game.onReplay = true;
   let replay = setInterval(() => {
     game.browseHistory(frame);
