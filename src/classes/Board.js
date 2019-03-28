@@ -64,6 +64,11 @@ function Board(mockScenario='noMock') {
     return true;
   };
 
+  /**
+   * Returns array of Tiles
+   *
+   * @returns {Array} Flattened list of references for each Tile board has
+   */
   this.tiles = () => {
     let listOfTiles = [];
     for (let row of this.matrix) {
