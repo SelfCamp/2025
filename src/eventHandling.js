@@ -1,5 +1,5 @@
 const {updateView} = require('./domManipulation');
-const {ANIMATION_SLIDE_DURATION} = require("./config.js");
+const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION} = require("./config.js");
 
 const listenForKeyPress = (game, event) => {
   if (game.isKeyPressAllowed()) {
@@ -64,7 +64,7 @@ const replay = (game) => {
       game.onReplay = false;
       clearInterval(replay);
     }
-  }, ANIMATION_SLIDE_DURATION + 100 );
+  }, ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION );
 };
 
 
