@@ -208,7 +208,7 @@ footer {
 
 .tile[data-state='spawned'] {
     animation-name: spawn;
-    animation-duration: calc(var(--slide-duration));
+    animation-duration: calc(var(--spawn-duration));
     animation-direction: alternate;
 }
 
