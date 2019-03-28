@@ -1,4 +1,4 @@
-const {ANIMATION_SLIDE_DURATION, ANIMATION_NEEDED} = require("./config.js");
+const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION, ANIMATION_NEEDED} = require("./config.js");
 
 
 /**
@@ -7,6 +7,7 @@ const {ANIMATION_SLIDE_DURATION, ANIMATION_NEEDED} = require("./config.js");
 const applyConfigToDOM = () => {
   let board = document.querySelector('#board');
   board.setAttribute('style', `--slide-duration: ${ANIMATION_SLIDE_DURATION}ms`);
+  board.setAttribute('style', `--spawn-duration: ${ANIMATION_SPAWN_DURATION}ms`);
 };
 
 /**
