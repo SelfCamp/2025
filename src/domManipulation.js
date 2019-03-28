@@ -6,8 +6,7 @@ const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION, ANIMATION_NEEDED} = r
  */
 const applyConfigToDOM = () => {
   let board = document.querySelector('#board');
-  board.setAttribute('style', `--slide-duration: ${ANIMATION_SLIDE_DURATION}ms`);
-  board.setAttribute('style', `--spawn-duration: ${ANIMATION_SPAWN_DURATION}ms`);
+  board.setAttribute('style', `--slide-duration: ${ANIMATION_SLIDE_DURATION}ms;--spawn-duration: ${ANIMATION_SPAWN_DURATION}ms`);
 };
 
 /**
@@ -64,11 +63,11 @@ const displayEndOfGame = (gameStatus) => {
     case 'ongoing':
       break;
     case 'won':
-      setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + 1000);
+      setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
       // +1 additional second added for a more dramatic effect
       break;
     case 'lost':
-      setTimeout(() => changeBackgroundInDOM('red'), ANIMATION_SLIDE_DURATION + 1000);
+      setTimeout(() => changeBackgroundInDOM('red'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
       break;
   }
 };
