@@ -61,6 +61,7 @@ const initiateMergeSpawnInDOM = (newBoard, ANIMATION_NEEDED=false) => {
 const displayEndOfGame = (gameStatus) => {
   switch (gameStatus) {
     case 'ongoing':
+      changeBackgroundInDOM();
       break;
     case 'won':
       setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
@@ -74,7 +75,7 @@ const displayEndOfGame = (gameStatus) => {
 
 const changeBackgroundInDOM = (color) => {
   let body = document.querySelector('body');
-  body.setAttribute('style', `background-color: ${color}`);
+  color ? body.setAttribute('style', `background-color: ${color}`) : body.removeAttribute('style');
 };
 
 /**
