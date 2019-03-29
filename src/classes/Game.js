@@ -25,17 +25,23 @@ function Game(mockScenario='noMock') {
    * Determines whether enough time has passed since last keypress to perform a new one
    *
    * - Makes sure board transformation finishes before starting a new one, avoiding UI glitches
+   * @param forActivity {key | history} to decide validation rules for keypress.
    * @returns {boolean}
    */
-  this.isKeyPressAllowed = () => {
+  this.isKeyPressAllowed = (forActivity="key") => {
     if (this.timeline.length === 1) {
       return true;
     }
     let timeSinceLastArrowPress = new Date() - this.currentBoard().createdAt;
     let currentStatus = this.status();
-    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT &&
-        (currentStatus === "ongoing" || currentStatus === "finale" || currentStatus === "timeForTheOne") &&
-        !this.onReplay;
+    if (forActivity === "key") {
+      return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT &&
+          (currentStatus === "ongoing" || currentStatus === "finale" || currentStatus === "timeForTheOne") &&
+          !this.onReplay;
+    } else if (forActivity === "history") {
+      return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT &&
+          !this.onReplay;
+    }
   };
 
   this.score = () => {
