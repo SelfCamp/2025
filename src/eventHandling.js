@@ -2,16 +2,14 @@ const {updateView} = require('./domManipulation');
 const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION} = require("./config.js");
 
 const listenForKeyPress = (game, event) => {
-  if (game.isKeyPressAllowed()) {
-    if (isItAnArrowKey(event.key)) {
-      handleArrowKeyPress(game, event.key)
-    }
-    else if (isItAHistoryKey(event.key)) {
-      handleHistoryKeyPress(game, event.key)
-    }
-    else if (isItReplay(event.key)) {
-      replay(game)
-    }
+  if (isItAnArrowKey(event.key) && game.isKeyPressAllowed()) {
+    handleArrowKeyPress(game, event.key)
+  }
+  else if (isItAHistoryKey(event.key) && game.isKeyPressAllowed("history")) {
+    handleHistoryKeyPress(game, event.key)
+  }
+  else if (isItReplay(event.key) && game.isKeyPressAllowed("history")) {
+    replay(game)
   }
 };
 
