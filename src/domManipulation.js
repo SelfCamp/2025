@@ -99,6 +99,11 @@ const updateScoreInDOM = (score) => {
   scoreTab.innerHTML = score
 };
 
+const updateMessageInDOM = (messageToUpdate) => {
+  let message = document.querySelector("#message")
+  message.innerHTML = messageToUpdate
+};
+
 const prettifySeconds = (secondsToCalc) => {
   let hours = parseInt( secondsToCalc / 3600);
   secondsToCalc -= hours * 3600;
