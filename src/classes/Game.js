@@ -36,6 +36,10 @@ function Game(mockScenario='noMock') {
         !this.onReplay;
   };
 
+  this.score = () => {
+    return this.timeline.map(board => board.score).reduce((acc, val) => acc + val)
+  };
+
   /**
    * @returns {Board}
    * The board `Game.head` is currently pointing to
