@@ -20,6 +20,7 @@
     </nav>
     <div id="game">
         <div id="board-header">
+            <div id="header-first">
             <ul>
                 <li>
                     <div>Timer:</div>
@@ -31,6 +32,10 @@
                 </li>
                 <li>Replay</li>
             </ul>
+            </div>
+            <div id="header-second">
+                <p id="message">You can totally do this!</p>
+            </div>
         </div>
         <div id="board-container">
             <div id="board-base">
@@ -84,9 +89,10 @@
         <div id="slide-container">
             <input type="range" min="0" max="0" value="0" class="slider" id="game-history-slider" onkeydown="return false;">
         </div>
+        <div id="cloaking"></div>
     </div>
     <footer>
-        <p>Created by Adam Hosman and Oliver Juhasz. Shamelessly based on 2048 game. Play the original
+        <p>Created by Adam Hosman and Oliver Juhasz. Shamelessly based on the game "2048". Play the original
             <a href="https://play2048.co/">here!</a></p>
     </footer>
 </div>
