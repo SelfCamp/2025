@@ -27,7 +27,7 @@ const handleArrowKeyPress = (game, key) => {
         game.maxHead(),
         game.head,
         true,
-        game.score
+        game.score(),
     );
   }
 };
@@ -43,7 +43,8 @@ const handleHistoryKeyPress = (game, key) => {
       game.status(),
       game.maxHead(),
       game.head,
-      false
+      false,
+      game.score(),
   );
 };
 
@@ -58,7 +59,8 @@ const replay = (game) => {
         game.status(),
         game.maxHead(),
         game.head,
-        true);
+        true,
+        game.score());
     frame +=1;
     if (frame === totalFrames) {
       game.onReplay = false;
@@ -76,7 +78,8 @@ const handleSliderChange = (game, event) => {
       game.status(),
       game.maxHead(),
       game.head,
-      false
+      false,
+      game.score,
   );
 };
 
