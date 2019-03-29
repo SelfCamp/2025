@@ -37,7 +37,7 @@ function Game(mockScenario='noMock') {
   };
 
   this.score = () => {
-    return this.timeline.map(board => board.score).reduce((acc, val) => acc + val)
+    return this.timeline.slice(0, this.length()).map(board => board.score).reduce((acc, val) => acc + val)
   };
 
   /**
