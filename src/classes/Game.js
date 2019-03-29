@@ -340,7 +340,7 @@ function Game(mockScenario='noMock') {
     if (thisTile.currentValue === nextTile.currentValue) {
       thisTile.currentValue = null;
       nextTile.currentValue = nextTile.currentValue * 2;
-      this.score += nextTile.currentValue;
+      this.tempScore += nextTile.currentValue;
       nextTile.wasJustMerged = true;
       return true;
     }
@@ -348,7 +348,7 @@ function Game(mockScenario='noMock') {
       thisTile.currentValue = null;
       nextTile.currentValue = 2049;
       nextTile.wasJustMerged = true;
-      this.score += 1;
+      this.tempScore += 1;
       return true;
     }
 
