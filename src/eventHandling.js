@@ -1,5 +1,5 @@
-const {updateView} = require('./domManipulation');
-const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION} = require("./config.js");
+const {updateView, updateMessageInDOM, prettifySeconds} = require('./domManipulation');
+const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION, COUNTDOWN} = require("./config.js");
 
 const listenForKeyPress = (game, event) => {
   if (isItAnArrowKey(event.key) && game.isKeyPressAllowed()) {
