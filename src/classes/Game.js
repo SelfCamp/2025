@@ -194,6 +194,7 @@ function Game(mockScenario='noMock') {
     for (let row of temporaryBoardSlices) {
       this.squashRow(row, direction)  // mutates tiles in input
     }
+    newBoard.score = this.tempScore;
     return newBoard;
   };
 
