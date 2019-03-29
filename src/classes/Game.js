@@ -185,6 +185,7 @@ function Game(mockScenario='noMock') {
   };
 
   this.squashBoard = (currentBoard, direction) => {
+    this.tempScore = 0;
     let newBoard = new Board();
     newBoard.initiatingDirection = direction;
     newBoard.matrix = cloneDeep(currentBoard.matrix);
