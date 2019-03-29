@@ -18,8 +18,8 @@ function Game(mockScenario='noMock') {
   /** Determines current position in `Game.timeline` */
   this.head = 0;
   this.createdAt = new Date();
-  this.score = 0;
   this.onReplay = false;
+  this.tempScore = 0;
 
   /**
    * Determines whether enough time has passed since last keypress to perform a new one
