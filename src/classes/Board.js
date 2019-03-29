@@ -14,6 +14,7 @@ function Board(mockScenario='noMock') {
   this.initiatingDirection = null;
   this.hasChanged = false;
   this.matrix = cloneDeep(boardMatrixFixtures[mockScenario]);
+  this.score = 0;
 
   /**
    * Add starter values to `howMany` empty tiles at random locations
