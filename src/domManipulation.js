@@ -100,7 +100,7 @@ const updateScoreInDOM = (score) => {
 };
 
 const updateMessageInDOM = (messageToUpdate) => {
-  let message = document.querySelector("#message")
+  let message = document.querySelector("#message");
   message.innerHTML = messageToUpdate
 };
 
@@ -120,5 +120,7 @@ const prettifySeconds = (secondsToCalc) => {
 module.exports = {
   applyConfigToDOM,
   updateView,
-  updateTimerInDOM
+  updateTimerInDOM,
+  updateMessageInDOM,
+  prettifySeconds
 };
