@@ -65,7 +65,6 @@ const displayEndOfGame = (gameStatus) => {
       break;
     case 'won':
       setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
-      // +1 additional second added for a more dramatic effect
       break;
     case 'lost':
       setTimeout(() => changeBackgroundInDOM('red'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
