@@ -93,16 +93,33 @@ nav ul li {
 
 }
 
-#board, #board-base {
+#board, #board-base, #rules, #about {
     position: absolute;
     width: var(--board-size);
     height: var(--board-size);
+}
+
+#board, #board-base {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
     justify-content: stretch;
     justify-items: stretch;
     grid-gap: var(--grid-gap);
+}
+
+#rules {
+    background-color: #FF6700;
+    visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
+    text-align: center;
+    color: #FFC9A4;
+}
+
+#about {
+    background-color: #FF6700;
+    visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
+    text-align: center;
+    color: #FFC9A4;
 }
 
 #slide-container {
@@ -195,16 +212,6 @@ footer {
     background-color: #CCCCCC;
 }
 
-
-#cloaking{
-    background-color: yellow;
-    z-index: 500;
-    width: 500px;
-    height: 500px;
-    position:relative;
-    top:0;
-
-}
 
 /* ANIMATION */
 
