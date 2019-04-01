@@ -1,5 +1,7 @@
 const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION, ANIMATION_NEEDED, COUNTDOWN} = require("./config.js");
 
+let countDownNeeded = false;
+let countDownOnGoing = false;
 
 /**
  * Updates DOM based on values defined in `config.js`
