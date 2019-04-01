@@ -31,7 +31,7 @@ const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=tr
   }
   updateSliderInDOM(sliderLength, sliderPosition);
   updateScoreInDOM(score);
-  displayEndOfGame(gameStatus);
+  handleGameEvent(gameStatus);
 };
 
 const initiateSlideInDOM = (newBoard) => {
@@ -60,7 +60,7 @@ const initiateMergeSpawnInDOM = (newBoard, ANIMATION_NEEDED=false) => {
   }
 };
 
-const displayEndOfGame = (gameStatus) => {
+const handleGameEvent = (gameStatus) => {
   switch (gameStatus) {
     case 'ongoing':
       changeBackgroundInDOM();
