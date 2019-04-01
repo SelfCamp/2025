@@ -149,7 +149,7 @@ const startCountdown = () => {
         updateMessageInDOM("OK, timer removed. Nice cheating, I guess.")
       } else if (seconds === 0) {
         clearInterval(countDown);
-        updateMessageInDOM("I'm afraid this is a lost cause. How about a new game?")
+        gameLost();
       } else {
         updateMessageInDOM(`Remaining time: ${prettifySeconds(seconds)}...`);
       }
