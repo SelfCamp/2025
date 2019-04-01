@@ -119,6 +119,10 @@ function Game(mockScenario='noMock') {
   this.canRedo = () =>
       (this.head < this.timeline.length - 1);
 
+  this.checkCountDown = () => {
+    return this.timeline.some(board => board.countDownStarted)
+  };
+
   /**
    * Return string describing game status by analyzing board given as input (default: `currentBoard`)
    *
