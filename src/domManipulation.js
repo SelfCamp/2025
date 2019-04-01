@@ -111,11 +111,10 @@ const prettifySeconds = (secondsToCalc) => {
   secondsToCalc -= hours * 3600;
   let minutes = parseInt( secondsToCalc / 60);
   secondsToCalc -= minutes * 60;
-  let seconds = secondsToCalc;
   return (
       (hours ? `${hours}:` : "") +
           `${String(minutes).padStart(2, '0')}:` +
-          String(seconds).padStart(2, '0')
+          String(secondsToCalc).padStart(2, '0')
   )
 };
 
