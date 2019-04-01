@@ -93,7 +93,7 @@ nav ul li {
 
 }
 
-#board, #board-base, #board-message {
+#board, #board-base, #rules, #about {
     position: absolute;
     width: var(--board-size);
     height: var(--board-size);
@@ -108,11 +108,18 @@ nav ul li {
     grid-gap: var(--grid-gap);
 }
 
-#board-message {
-    background-color: rgba(255, 255, 255, 0.9);
-    visibility: visible;  /* TODO: change to `hidden` when game is ongoing */
+#rules {
+    background-color: #FF6700;
+    visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
     text-align: center;
-    color: #000000;
+    color: #FFC9A4;
+}
+
+#about {
+    background-color: #FF6700;
+    visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
+    text-align: center;
+    color: #FFC9A4;
 }
 
 #slide-container {
