@@ -65,9 +65,11 @@ const displayEndOfGame = (gameStatus) => {
       break;
     case 'won':
       setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
+      setTimeout(() => updateMessageInDOM('Good news! You have won the game. How about an another play?'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
       break;
     case 'lost':
       setTimeout(() => changeBackgroundInDOM('red'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
+      setTimeout(() => updateMessageInDOM('I hate to tell you, but this game is lost. How about starting a new one?'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
       break;
   }
 };
