@@ -12,8 +12,10 @@ let game = new Game(config.MOCK_SCENARIO);
 
 document.addEventListener("keydown", (event) => listenForKeyPress(game, event));
 document.querySelector("#game-history-slider").addEventListener("change", (event) => handleSliderChange(game,event));
-document.querySelector("#rules-button").addEventListener("click", () => displayRules());
-document.querySelector("#about-button").addEventListener("click", () => displayAbout());
+document.querySelector("#rules-button").addEventListener("click", () => changeDisplay("rules"));
+document.querySelector("#about-button").addEventListener("click", () => changeDisplay("about"));
+document.querySelector("#game-button").addEventListener("click", () => changeDisplay("game"));
+
 window.setInterval(() => updateTimerInDOM(game.elapsedTimeInSeconds()), 1000);
 
 updateView(
