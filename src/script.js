@@ -2,7 +2,7 @@
 
 const {Game} = require('./classes/Game');
 const {listenForKeyPress, handleSliderChange} = require('./eventHandling');
-const {applyConfigToDOM, updateView, updateTimerInDOM, displayAbout, displayRules} = require('./domManipulation');
+const {applyConfigToDOM, updateView, updateTimerInDOM, changeDisplay} = require('./domManipulation');
 const config = require('./config');
 
 
