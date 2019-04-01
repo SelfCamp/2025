@@ -70,17 +70,6 @@ const replay = (game) => {
   }, ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION );
 };
 
-const startCountdown = () => {
-  let seconds = COUNTDOWN;
-  let countDown = setInterval( () => {
-    if (seconds === 0) {
-      clearInterval(countDown)
-    }
-    updateMessageInDOM(`Remaining time: ${prettifySeconds(seconds)}...`);
-    seconds -= 1;
-  }, 1000)
-};
-
 const handleSliderChange = (game, event) => {
   let requestedHead = +event.target.value;
   game.browseHistory(requestedHead);
