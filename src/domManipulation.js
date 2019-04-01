@@ -20,7 +20,11 @@ const applyConfigToDOM = () => {
  * @param score (number)
  * Whether slide animation should appear (may not want to slide when doing undo/redo)
  */
-const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=true, score=0) => {
+const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=true, score=0, checkCountDown=false) => {
+  countDownNeeded = checkCountDown;
+  if (countDownOnGoing && !countDownNeeded) {
+    countDownOnGoing = false;
+  }
   if (!slide) {
     initiateMergeSpawnInDOM(newBoard)
   } else {
@@ -32,6 +36,9 @@ const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=tr
   updateSliderInDOM(sliderLength, sliderPosition);
   updateScoreInDOM(score);
   handleGameEvent(gameStatus);
+  if (countDownNeeded) {
+    startCountdown()
+  }
 };
 
 const initiateSlideInDOM = (newBoard) => {
