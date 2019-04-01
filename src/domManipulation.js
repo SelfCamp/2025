@@ -158,10 +158,31 @@ const startCountdown = () => {
   }
 };
 
+const changeDisplay = (newDisplay) => {
+  let rulesElement = document.querySelector("#rules");
+  let aboutElement =  document.querySelector("#about");
+  switch (newDisplay) {
+    case "game":
+      rulesElement.setAttribute("style", "visibility: hidden");
+      aboutElement.setAttribute("style", "visibility: hidden");
+      break;
+    case "about":
+      rulesElement.setAttribute("style", "visibility: hidden");
+      aboutElement.setAttribute("style", "visibility: visible");
+      break;
+    case "rules":
+      rulesElement.setAttribute("style", "visibility: visible");
+      aboutElement.setAttribute("style", "visibility: hidden");
+      break;
+  }
+};
+
+
 module.exports = {
   applyConfigToDOM,
   updateView,
   updateTimerInDOM,
   updateMessageInDOM,
-  prettifySeconds
+  prettifySeconds,
+  changeDisplay,
 };
