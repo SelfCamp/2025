@@ -120,6 +120,25 @@ const prettifySeconds = (secondsToCalc) => {
   )
 };
 
+const startCountdown = () => {
+  if (!countDownOnGoing) {
+    countDownOnGoing = true;
+    let seconds = COUNTDOWN;
+    let countDown = setInterval( () => {
+      if (!countDownOnGoing) {
+        clearInterval(countDown);
+        updateMessageInDOM("OK, timer removed. Nice cheating, I guess.")
+      } else if (seconds === 0) {
+        clearInterval(countDown);
+        updateMessageInDOM("I'm afraid this is a lost cause. How about a new game?")
+      } else {
+        updateMessageInDOM(`Remaining time: ${prettifySeconds(seconds)}...`);
+      }
+      seconds -= 1;
+    }, 1000)
+  }
+};
+
 module.exports = {
   applyConfigToDOM,
   updateView,
