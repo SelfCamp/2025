@@ -15,6 +15,7 @@ function Board(mockScenario='noMock') {
   this.hasChanged = false;
   this.matrix = cloneDeep(boardMatrixFixtures[mockScenario]);
   this.score = 0;
+  this.countDownStarted = false;
 
   /**
    * Add starter values to `howMany` empty tiles at random locations
@@ -23,6 +24,7 @@ function Board(mockScenario='noMock') {
    * @param {boolean} isItTheOneAlready - Return special tile if param is TRUE.
    */
   this.spawnTiles = (howMany, isItTheOneAlready=false) => {
+    this.countDownStarted = isItTheOneAlready;
     for (let i = 0; i < howMany; i++) {
       let emptyTiles = [];
       for (let row of this.matrix) {
