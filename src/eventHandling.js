@@ -79,7 +79,7 @@ const handleSliderChange = (game, event) => {
       game.maxHead(),
       game.head,
       false,
-      game.score,
+      game.score(),
       game.checkCountDown(),
   );
 };
