@@ -3,13 +3,15 @@
 <head>
     <script type="text/javascript" src="bundle.js" defer></script>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Rajdhani" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
     <meta charset="UTF-8">
     <title>2049</title>
 </head>
 <body>
 <div id="front">
     <header>
-        <p id="title">2049</p>
+        <p id="title">204<span id="lastletter">9</span></p>
     </header>
     <nav>
         <ul>
@@ -22,12 +24,12 @@
         <div id="board-header">
             <div id="header-first">
                 <ul>
-                    <li>
+                    <li class="counter">
                         <div>Timer:</div>
                         <div id="time"></div>
                     </li>
-                    <li>
-                        <div>Score</div>
+                    <li class="counter">
+                        <div>Score:<br>
                         <div id="score"></div>
                     </li>
                     <li>Replay</li>
