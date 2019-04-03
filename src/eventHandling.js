@@ -26,7 +26,6 @@ const handleArrowKeyPress = (game, key) => {
         game.head,
         true,
         game.score(),
-        game.checkCountDown(),
     );
   }
 };
@@ -44,7 +43,6 @@ const handleHistoryKeyPress = (game, key) => {
       game.head,
       false,
       game.score(),
-      game.checkCountDown(),
   );
 };
 
@@ -61,7 +59,7 @@ const replay = (game) => {
         game.head,
         true,
         game.score(),
-        game.checkCountDown(),);
+        );
     frame +=1;
     if (frame === totalFrames) {
       game.onReplay = false;
@@ -80,7 +78,6 @@ const handleSliderChange = (game, event) => {
       game.head,
       false,
       game.score(),
-      game.checkCountDown(),
   );
 };
 
