@@ -67,24 +67,11 @@ nav ul li {
     margin: auto;
 }
 
-
-#board-header ul li {
-    display: grid;
-    grid-template-columns: 1fr;
-    text-align: center;
-    font-family: 'Permanent Marker', cursive;
-}
-
 #board-header{
     display: grid;
     grid-template-columns: 1fr;
     justify-content: center;
     align-items: center;
-}
-
-#message {
-    margin: 0;
-    text-align: center;
 }
 
 #board-header ul {
@@ -93,6 +80,13 @@ nav ul li {
     padding: 0;
     margin: 0;
     list-style-type: none;
+}
+
+#board-header ul li {
+    display: grid;
+    grid-template-columns: 1fr;
+    text-align: center;
+    font-family: 'Permanent Marker', cursive;
 }
 
 #board-container {
