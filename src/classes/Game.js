@@ -18,8 +18,9 @@ function Game(mockScenario='noMock') {
   /** Determines current position in `Game.timeline` */
   this.head = 0;
   this.createdAt = new Date();
-  this.onReplay = false;
+  this.ignoreKeystrokes = false;
   this.tempScore = 0;
+  this.finaleStartedAt = false;
 
   /**
    * Determines whether enough time has passed since last keypress to perform a new one
@@ -37,10 +38,10 @@ function Game(mockScenario='noMock') {
     if (forActivity === "key") {
       return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT &&
           (currentStatus === "ongoing" || currentStatus === "finale" || currentStatus === "timeForTheOne") &&
-          !this.onReplay;
+          !this.ignoreKeystrokes;
     } else if (forActivity === "history") {
       return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT &&
-          !this.onReplay;
+          !this.ignoreKeystrokes;
     }
   };
 
