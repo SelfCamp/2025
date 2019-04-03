@@ -45,6 +45,10 @@ function Game(mockScenario='noMock') {
     }
   };
 
+  this.setIgnoreKeystrokes = (bool) => {
+    this.ignoreKeystrokes = bool
+  };
+
   this.score = () => {
     return this.timeline.slice(0, this.length()).map(board => board.score).reduce((acc, val) => acc + val)
   };
