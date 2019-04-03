@@ -112,9 +112,18 @@ const updateSliderInDOM = (max, value) => {
   slider.value = value;
 };
 
-const updateTimerInDOM = (gameTime) => {
+const updateTimerInDOM = (gameTime, color="white") => {
   let timer = document.querySelector("#time");
-  timer.innerHTML = prettifySeconds(gameTime)
+  timer.innerHTML = gameTime;
+  switch (color) {
+    case "white":
+      timer.setAttribute("style", "color: #FFC9A4");
+      break;
+    case "red":
+      timer.setAttribute("style", "color: #FF001E");
+      break;
+  }
+
 };
 
 const updateScoreInDOM = (score) => {
