@@ -49,7 +49,7 @@ const handleHistoryKeyPress = (game, key) => {
 const replay = (game) => {
   let frame = 0;
   let totalFrames = game.length();
-  game.onReplay = true;
+  game.ignoreKeystrokes = true;
   let replay = setInterval(() => {
     game.browseHistory(frame);
     updateView(
@@ -62,7 +62,7 @@ const replay = (game) => {
         );
     frame +=1;
     if (frame === totalFrames) {
-      game.onReplay = false;
+      game.ignoreKeystrokes = false;
       clearInterval(replay);
     }
   }, ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION );
