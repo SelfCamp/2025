@@ -1,4 +1,4 @@
-const {updateView, updateTimerInDOM, updateMessageInDOM} = require('./domManipulation');
+const {updateView, updateTimerInDOM} = require('./domManipulation');
 const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION, FINALE_COUNTDOWN_FROM} = require("./config.js");
 
 const listenForKeyPress = (game, event) => {
