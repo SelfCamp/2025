@@ -1,7 +1,5 @@
 const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION, ANIMATION_NEEDED, COUNTDOWN} = require("./config.js");
 
-let countDownNeeded = false;
-let countDownOnGoing = false;
 
 /**
  * Updates DOM based on values defined in `config.js`
@@ -20,11 +18,7 @@ const applyConfigToDOM = () => {
  * @param score (number)
  * Whether slide animation should appear (may not want to slide when doing undo/redo)
  */
-const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=true, score=0, checkCountDown=false) => {
-  countDownNeeded = checkCountDown;
-  if (countDownOnGoing && !countDownNeeded) {
-    countDownOnGoing = false;
-  }
+const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=true, score=0) => {
   if (!slide) {
     initiateMergeSpawnInDOM(newBoard)
   } else {
@@ -36,9 +30,6 @@ const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=tr
   updateSliderInDOM(sliderLength, sliderPosition);
   updateScoreInDOM(score);
   handleGameEvent(gameStatus);
-  if (countDownNeeded) {
-    startCountdown()
-  }
 };
 
 const initiateSlideInDOM = (newBoard) => {
@@ -84,15 +75,11 @@ const handleGameEvent = (gameStatus) => {
 const gameLost = () => {
   setTimeout(() => changeBackgroundInDOM('red'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
   setTimeout(() => updateMessageInDOM('I hate to tell you, but this game is lost. How about starting a new one?'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
-  countDownOnGoing = false;
-  countDownNeeded = false;
 };
 
 const gameWon = () => {
   setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
   setTimeout(() => updateMessageInDOM('Good news! You have won the game. How about an another play?'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
-  countDownOnGoing = false;
-  countDownNeeded = false;
 };
 
 const changeBackgroundInDOM = (color) => {
@@ -136,36 +123,6 @@ const updateMessageInDOM = (messageToUpdate) => {
   message.innerHTML = messageToUpdate
 };
 
-const prettifySeconds = (secondsToCalc) => {
-  let hours = parseInt( secondsToCalc / 3600);
-  secondsToCalc -= hours * 3600;
-  let minutes = parseInt( secondsToCalc / 60);
-  secondsToCalc -= minutes * 60;
-  return (
-      (hours ? `${hours}:` : "") +
-          `${String(minutes).padStart(2, '0')}:` +
-          String(secondsToCalc).padStart(2, '0')
-  )
-};
-
-const startCountdown = () => {
-  if (!countDownOnGoing) {
-    countDownOnGoing = true;
-    let seconds = COUNTDOWN;
-    let countDown = setInterval( () => {
-      if (!countDownOnGoing) {
-        clearInterval(countDown);
-        updateMessageInDOM("OK, timer removed. Nice cheating, I guess.")
-      } else if (seconds === 0) {
-        clearInterval(countDown);
-        gameLost();
-      } else {
-        updateMessageInDOM(`Remaining time: ${prettifySeconds(seconds)}...`);
-      }
-      seconds -= 1;
-    }, 1000)
-  }
-};
 
 const changeDisplay = (newDisplay) => {
   let rulesElement = document.querySelector("#rules");
@@ -192,6 +149,5 @@ module.exports = {
   updateView,
   updateTimerInDOM,
   updateMessageInDOM,
-  prettifySeconds,
   changeDisplay,
 };
