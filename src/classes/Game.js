@@ -175,7 +175,8 @@ function Game(mockScenario='noMock') {
     if (nextBoard) {
       let nextStatus = this.status(nextBoard);
       if (nextStatus === "timeForTheOne") {
-        nextBoard.spawnTiles(1, true)
+        nextBoard.spawnTiles(1, true);
+        this.finaleStartedAt = new Date();
       }
       else if (nextStatus === 'ongoing' || "finale") {
         nextBoard.spawnTiles(1);
