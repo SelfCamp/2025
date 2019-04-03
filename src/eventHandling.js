@@ -115,8 +115,26 @@ const prettifySeconds = (secondsToCalc) => {
   )
 };
 
+switchPage = (page, ignoreKeyStrokes) => {
+  switch (page) {
+    case "rules":
+      ignoreKeyStrokes(true);
+      showPageInDOM("rules");
+      break;
+    case "about":
+      ignoreKeyStrokes(true);
+      showPageInDOM("about");
+      break;
+    case "game":
+      ignoreKeyStrokes(false);
+      showPageInDOM("game");
+      break;
+  }
+};
+
 module.exports = {
   listenForKeyPress,
   handleSliderChange,
   getTimersFromGame,
+  switchPage,
 };
