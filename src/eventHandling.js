@@ -98,8 +98,28 @@ const getDirectionFromKey = (key) => {
   return directions[key];
 };
 
+const getTimersFromGame = (elapsedTimeInSeconds, elapsedCountdownInSeconds) => {
+  if (elapsedCountdownInSeconds) {
+    updateTimerInDOM(prettifySeconds(FINALE_COUNTDOWN_FROM - elapsedCountdownInSeconds), "red");
+  } else {
+    updateTimerInDOM(prettifySeconds(elapsedTimeInSeconds), "white");
+  }
+};
+
+const prettifySeconds = (secondsToCalc) => {
+  let hours = parseInt( secondsToCalc / 3600);
+  secondsToCalc -= hours * 3600;
+  let minutes = parseInt( secondsToCalc / 60);
+  secondsToCalc -= minutes * 60;
+  return (
+      (hours ? `${hours}:` : "") +
+      `${String(minutes).padStart(2, '0')}:` +
+      String(secondsToCalc).padStart(2, '0')
+  )
+};
 
 module.exports = {
   listenForKeyPress,
   handleSliderChange,
+  getTimersFromGame,
 };
