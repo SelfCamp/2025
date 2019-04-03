@@ -30,7 +30,7 @@ function Game(mockScenario='noMock') {
    * @returns {boolean}
    */
   this.isKeyPressAllowed = (forActivity="key") => {
-    if (this.timeline.length === 1) {
+    if (this.timeline.length === 1 && !this.ignoreKeystrokes) {
       return true;
     }
     let timeSinceLastArrowPress = new Date() - this.currentBoard().createdAt;
