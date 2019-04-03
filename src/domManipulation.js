@@ -124,7 +124,7 @@ const updateMessageInDOM = (messageToUpdate) => {
 };
 
 
-const changeDisplay = (newDisplay) => {
+const showPageInDOM = (newDisplay) => {
   let rulesElement = document.querySelector("#rules");
   let aboutElement =  document.querySelector("#about");
   switch (newDisplay) {
@@ -149,5 +149,5 @@ module.exports = {
   updateView,
   updateTimerInDOM,
   updateMessageInDOM,
-  changeDisplay,
+  showPageInDOM,
 };
