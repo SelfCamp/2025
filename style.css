@@ -89,7 +89,7 @@ nav ul li {
 
 #board-header ul {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     padding: 0;
     margin: 0;
     list-style-type: none;
