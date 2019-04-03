@@ -377,6 +377,14 @@ function Game(mockScenario='noMock') {
   this.elapsedTimeInSeconds = () => parseInt((new Date() - this.createdAt) / 1000)
   ;
 
+  this.elapsedCountdownInSeconds = () => {
+    if (this.finaleStartedAt && this.status() === "finale") {
+      return parseInt((new Date() - this.finaleStartedAt) / 1000)
+    } else {
+      return false
+    }
+  };
+
   if (this.currentBoard().isEmpty()) {
     this.currentBoard().spawnTiles(2);
   }
