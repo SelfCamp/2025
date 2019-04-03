@@ -16,7 +16,7 @@ document.querySelector("#rules-button").addEventListener("click", () => changeDi
 document.querySelector("#about-button").addEventListener("click", () => changeDisplay("about"));
 document.querySelector("#game-button").addEventListener("click", () => changeDisplay("game"));
 
-window.setInterval(() => updateTimerInDOM(game.elapsedTimeInSeconds()), 1000);
+window.setInterval(() => getTimersFromGame(game.elapsedTimeInSeconds(), game.elapsedCountdownInSeconds()), 1000);
 
 updateView(
     game.currentBoard(),
