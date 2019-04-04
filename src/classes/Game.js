@@ -148,22 +148,25 @@ function Game(mockScenario='noMock') {
     if (maxValue === 2049) {
       return 'won'
     }
-    if (maxValue === 2048 && hasOne && hasEmptySpots) {
+    if (maxValue === 2048 && hasOne && (hasEmptySpots || this.isThereValidNextMove())) {
       return "finale"
     }
-    if (maxValue === 2048 && hasEmptySpots) {
+    if (maxValue === 2048 && (hasEmptySpots)) {
       return 'timeForTheOne'  // TODO: continue expanding +1 logic outwards from here
     }
-    if (hasEmptySpots) {
+    if (hasEmptySpots || this.isThereValidNextMove()) {
       return 'ongoing'
     }
+    return "lost";
+  };
+
+  this.isThereValidNextMove = () => {
     for (let direction of ["up", "right", "down", "left"]) {
       let testBoardCopy = this.nextBoard(direction);
       if (testBoardCopy) {
-        return "ongoing"
+        return true
       }
     }
-    return "lost";
   };
 
   /**
@@ -378,6 +381,7 @@ function Game(mockScenario='noMock') {
   ;
 
   this.elapsedCountdownInSeconds = () => {
+    console.log(this.status());
     if (this.finaleStartedAt && this.status() === "finale") {
       return parseInt((new Date() - this.finaleStartedAt) / 1000)
     } else {
