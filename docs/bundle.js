@@ -17425,8 +17425,9 @@ function Game(mockScenario='noMock') {
   /** Determines current position in `Game.timeline` */
   this.head = 0;
   this.createdAt = new Date();
-  this.onReplay = false;
+  this.ignoreKeystrokes = false;
   this.tempScore = 0;
+  this.finaleStartedAt = false;
 
   /**
    * Determines whether enough time has passed since last keypress to perform a new one
@@ -17436,7 +17437,7 @@ function Game(mockScenario='noMock') {
    * @returns {boolean}
    */
   this.isKeyPressAllowed = (forActivity="key") => {
-    if (this.timeline.length === 1) {
+    if (this.timeline.length === 1 && !this.ignoreKeystrokes) {
       return true;
     }
     let timeSinceLastArrowPress = new Date() - this.currentBoard().createdAt;
@@ -17444,11 +17445,15 @@ function Game(mockScenario='noMock') {
     if (forActivity === "key") {
       return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT &&
           (currentStatus === "ongoing" || currentStatus === "finale" || currentStatus === "timeForTheOne") &&
-          !this.onReplay;
+          !this.ignoreKeystrokes;
     } else if (forActivity === "history") {
       return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT &&
-          !this.onReplay;
+          !this.ignoreKeystrokes;
     }
+  };
+
+  this.setIgnoreKeystrokes = (bool) => {
+    this.ignoreKeystrokes = bool
   };
 
   this.score = () => {
@@ -17526,10 +17531,6 @@ function Game(mockScenario='noMock') {
   this.canRedo = () =>
       (this.head < this.timeline.length - 1);
 
-  this.checkCountDown = () => {
-    return this.timeline.some(board => board.countDownStarted)
-  };
-
   /**
    * Return string describing game status by analyzing board given as input (default: `currentBoard`)
    *
@@ -17581,7 +17582,8 @@ function Game(mockScenario='noMock') {
     if (nextBoard) {
       let nextStatus = this.status(nextBoard);
       if (nextStatus === "timeForTheOne") {
-        nextBoard.spawnTiles(1, true)
+        nextBoard.spawnTiles(1, true);
+        this.finaleStartedAt = new Date();
       }
       else if (nextStatus === 'ongoing' || "finale") {
         nextBoard.spawnTiles(1);
@@ -17782,6 +17784,14 @@ function Game(mockScenario='noMock') {
   this.elapsedTimeInSeconds = () => parseInt((new Date() - this.createdAt) / 1000)
   ;
 
+  this.elapsedCountdownInSeconds = () => {
+    if (this.finaleStartedAt && this.status() === "finale") {
+      return parseInt((new Date() - this.finaleStartedAt) / 1000)
+    } else {
+      return false
+    }
+  };
+
   if (this.currentBoard().isEmpty()) {
     this.currentBoard().spawnTiles(2);
   }
@@ -17820,7 +17830,7 @@ const ANIMATION_SPAWN_DURATION = 400;
 const ARROW_PRESS_TIMEOUT = ANIMATION_SLIDE_DURATION;
 const MOCK_SCENARIO = 'almostWon';  // {"noMock"|"almostLost"|"almostWon"|"oneMissing"}
 const ANIMATION_NEEDED = true;
-const COUNTDOWN = 60;
+const FINALE_COUNTDOWN_FROM = 61;
 
 
 
@@ -17830,14 +17840,12 @@ module.exports = {
   MOCK_SCENARIO,
   ANIMATION_NEEDED,
   ANIMATION_SPAWN_DURATION,
-  COUNTDOWN,
+  FINALE_COUNTDOWN_FROM,
 };
 
 },{}],7:[function(require,module,exports){
-const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION, ANIMATION_NEEDED, COUNTDOWN} = require("./config.js");
+const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION, ANIMATION_NEEDED} = require("./config.js");
 
-let countDownNeeded = false;
-let countDownOnGoing = false;
 
 /**
  * Updates DOM based on values defined in `config.js`
@@ -17856,11 +17864,7 @@ const applyConfigToDOM = () => {
  * @param score (number)
  * Whether slide animation should appear (may not want to slide when doing undo/redo)
  */
-const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=true, score=0, checkCountDown=false) => {
-  countDownNeeded = checkCountDown;
-  if (countDownOnGoing && !countDownNeeded) {
-    countDownOnGoing = false;
-  }
+const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=true, score=0) => {
   if (!slide) {
     initiateMergeSpawnInDOM(newBoard)
   } else {
@@ -17872,9 +17876,6 @@ const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=tr
   updateSliderInDOM(sliderLength, sliderPosition);
   updateScoreInDOM(score);
   handleGameEvent(gameStatus);
-  if (countDownNeeded) {
-    startCountdown()
-  }
 };
 
 const initiateSlideInDOM = (newBoard) => {
@@ -17919,16 +17920,10 @@ const handleGameEvent = (gameStatus) => {
 
 const gameLost = () => {
   setTimeout(() => changeBackgroundInDOM('red'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
-  setTimeout(() => updateMessageInDOM('I hate to tell you, but this game is lost. How about starting a new one?'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
-  countDownOnGoing = false;
-  countDownNeeded = false;
 };
 
 const gameWon = () => {
   setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
-  setTimeout(() => updateMessageInDOM('Good news! You have won the game. How about an another play?'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
-  countDownOnGoing = false;
-  countDownNeeded = false;
 };
 
 const changeBackgroundInDOM = (color) => {
@@ -17948,9 +17943,18 @@ const updateSliderInDOM = (max, value) => {
   slider.value = value;
 };
 
-const updateTimerInDOM = (gameTime) => {
+const updateTimerInDOM = (gameTime, color="white") => {
   let timer = document.querySelector("#time");
-  timer.innerHTML = prettifySeconds(gameTime)
+  timer.innerHTML = gameTime;
+  switch (color) {
+    case "white":
+      timer.setAttribute("style", "color: #FFC9A4");
+      break;
+    case "red":
+      timer.setAttribute("style", "color: #FF001E");
+      break;
+  }
+
 };
 
 const updateScoreInDOM = (score) => {
@@ -17958,43 +17962,7 @@ const updateScoreInDOM = (score) => {
   scoreTab.innerHTML = score
 };
 
-const updateMessageInDOM = (messageToUpdate) => {
-  let message = document.querySelector("#message");
-  message.innerHTML = messageToUpdate
-};
-
-const prettifySeconds = (secondsToCalc) => {
-  let hours = parseInt( secondsToCalc / 3600);
-  secondsToCalc -= hours * 3600;
-  let minutes = parseInt( secondsToCalc / 60);
-  secondsToCalc -= minutes * 60;
-  return (
-      (hours ? `${hours}:` : "") +
-          `${String(minutes).padStart(2, '0')}:` +
-          String(secondsToCalc).padStart(2, '0')
-  )
-};
-
-const startCountdown = () => {
-  if (!countDownOnGoing) {
-    countDownOnGoing = true;
-    let seconds = COUNTDOWN;
-    let countDown = setInterval( () => {
-      if (!countDownOnGoing) {
-        clearInterval(countDown);
-        updateMessageInDOM("OK, timer removed. Nice cheating, I guess.")
-      } else if (seconds === 0) {
-        clearInterval(countDown);
-        gameLost();
-      } else {
-        updateMessageInDOM(`Remaining time: ${prettifySeconds(seconds)}...`);
-      }
-      seconds -= 1;
-    }, 1000)
-  }
-};
-
-const changeDisplay = (newDisplay) => {
+const showPageInDOM = (newDisplay) => {
   let rulesElement = document.querySelector("#rules");
   let aboutElement =  document.querySelector("#about");
   switch (newDisplay) {
@@ -18018,14 +17986,12 @@ module.exports = {
   applyConfigToDOM,
   updateView,
   updateTimerInDOM,
-  updateMessageInDOM,
-  prettifySeconds,
-  changeDisplay,
+  showPageInDOM,
 };
 
 },{"./config.js":6}],8:[function(require,module,exports){
-const {updateView} = require('./domManipulation');
-const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION} = require("./config.js");
+const {updateView, updateTimerInDOM, showPageInDOM} = require('./domManipulation');
+const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION, FINALE_COUNTDOWN_FROM} = require("./config.js");
 
 const listenForKeyPress = (game, event) => {
   if (isItAnArrowKey(event.key) && game.isKeyPressAllowed()) {
@@ -18045,15 +18011,23 @@ const handleArrowKeyPress = (game, key) => {
   }
   let direction = getDirectionFromKey(key);
   if (game.makeMove(direction)) {
+    switch (game.status()) {
+      case "won":
+        console.log("game won!");
+        break;
+      case "lost":
+        console.log("game lost!");
+        break;
+      default:
     updateView(
         game.currentBoard(),
-        game.status(),
-        game.maxHead(),
-        game.head,
-        true,
-        game.score(),
-        game.checkCountDown(),
-    );
+            game.status(),
+            game.maxHead(),
+            game.head,
+            true,
+            game.score(),
+        );
+      }
   }
 };
 
@@ -18070,14 +18044,13 @@ const handleHistoryKeyPress = (game, key) => {
       game.head,
       false,
       game.score(),
-      game.checkCountDown(),
   );
 };
 
 const replay = (game) => {
   let frame = 0;
   let totalFrames = game.length();
-  game.onReplay = true;
+  game.ignoreKeystrokes = true;
   let replay = setInterval(() => {
     game.browseHistory(frame);
     updateView(
@@ -18087,10 +18060,10 @@ const replay = (game) => {
         game.head,
         true,
         game.score(),
-        game.checkCountDown(),);
+        );
     frame +=1;
     if (frame === totalFrames) {
-      game.onReplay = false;
+      game.ignoreKeystrokes = false;
       clearInterval(replay);
     }
   }, ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION );
@@ -18106,7 +18079,6 @@ const handleSliderChange = (game, event) => {
       game.head,
       false,
       game.score(),
-      game.checkCountDown(),
   );
 };
 
@@ -18124,39 +18096,85 @@ const getDirectionFromKey = (key) => {
   return directions[key];
 };
 
+const getTimersFromGame = (elapsedTimeInSeconds, elapsedCountdownInSeconds) => {
+  if (elapsedCountdownInSeconds) {
+    if (elapsedCountdownInSeconds === FINALE_COUNTDOWN_FROM) {
+      console.log("game over")
+    }
+    updateTimerInDOM(prettifySeconds(FINALE_COUNTDOWN_FROM - elapsedCountdownInSeconds), "red");
+  } else {
+    updateTimerInDOM(prettifySeconds(elapsedTimeInSeconds), "white");
+  }
+};
+
+const prettifySeconds = (secondsToCalc) => {
+  let hours = parseInt( secondsToCalc / 3600);
+  secondsToCalc -= hours * 3600;
+  let minutes = parseInt( secondsToCalc / 60);
+  secondsToCalc -= minutes * 60;
+  return (
+      (hours ? `${hours}:` : "") +
+      `${String(minutes).padStart(2, '0')}:` +
+      String(secondsToCalc).padStart(2, '0')
+  )
+};
+
+switchPage = (page, ignoreKeyStrokes) => {
+  switch (page) {
+    case "rules":
+      ignoreKeyStrokes(true);
+      showPageInDOM("rules");
+      break;
+    case "about":
+      ignoreKeyStrokes(true);
+      showPageInDOM("about");
+      break;
+    case "game":
+      ignoreKeyStrokes(false);
+      showPageInDOM("game");
+      break;
+  }
+};
 
 module.exports = {
   listenForKeyPress,
   handleSliderChange,
+  getTimersFromGame,
+  switchPage,
+  replay,
 };
 
 },{"./config.js":6,"./domManipulation":7}],9:[function(require,module,exports){
 'use strict';
 
 const {Game} = require('./classes/Game');
-const {listenForKeyPress, handleSliderChange} = require('./eventHandling');
-const {applyConfigToDOM, updateView, updateTimerInDOM, changeDisplay} = require('./domManipulation');
+const {listenForKeyPress, handleSliderChange, getTimersFromGame, switchPage, replay} = require('./eventHandling');
+const {applyConfigToDOM, updateView} = require('./domManipulation');
 const config = require('./config');
 
+const requestNewGame = () => {
+  applyConfigToDOM();
+  let game = new Game(config.MOCK_SCENARIO);
+  updateView(
+      game.currentBoard(),
+      game.status(),
+      game.maxHead(),
+      game.head,
+      false
+  );
+  return game
+};
 
-applyConfigToDOM();
-
-let game = new Game(config.MOCK_SCENARIO);
+let game = requestNewGame();
 
 document.addEventListener("keydown", (event) => listenForKeyPress(game, event));
 document.querySelector("#game-history-slider").addEventListener("change", (event) => handleSliderChange(game,event));
-document.querySelector("#rules-button").addEventListener("click", () => changeDisplay("rules"));
-document.querySelector("#about-button").addEventListener("click", () => changeDisplay("about"));
-document.querySelector("#game-button").addEventListener("click", () => changeDisplay("game"));
+document.querySelector("#rules-button").addEventListener("click", () => switchPage("rules", game.setIgnoreKeystrokes));
+document.querySelector("#about-button").addEventListener("click", () => switchPage("about", game.setIgnoreKeystrokes));
+document.querySelector("#game-button").addEventListener("click", () => switchPage("game", game.setIgnoreKeystrokes));
+document.querySelector("#newgame-button").addEventListener("click", () => game = requestNewGame());
+document.querySelector("#replay-button").addEventListener("click", () => replay(game));
+window.setInterval(() => getTimersFromGame(game.elapsedTimeInSeconds(), game.elapsedCountdownInSeconds()), 1000);
 
-window.setInterval(() => updateTimerInDOM(game.elapsedTimeInSeconds()), 1000);
-
-updateView(
-    game.currentBoard(),
-    game.status(),
-    game.maxHead(),
-    game.head,
-    false
-);
 
 },{"./classes/Game":4,"./config":6,"./domManipulation":7,"./eventHandling":8}]},{},[9]);

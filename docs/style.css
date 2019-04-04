@@ -67,14 +67,6 @@ nav ul li {
     margin: auto;
 }
 
-
-#board-header ul li {
-    display: grid;
-    grid-template-columns: 1fr;
-    text-align: center;
-    font-family: 'Permanent Marker', cursive;
-}
-
 #board-header{
     display: grid;
     grid-template-columns: 1fr;
@@ -82,18 +74,50 @@ nav ul li {
     align-items: center;
 }
 
-#message {
-    margin: 0;
-    text-align: center;
-}
-
 #board-header ul {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     padding: 0;
     margin: 0;
     list-style-type: none;
 }
+
+#board-header ul li {
+    font-size: calc(var(--board-size) /25);
+    display: grid;
+    grid-template-columns: 1fr;
+    text-align: center;
+    font-family: 'Permanent Marker', cursive;
+}
+
+#board-footer{
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    align-items: center;
+}
+
+#board-footer ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+#board-footer ul li {
+    display: grid;
+    grid-template-columns: 1fr;
+    text-align: center;
+    margin: auto;
+    border: 2px solid #FFC9A4;
+    padding: 0.5vh;
+    border-radius: 10px;
+    font-family: 'Permanent Marker', cursive;
+    font-size: calc(var(--board-size) /25);
+    cursor: pointer;
+}
+
 
 #board-container {
     padding: calc(var(--board-size) / 20);
@@ -151,6 +175,15 @@ footer {
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+.non-selectable {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }
 
 .tile {
