@@ -64,22 +64,14 @@ const handleGameEvent = (gameStatus) => {
       changeBackgroundInDOM();
       break;
     case 'won':
-      gameWon();
+      setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
+      setTimeout(() => showPageInDOM("victory"), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION + WAIT_TIME_BEFORE_WIN_LOSS_SCREEN);
       break;
     case 'lost':
-      gameLost();
+      setTimeout(() => changeBackgroundInDOM('red'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
+      setTimeout(() => showPageInDOM("defeat"), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION + WAIT_TIME_BEFORE_WIN_LOSS_SCREEN);
       break;
   }
-};
-
-const gameLost = () => {
-  setTimeout(() => changeBackgroundInDOM('red'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
-  setTimeout(() => showPageInDOM("defeat"), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION + WAIT_TIME_BEFORE_WIN_LOSS_SCREEN);
-};
-
-const gameWon = () => {
-  setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
-  setTimeout(() => showPageInDOM("victory"), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION + WAIT_TIME_BEFORE_WIN_LOSS_SCREEN);
 };
 
 const changeBackgroundInDOM = (color) => {
