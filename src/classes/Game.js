@@ -1,7 +1,7 @@
 const {cloneDeep} = require('lodash');
 
 const {Board} = require('./Board');
-const {ARROW_PRESS_TIMEOUT} = require('../config');
+const {ARROW_PRESS_TIMEOUT, FINALE_COUNTDOWN_FROM} = require('../config');
 
 
 /**
