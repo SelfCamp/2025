@@ -123,39 +123,27 @@ const showPageInDOM = (newDisplay) => {
   let aboutElement =  document.querySelector("#about");
   let victoryElement = document.querySelector("#victory");
   let defeatElement = document.querySelector("#defeat");
+
+  rulesElement.setAttribute("style", "visibility: hidden");
+  aboutElement.setAttribute("style", "visibility: hidden");
+  victoryElement.setAttribute("style", "visibility: hidden");
+  defeatElement.setAttribute("style", "visibility: hidden");
+
   switch (newDisplay) {
-    case "game":
-      rulesElement.setAttribute("style", "visibility: hidden");
-      aboutElement.setAttribute("style", "visibility: hidden");
-      victoryElement.setAttribute("style", "visibility: hidden");
-      defeatElement.setAttribute("style", "visibility: hidden");
-      break;
     case "about":
-      rulesElement.setAttribute("style", "visibility: hidden");
       aboutElement.setAttribute("style", "visibility: visible");
-      victoryElement.setAttribute("style", "visibility: hidden");
-      defeatElement.setAttribute("style", "visibility: hidden");
       break;
     case "rules":
       rulesElement.setAttribute("style", "visibility: visible");
-      aboutElement.setAttribute("style", "visibility: hidden");
-      victoryElement.setAttribute("style", "visibility: hidden");
-      defeatElement.setAttribute("style", "visibility: hidden");
       break;
     case "victory":
-      rulesElement.setAttribute("style", "visibility: hidden");
-      aboutElement.setAttribute("style", "visibility: hidden");
       victoryElement.setAttribute("style", "visibility: visible");
-      defeatElement.setAttribute("style", "visibility: hidden");
       break;
     case "defeat":
-      rulesElement.setAttribute("style", "visibility: hidden");
-      aboutElement.setAttribute("style", "visibility: hidden");
-      victoryElement.setAttribute("style", "visibility: hidden");
       defeatElement.setAttribute("style", "visibility: visible");
       break;
   }
-}; //TODO: refactor
+};
 
 
 module.exports = {
