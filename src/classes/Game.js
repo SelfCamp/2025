@@ -372,6 +372,7 @@ function Game(mockScenario='noMock') {
       nextTile.currentValue = 2049;
       nextTile.wasJustMerged = true;
       this.tempScore += 1;
+      this.gameOverAt = new Date;
       return true;
     }
 
