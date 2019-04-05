@@ -145,9 +145,11 @@ nav ul li {
 
 .messages {
     background-color: #FF6700;
-    visibility: hidden;
+    visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
     text-align: center;
+    line-height: 1.2em;
     color: #FFC9A4;
+    font-size: 3vh;
 }
 
 
@@ -161,6 +163,10 @@ nav ul li {
 
 #game-history-slider {
     bottom: 0;
+}
+
+br {
+    line-height: 200%;
 }
 
 footer {
