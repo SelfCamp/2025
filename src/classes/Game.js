@@ -164,6 +164,13 @@ function Game(mockScenario='noMock') {
   this.isGameOver = () => ["won", "lost"].includes(this.status()) ||
       (this.elapsedCountdownInSeconds() - FINALE_COUNTDOWN_FROM >= 0);
 
+
+  this.getFinishedGameLength = () => {
+    if (!this.gameOverAt) {
+      this.gameOverAt = new Date()
+    }
+    return parseInt((this.gameOverAt - this.createdAt) / 1000)};
+
   this.isThereValidNextMove = () => {
     for (let direction of ["up", "right", "down", "left"]) {
       let testBoardCopy = this.nextBoard(direction);
