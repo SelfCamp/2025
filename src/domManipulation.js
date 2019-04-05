@@ -74,10 +74,12 @@ const handleGameEvent = (gameStatus) => {
 
 const gameLost = () => {
   setTimeout(() => changeBackgroundInDOM('red'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
+  setTimeout(() => showPageInDOM("defeat"), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
 };
 
 const gameWon = () => {
   setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
+  setTimeout(() => showPageInDOM("victory"), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
 };
 
 const changeBackgroundInDOM = (color) => {
