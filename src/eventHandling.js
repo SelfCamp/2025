@@ -47,6 +47,7 @@ const handleHistoryKeyPress = (game, key) => {
 };
 
 const replay = (game) => {
+  switchPage("game", game.setIgnoreKeystrokes);
   let frame = 0;
   let totalFrames = game.length();
   game.ignoreKeystrokes = true;
@@ -137,4 +138,5 @@ module.exports = {
   handleSliderChange,
   getTimersFromGame,
   switchPage,
+  replay,
 };
