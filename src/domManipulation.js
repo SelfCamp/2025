@@ -67,7 +67,8 @@ const initiateMergeSpawnInDOM = (newBoard, ANIMATION_NEEDED=false) => {
  */
 const handleGameEvent = (gameStatus) => {
   switch (gameStatus) {
-    case 'ongoing': //TODO: check if additional game statuses need to be added
+    case 'ongoing':
+    case 'finale':
       changeBackgroundInDOM();
       break;
     case 'won':
