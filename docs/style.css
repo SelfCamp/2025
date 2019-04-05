@@ -118,7 +118,6 @@ nav ul li {
     cursor: pointer;
 }
 
-
 #board-container {
     padding: calc(var(--board-size) / 20);
     height: var(--board-size);
@@ -129,7 +128,7 @@ nav ul li {
 
 }
 
-#board, #board-base, #rules, #about {
+#board, #board-base, #rules, #about, #victory, #defeat {
     position: absolute;
     width: var(--board-size);
     height: var(--board-size);
@@ -144,19 +143,15 @@ nav ul li {
     grid-gap: var(--grid-gap);
 }
 
-#rules {
+.messages {
     background-color: #FF6700;
     visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
     text-align: center;
+    line-height: 1.2em;
     color: #FFC9A4;
+    font-size: 3vh;
 }
 
-#about {
-    background-color: #FF6700;
-    visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
-    text-align: center;
-    color: #FFC9A4;
-}
 
 #slide-container {
     display: flex;
@@ -168,6 +163,10 @@ nav ul li {
 
 #game-history-slider {
     bottom: 0;
+}
+
+br {
+    line-height: 200%;
 }
 
 footer {
