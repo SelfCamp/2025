@@ -1,4 +1,4 @@
-const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION, ANIMATION_NEEDED} = require("./config.js");
+const {ANIMATION_SLIDE_DURATION, ANIMATION_SPAWN_DURATION, ANIMATION_NEEDED, WAIT_TIME_BEFORE_WIN_LOSS_SCREEN} = require("./config.js");
 
 
 /**
@@ -74,12 +74,12 @@ const handleGameEvent = (gameStatus) => {
 
 const gameLost = () => {
   setTimeout(() => changeBackgroundInDOM('red'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
-  setTimeout(() => showPageInDOM("defeat"), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
+  setTimeout(() => showPageInDOM("defeat"), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION + WAIT_TIME_BEFORE_WIN_LOSS_SCREEN);
 };
 
 const gameWon = () => {
   setTimeout(() => changeBackgroundInDOM('green'), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
-  setTimeout(() => showPageInDOM("victory"), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION);
+  setTimeout(() => showPageInDOM("victory"), ANIMATION_SLIDE_DURATION + ANIMATION_SPAWN_DURATION + WAIT_TIME_BEFORE_WIN_LOSS_SCREEN);
 };
 
 const changeBackgroundInDOM = (color) => {
