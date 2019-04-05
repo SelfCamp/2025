@@ -96,8 +96,14 @@ const getDirectionFromKey = (key) => {
   return directions[key];
 };
 
-const getTimersFromGame = (elapsedTimeInSeconds, elapsedCountdownInSeconds) => {
-  if (elapsedCountdownInSeconds) {
+const getTimersFromGame = (elapsedTimeInSeconds, elapsedCountdownInSeconds, isGameOver=false, getFinishedGameLength, setIgnoreKeyStrokes) => {
+  if (isGameOver) {
+    updateTimerInDOM(prettifySeconds(getFinishedGameLength()), "white")
+    if (elapsedCountdownInSeconds - FINALE_COUNTDOWN_FROM === 0) {
+      switchPage("lost", setIgnoreKeyStrokes)
+    }
+  }
+  else if (elapsedCountdownInSeconds) {
     updateTimerInDOM(prettifySeconds(FINALE_COUNTDOWN_FROM - elapsedCountdownInSeconds), "red");
   } else {
     updateTimerInDOM(prettifySeconds(elapsedTimeInSeconds), "white");
