@@ -21,6 +21,7 @@ function Game(mockScenario='noMock') {
   this.ignoreKeystrokes = false;
   this.tempScore = 0;
   this.finaleStartedAt = false;
+  this.gameOverAt = null;
 
   /**
    * Determines whether enough time has passed since last keypress to perform a new one
