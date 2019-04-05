@@ -1,9 +1,9 @@
 const ANIMATION_SLIDE_DURATION = 400;  // ms
 const ANIMATION_SPAWN_DURATION = 400;
 const ARROW_PRESS_TIMEOUT = ANIMATION_SLIDE_DURATION;
-const MOCK_SCENARIO = 'almostWon';  // {"noMock"|"almostLost"|"almostWon"|"oneMissing"}
+const MOCK_SCENARIO = 'noMock';  // {"noMock"|"almostLost"|"almostWon"|"oneMissing"}
 const ANIMATION_NEEDED = true;
-const FINALE_COUNTDOWN_FROM = 60;
+const FINALE_COUNTDOWN_FROM = 10;
 const WAIT_TIME_BEFORE_WIN_LOSS_SCREEN = 1000;
 
 
