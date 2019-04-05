@@ -128,7 +128,7 @@ nav ul li {
 
 }
 
-#board, #board-base, #rules, #about {
+#board, #board-base, #rules, #about, #victory, #defeat {
     position: absolute;
     width: var(--board-size);
     height: var(--board-size);
@@ -151,6 +151,20 @@ nav ul li {
 }
 
 #about {
+    background-color: #FF6700;
+    visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
+    text-align: center;
+    color: #FFC9A4;
+}
+
+#victory {
+    background-color: #FF6700;
+    visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
+    text-align: center;
+    color: #FFC9A4;
+}
+
+#defeat {
     background-color: #FF6700;
     visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
     text-align: center;
