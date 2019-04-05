@@ -104,7 +104,6 @@ function Game(mockScenario='noMock') {
           this.head++;
         break;
       default:
-        console.log(whichBoard);
         this.head = whichBoard;
     }
   };
@@ -393,7 +392,6 @@ function Game(mockScenario='noMock') {
   ;
 
   this.elapsedCountdownInSeconds = () => {
-    console.log(this.status());
     if (this.finaleStartedAt && this.status() === "finale") {
       return parseInt((new Date() - this.finaleStartedAt) / 1000)
     } else {
