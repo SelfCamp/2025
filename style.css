@@ -143,33 +143,13 @@ nav ul li {
     grid-gap: var(--grid-gap);
 }
 
-#rules {
+.messages {
     background-color: #FF6700;
-    visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
+    visibility: hidden;
     text-align: center;
     color: #FFC9A4;
 }
 
-#about {
-    background-color: #FF6700;
-    visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
-    text-align: center;
-    color: #FFC9A4;
-}
-
-#victory {
-    background-color: #FF6700;
-    visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
-    text-align: center;
-    color: #FFC9A4;
-}
-
-#defeat {
-    background-color: #FF6700;
-    visibility: hidden;  /* TODO: change to `hidden` when game is ongoing */
-    text-align: center;
-    color: #FFC9A4;
-}
 
 #slide-container {
     display: flex;
