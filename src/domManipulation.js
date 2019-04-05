@@ -41,7 +41,11 @@ const initiateSlideInDOM = (newBoard) => {
     tileElement.setAttribute("data-state", isSliding ? 'sliding' : '');
   }
 };
-
+/**
+ * Goes through all board tile elements in DOM and updates their merge and spawn status according to tiles in Game object.
+ * @param newBoard {object}
+ * @param ANIMATION_NEEDED {boolean}
+ */
 const initiateMergeSpawnInDOM = (newBoard, ANIMATION_NEEDED=false) => {
   for (let tile of newBoard.tiles()) {
     let tileElement = document.querySelector(tile.selector);
@@ -57,10 +61,13 @@ const initiateMergeSpawnInDOM = (newBoard, ANIMATION_NEEDED=false) => {
     tileElement.textContent = tile.currentValue;
   }
 };
-
+/**
+ * Function receives gameStatus and updates the DOM based on it.
+ * @param gameStatus
+ */
 const handleGameEvent = (gameStatus) => {
   switch (gameStatus) {
-    case 'ongoing':
+    case 'ongoing': //TODO: check if additional game statuses need to be added
       changeBackgroundInDOM();
       break;
     case 'won':
@@ -90,7 +97,11 @@ const updateSliderInDOM = (max, value) => {
   slider.setAttribute("max", max);
   slider.value = value;
 };
-
+/**
+ * Updates timer on board header. It accepts gameTime (number, elapsed seconds) and color (string, for styling)
+ * @param gameTime {number}
+ * @param color {string}
+ */
 const updateTimerInDOM = (gameTime, color="white") => {
   let timer = document.querySelector("#time");
   timer.innerHTML = gameTime;
@@ -104,12 +115,18 @@ const updateTimerInDOM = (gameTime, color="white") => {
   }
 
 };
-
+/**
+ * Updates score on board header.
+ * @param score {number}
+ */
 const updateScoreInDOM = (score) => {
   let scoreTab = document.querySelector("#score");
   scoreTab.innerHTML = score
 };
-
+/**
+ * Activates requested page on game.
+ * @param newDisplay {string}
+ */
 const showPageInDOM = (newDisplay) => {
   let rulesElement = document.querySelector("#rules");
   let aboutElement =  document.querySelector("#about");

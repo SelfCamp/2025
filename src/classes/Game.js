@@ -160,16 +160,27 @@ function Game(mockScenario='noMock') {
     return "lost";
   };
 
+  /**
+   * Checks whether the game should or should not be over. Checks game.status and the final countdown
+   * @returns {boolean}
+   */
   this.isGameOver = () => ["won", "lost"].includes(this.status()) ||
       (this.elapsedCountdownInSeconds() - FINALE_COUNTDOWN_FROM >= 0);
 
-
+  /**
+   * Returns game time from start to end in seconds
+   * @returns {number}
+   */
   this.getFinishedGameLength = () => {
     if (!this.gameOverAt) {
       this.gameOverAt = new Date()
     }
     return parseInt((this.gameOverAt - this.createdAt) / 1000)};
 
+  /**
+   * Checks if there is a valid next move in any directions
+   * @returns {boolean}
+   */
   this.isThereValidNextMove = () => {
     for (let direction of ["up", "right", "down", "left"]) {
       let testBoardCopy = this.nextBoard(direction);
@@ -388,9 +399,17 @@ function Game(mockScenario='noMock') {
     return false;
   };
 
+  /**
+   * Returns elapsed time since game start in seconds
+   * @returns {number}
+   */
   this.elapsedTimeInSeconds = () => parseInt((new Date() - this.createdAt) / 1000)
   ;
 
+  /**
+   * Returns elapsed time since countdown has started. If the game is not in the "finale" stage, returns false
+   * @returns {boolean|number}
+   */
   this.elapsedCountdownInSeconds = () => {
     if (this.finaleStartedAt && this.status() === "finale") {
       return parseInt((new Date() - this.finaleStartedAt) / 1000)
