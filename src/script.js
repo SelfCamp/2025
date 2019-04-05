@@ -27,5 +27,5 @@ document.querySelector("#about-button").addEventListener("click", () => switchPa
 document.querySelector("#game-button").addEventListener("click", () => switchPage("game", game.setIgnoreKeystrokes));
 document.querySelector("#newgame-button").addEventListener("click", () => game = requestNewGame());
 document.querySelector("#replay-button").addEventListener("click", () => replay(game));
-window.setInterval(() => getTimersFromGame(game.elapsedTimeInSeconds(), game.elapsedCountdownInSeconds()), 1000);
+window.setInterval(() => getTimersFromGame(game.elapsedTimeInSeconds(), game.elapsedCountdownInSeconds(), game.isGameOver(), game.getFinishedGameLength, game.setIgnoreKeystrokes), 1000);
 
