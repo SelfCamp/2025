@@ -130,6 +130,14 @@ switchPage = (page, ignoreKeyStrokes) => {
       ignoreKeyStrokes(false);
       showPageInDOM("game");
       break;
+    case "won:":
+      ignoreKeyStrokes(true);
+      showPageInDOM("victory");
+      break;
+    case "lost":
+      ignoreKeyStrokes(true);
+      showPageInDOM("defeat");
+      break;
   }
 };
 
