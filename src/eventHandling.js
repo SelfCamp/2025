@@ -96,14 +96,13 @@ const getDirectionFromKey = (key) => {
   return directions[key];
 };
 
-const getTimersFromGame = (elapsedTimeInSeconds, elapsedCountdownInSeconds, isGameOver=false, getFinishedGameLength, setIgnoreKeyStrokes) => {
+const handleTimeEvents = (elapsedTimeInSeconds, elapsedCountdownInSeconds, isGameOver=false, getFinishedGameLength, setIgnoreKeyStrokes) => {
   if (isGameOver) {
-    updateTimerInDOM(prettifySeconds(getFinishedGameLength()), "white")
-    if (elapsedCountdownInSeconds - FINALE_COUNTDOWN_FROM === 0) {
+    updateTimerInDOM(prettifySeconds(getFinishedGameLength()), "white");
+    if (FINALE_COUNTDOWN_FROM - elapsedCountdownInSeconds <= 0) {
       switchPage("lost", setIgnoreKeyStrokes)
     }
-  }
-  else if (elapsedCountdownInSeconds) {
+  } else if (elapsedCountdownInSeconds) {
     updateTimerInDOM(prettifySeconds(FINALE_COUNTDOWN_FROM - elapsedCountdownInSeconds), "red");
   } else {
     updateTimerInDOM(prettifySeconds(elapsedTimeInSeconds), "white");
@@ -150,7 +149,7 @@ switchPage = (page, ignoreKeyStrokes) => {
 module.exports = {
   listenForKeyPress,
   handleSliderChange,
-  getTimersFromGame,
+  handleTimeEvents,
   switchPage,
   replay,
 };
