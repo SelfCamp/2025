@@ -1,7 +1,7 @@
 const {cloneDeep} = require('lodash');
 
 const {Board} = require('./Board');
-const {ARROW_PRESS_TIMEOUT, FINALE_COUNTDOWN_FROM} = require('../config');
+const {ANIMATION_SLIDE_DURATION, FINALE_COUNTDOWN_FROM} = require('../config');
 
 
 /**
@@ -24,26 +24,28 @@ function Game(mockScenario='noMock') {
   this.gameOverAt = null;
 
   /**
-   * Determines whether enough time has passed since last keypress to perform a new one
-   *
-   * - Makes sure board transformation finishes before starting a new one, avoiding UI glitches
-   * @param forActivity {key | history} to decide validation rules for keypress.
+   * @param keyType {"arrowKey" | "historyKey"} determines validation rules to be used for keypress
    * @returns {boolean}
    */
-  this.isKeyPressAllowed = (forActivity="key") => {
-    if (this.timeline.length === 1 && !this.ignoreKeystrokes) {
+  this.isKeyPressAllowed = (keyType="arrowKey") => {
+    if (this.ignoreKeystrokes || this.areTilesSliding())
+      return false;
+    if (this.timeline.length === 1)
+      return true;
+    if (keyType === "arrowKey") {
+      return ["ongoing", "finale", "timeForTheOne"].includes(this.status());
+    } else {
       return true;
     }
-    let timeSinceLastArrowPress = new Date() - this.currentBoard().createdAt;
-    let currentStatus = this.status();
-    if (forActivity === "key") {
-      return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT &&
-          (currentStatus === "ongoing" || currentStatus === "finale" || currentStatus === "timeForTheOne") &&
-          !this.ignoreKeystrokes;
-    } else if (forActivity === "history") {
-      return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT &&
-          !this.ignoreKeystrokes;
-    }
+  };
+
+  /**
+   * Determines whether tile sliding animation is currently assumed to be in progress
+   * @returns {boolean}
+   */
+  this.areTilesSliding = () => {
+    let timeSinceLastSuccessfulArrowPress = new Date() - this.currentBoard().createdAt;
+    return (timeSinceLastSuccessfulArrowPress < ANIMATION_SLIDE_DURATION)
   };
 
   this.setIgnoreKeystrokes = (bool) => {

@@ -5,10 +5,10 @@ const listenForKeyPress = (game, event) => {
   if (isItAnArrowKey(event.key) && game.isKeyPressAllowed()) {
     handleArrowKeyPress(game, event.key)
   }
-  else if (isItAHistoryKey(event.key) && game.isKeyPressAllowed("history")) {
+  else if (isItAHistoryKey(event.key) && game.isKeyPressAllowed("historyKey")) {
     handleHistoryKeyPress(game, event.key)
   }
-  else if (isItReplay(event.key) && game.isKeyPressAllowed("history")) {
+  else if (isItReplay(event.key) && game.isKeyPressAllowed("historyKey")) {
     replay(game)
   }
 };
