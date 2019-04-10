@@ -29,7 +29,7 @@ const updateView = (newBoard, gameStatus, sliderLength, sliderPosition, slide=tr
   }
   updateSliderInDOM(sliderLength, sliderPosition);
   updateScoreInDOM(score);
-  handleGameEvent(gameStatus);
+  displayGameStatusChange(gameStatus);
 };
 
 const initiateSlideInDOM = (newBoard) => {
@@ -41,6 +41,7 @@ const initiateSlideInDOM = (newBoard) => {
     tileElement.setAttribute("data-state", isSliding ? 'sliding' : '');
   }
 };
+
 /**
  * Goes through all board tile elements in DOM and updates their merge and spawn status according to tiles in Game object.
  * @param newBoard {object}
@@ -61,11 +62,12 @@ const initiateMergeSpawnInDOM = (newBoard, ANIMATION_NEEDED=false) => {
     tileElement.textContent = tile.currentValue;
   }
 };
+
 /**
  * Function receives gameStatus and updates the DOM based on it.
  * @param gameStatus
  */
-const handleGameEvent = (gameStatus) => {
+const displayGameStatusChange = (gameStatus) => {
   switch (gameStatus) {
     case 'ongoing':
     case 'finale':
@@ -98,6 +100,7 @@ const updateSliderInDOM = (max, value) => {
   slider.setAttribute("max", max);
   slider.value = value;
 };
+
 /**
  * Updates timer on board header. It accepts gameTime (number, elapsed seconds) and color (string, for styling)
  * @param gameTime {number}
@@ -114,8 +117,8 @@ const updateTimerInDOM = (gameTime, color="white") => {
       timer.setAttribute("style", "color: #FF001E");
       break;
   }
-
 };
+
 /**
  * Updates score on board header.
  * @param score {number}
@@ -124,6 +127,7 @@ const updateScoreInDOM = (score) => {
   let scoreTab = document.querySelector("#score");
   scoreTab.innerHTML = score
 };
+
 /**
  * Activates requested page on game.
  * @param newDisplay {string}
