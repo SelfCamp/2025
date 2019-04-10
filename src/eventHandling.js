@@ -121,26 +121,26 @@ const prettifySeconds = (secondsToCalc) => {
   )
 };
 
-switchPage = (page, ignoreKeyStrokes) => {
+const switchPage = (page, setIgnoreKeyStrokes) => {
   switch (page) {
     case "rules":
-      ignoreKeyStrokes(true);
+      setIgnoreKeyStrokes(true);
       showPageInDOM("rules");
       break;
     case "about":
-      ignoreKeyStrokes(true);
+      setIgnoreKeyStrokes(true);
       showPageInDOM("about");
       break;
     case "game":
-      ignoreKeyStrokes(false);
+      setIgnoreKeyStrokes(false);
       showPageInDOM("game");
       break;
     case "won:":
-      ignoreKeyStrokes(true);
+      setIgnoreKeyStrokes(true);
       showPageInDOM("victory");
       break;
     case "lost":
-      ignoreKeyStrokes(true);
+      setIgnoreKeyStrokes(true);
       showPageInDOM("defeat");
       break;
   }
