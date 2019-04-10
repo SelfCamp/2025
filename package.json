@@ -25,10 +25,12 @@
   },
   "homepage": "https://github.com/SelfCamp/2049#readme",
   "devDependencies": {
+    "autoprefixer": "^9.5.1",
     "browserify": "^16.2.3",
     "jest": "^24.5.0",
     "live-server": "^1.2.1",
     "lodash": "^4.17.11",
+    "postcss-cli": "^6.1.2",
     "tinyify": "^2.5.0"
   },
   "dependencies": {}
