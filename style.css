@@ -1,111 +1,261 @@
 :root {
-  --board-size: 50vw;
-  --grid-gap: calc(var(--board-size) / 50);
-  --tile-size: calc((var(--board-size) - (var(--grid-gap) * 3)) / 4);
-  --tile-slide-length: calc(var(--tile-size) + var(--grid-gap));
+    --front-size: 100vh;
+    --board-size: calc(var(--front-size) / 2);
+    --grid-gap: calc(var(--board-size) / 50);
+    --tile-size: calc((var(--board-size) - (var(--grid-gap) * 3)) / 4);
+    --tile-slide-length: calc(var(--tile-size) + var(--grid-gap));
+}
+
+
+/* LAYOUT */
+
+body {
+    background-color: #FF001E;
+    margin: 0;
+    color: #FFC9A4;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#title {
+    font-size: calc(var(--board-size) /8);
+    margin: 0;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: bold;
+}
+
+#lastletter {
+    color: red;
+}
+
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    padding: 0;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: bold;
+    margin: 5px;
+}
+
+nav ul li {
+    border-radius: 10px;
+    box-shadow: 0 5px 5px black;
+    cursor: pointer;
+    padding: calc(var(--board-size) /50) calc(var(--board-size) /50);
+    font-size: calc(var(--board-size) /25);
+}
+
+#game {
+    display: grid;
+    grid-template-columns: 1fr;
+    box-shadow: inset 0 0 20px #000000;
+}
+
+#front {
+    background-color: #FF6700;
+    display: grid;
+    grid-template-columns: 1fr;
+    width: calc(var(--board-size) + 30px);
+    height: var(--front-size);
+    margin: auto;
+}
+
+#board-header{
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    align-items: center;
+}
+
+#board-header ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+#board-header ul li {
+    font-size: calc(var(--board-size) /25);
+    display: grid;
+    grid-template-columns: 1fr;
+    text-align: center;
+    font-family: 'Permanent Marker', cursive;
+}
+
+#board-footer{
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    align-items: center;
+}
+
+#board-footer ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+#board-footer ul li {
+    display: grid;
+    grid-template-columns: 1fr;
+    text-align: center;
+    margin: auto;
+    border: 2px solid #FFC9A4;
+    padding: 0.5vh;
+    border-radius: 10px;
+    font-family: 'Permanent Marker', cursive;
+    font-size: calc(var(--board-size) /25);
+    cursor: pointer;
+}
+
+#board-container {
+    padding: calc(var(--board-size) / 20);
+    height: var(--board-size);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#board, #board-base, #rules, #about, #victory, #defeat {
+    position: absolute;
+    width: var(--board-size);
+    height: var(--board-size);
 }
 
 #board, #board-base {
-  position: absolute;
-  top: calc((100vh - var(--board-size)) / 2);
-  left: calc((100vw - var(--board-size)) / 2);
-  width: var(--board-size);
-  height: var(--board-size);
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
-  justify-content: stretch;
-  justify-items: stretch;
-  grid-gap: var(--grid-gap);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    justify-content: stretch;
+    justify-items: stretch;
+    grid-gap: var(--grid-gap);
+}
+
+.messages {
+    background-color: #FF6700;
+    visibility: hidden;
+    text-align: center;
+    line-height: 1.2em;
+    color: #FFC9A4;
+    font-size: 3vh;
 }
 
 #slide-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+
 }
 
-#game-history {
-  width: 75vw;
+#game-history-slider {
+    bottom: 0;
+}
+
+br {
+    line-height: 200%;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.non-selectable {
+    user-select: none;
 }
 
 .tile {
-  color: #FFFFFF;
-  font-family: monospace;
-  font-size: calc(var(--board-size) * 0.08);
-  display: flex;
-  justify-content: center ;
-  align-items: center;
-  border: calc(var(--board-size) / 250) solid #444444;
-  border-radius: calc(var(--board-size) / 50);
+    color: #FFFFFF;
+    font-family: monospace;
+    font-size: calc(var(--board-size) * 0.08);
+    display: flex;
+    justify-content: center ;
+    align-items: center;
+    border: calc(var(--board-size) / 250) solid #444444;
+    border-radius: calc(var(--board-size) / 50);
 }
 
 #board-base .tile {
-  background-color: #ffca7f;
+    background-color: #ffca7f;
 }
 
 #board .tile[value='null'] {
-  visibility: hidden;
+    visibility: hidden;
 }
 
 .tile[value='2'] {
-  background-color: #000000;
+    background-color: #000000;
 }
 
 .tile[value='4'] {
-  background-color: #111111;
+    background-color: #111111;
 }
 
 .tile[value='8'] {
-  background-color: #222222;
+    background-color: #222222;
 }
 
 .tile[value='16'] {
-  background-color: #333333;
+    background-color: #333333;
 }
 
 .tile[value='32'] {
-  background-color: #444444;
+    background-color: #444444;
 }
 
 .tile[value='64'] {
-  background-color: #555555;
+    background-color: #555555;
 }
 
 .tile[value='128'] {
-  background-color: #666666;
+    background-color: #666666;
 }
 
 .tile[value='256'] {
-  background-color: #777777;
+    background-color: #777777;
 }
 
 .tile[value='512'] {
-  background-color: #888888;
+    background-color: #888888;
 }
 
 .tile[value='1024'] {
-  background-color: #999999;
+    background-color: #999999;
 }
 
 .tile[value='2048'] {
-  background-color: #AAAAAA;
+    background-color: #AAAAAA;
 }
 
 .tile[value='1'] {
-  background-color: #BBBBBB;
+    background-color: #BBBBBB;
 }
 
 .tile[value='2049'] {
-  background-color: #CCCCCC;
+    background-color: #CCCCCC;
 }
 
 
 /* ANIMATION */
 
 .tile[data-state='sliding'] {
-  animation-name: slide;
-  animation-duration: calc(var(--slide-duration) * 2);  /* Multiplier adds buffer to prevent flashing back to original
+    animation-name: slide;
+    animation-duration: calc(var(--slide-duration) * 2);  /* Multiplier adds buffer to prevent flashing back to original
                                                            position during processing of `initiateMergeSpawnInDOM`.
 
                                                            Combined with 50% keyframe end, this results in
@@ -115,46 +265,46 @@
 }
 
 .tile[data-state='merged'] {
-  animation-name: merge;
-  animation-duration: 250ms;
-  animation-direction: alternate;
+    animation-name: merge;
+    animation-duration: 250ms;
+    animation-direction: alternate;
 }
 
 .tile[data-state='spawned'] {
-  animation-name: spawn;
-  animation-duration: 500ms;
-  animation-direction: alternate;
+    animation-name: spawn;
+    animation-duration: calc(var(--spawn-duration));
+    animation-direction: alternate;
 }
 
 @keyframes slide {
-  50% {
-    transform:
-      translateX(calc(var(--tile-slide-length) * var(--slide-x)))
-      translateY(calc(var(--tile-slide-length) * var(--slide-y)));
-  }
+    50% {
+        transform:
+                translateX(calc(var(--tile-slide-length) * var(--slide-x)))
+                translateY(calc(var(--tile-slide-length) * var(--slide-y)));
+    }
 }
 
 @keyframes merge {
-  100% {
-    background-color: red;
-    transform: scale(1.1);
-  }
+    100% {
+        background-color: red;
+        transform: scale(1.1);
+    }
 }
 
 @keyframes spawn {
-  0% {
-    visibility: hidden;
-  }
-  50% {
-    visibility: hidden;
-  }
-  50.01% {
-    visibility: visible;
-    background-color: initial;
-    transform: scale(1);
-  }
-  100% {
-    background-color: white;
-    transform: scale(1.1);
-  }
+    0% {
+        visibility: hidden;
+    }
+    50% {
+        visibility: hidden;
+    }
+    50.01% {
+        visibility: visible;
+        background-color: initial;
+        transform: scale(1);
+    }
+    100% {
+        background-color: white;
+        transform: scale(1.1);
+    }
 }

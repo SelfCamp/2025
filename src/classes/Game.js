@@ -1,7 +1,7 @@
 const {cloneDeep} = require('lodash');
 
 const {Board} = require('./Board');
-const {ARROW_PRESS_TIMEOUT} = require('../config');
+const {ANIMATION_SLIDE_DURATION, FINALE_COUNTDOWN_FROM} = require('../config');
 
 
 /**
@@ -17,19 +17,43 @@ function Game(mockScenario='noMock') {
   this.timeline = [new Board(mockScenario)];
   /** Determines current position in `Game.timeline` */
   this.head = 0;
+  this.createdAt = new Date();
+  this.ignoreKeystrokes = false;
+  this.tempScore = 0;
+  this.finaleStartedAt = false;
+  this.gameOverAt = null;
 
   /**
-   * Determines whether enough time has passed since last keypress to perform a new one
-   *
-   * - Makes sure board transformation finishes before starting a new one, avoiding UI glitches
+   * @param keyType {"arrowKey" | "historyKey"} determines validation rules to be used for keypress
    * @returns {boolean}
    */
-  this.isKeyPressAllowed = () => {
-    if (this.timeline.length === 1) {
+  this.isKeyPressAllowed = (keyType="arrowKey") => {
+    if (this.ignoreKeystrokes || this.areTilesSliding())
+      return false;
+    if (this.timeline.length === 1)
+      return true;
+    if (keyType === "arrowKey") {
+      return ["ongoing", "finale", "timeForTheOne"].includes(this.status());
+    } else {
       return true;
     }
-    let timeSinceLastArrowPress = new Date() - this.currentBoard().createdAt;
-    return timeSinceLastArrowPress > ARROW_PRESS_TIMEOUT;
+  };
+
+  /**
+   * Determines whether tile sliding animation is currently assumed to be in progress
+   * @returns {boolean}
+   */
+  this.areTilesSliding = () => {
+    let timeSinceLastSuccessfulArrowPress = new Date() - this.currentBoard().createdAt;
+    return (timeSinceLastSuccessfulArrowPress < ANIMATION_SLIDE_DURATION)
+  };
+
+  this.setIgnoreKeystrokes = (bool) => {
+    this.ignoreKeystrokes = bool
+  };
+
+  this.score = () => {
+    return this.timeline.slice(0, this.length()).map(board => board.score).reduce((acc, val) => acc + val)
   };
 
   /**
@@ -82,7 +106,6 @@ function Game(mockScenario='noMock') {
           this.head++;
         break;
       default:
-        console.log(whichBoard);
         this.head = whichBoard;
     }
   };
@@ -111,33 +134,62 @@ function Game(mockScenario='noMock') {
    */
   this.status = (whenBoardIs=this.currentBoard()) => {
     let hasEmptySpots;
+    let hasOne;
     let maxValue = 0;
-    for (let row of whenBoardIs.matrix) {
-      for (let tile of row) {
-        if (tile.currentValue > maxValue) {
-          maxValue = tile.currentValue;
-        }
-        if (!tile.currentValue) {
-          hasEmptySpots = true;
-        }
+    for (let tile of whenBoardIs.tiles()) {
+      if (tile.currentValue > maxValue) {
+        maxValue = tile.currentValue;
+      }
+      if (!tile.currentValue) {
+        hasEmptySpots = true;
+      }
+      if (tile.currentValue === 1) {
+        hasOne = true;
       }
     }
     if (maxValue === 2049) {
       return 'won'
     }
-    if (maxValue === 2048 && hasEmptySpots) {
+    if (maxValue === 2048 && hasOne && (hasEmptySpots || this.isThereValidNextMove())) {
+      return "finale"
+    }
+    if (maxValue === 2048 && (hasEmptySpots)) {
       return 'timeForTheOne'  // TODO: continue expanding +1 logic outwards from here
     }
-    if (hasEmptySpots) {
+    if (hasEmptySpots || this.isThereValidNextMove()) {
       return 'ongoing'
     }
+    return "lost";
+  };
+
+  /**
+   * Checks whether the game should or should not be over. Checks game.status and the final countdown
+   * @returns {boolean}
+   */
+  this.isGameOver = () => ["won", "lost"].includes(this.status()) ||
+      (this.elapsedCountdownInSeconds() - FINALE_COUNTDOWN_FROM >= 0);
+
+  /**
+   * Returns game time from start to end in seconds
+   * @returns {number}
+   */
+  this.getFinishedGameLength = () => {
+    if (!this.gameOverAt) {
+      this.gameOverAt = new Date()
+    }
+    return parseInt((this.gameOverAt - this.createdAt) / 1000)};
+
+  /**
+   * Checks if there is a valid next move in any directions
+   * @returns {boolean}
+   */
+  this.isThereValidNextMove = () => {
     for (let direction of ["up", "right", "down", "left"]) {
       let testBoardCopy = this.nextBoard(direction);
       if (testBoardCopy) {
-        return "ongoing"
+        return true
       }
     }
-    return "lost";
   };
 
   /**
@@ -148,7 +200,11 @@ function Game(mockScenario='noMock') {
     let nextBoard = this.nextBoard(direction);
     if (nextBoard) {
       let nextStatus = this.status(nextBoard);
-      if (nextStatus === 'ongoing') {
+      if (nextStatus === "timeForTheOne") {
+        nextBoard.spawnTiles(1, true);
+        this.finaleStartedAt = new Date();
+      }
+      else if (nextStatus === 'ongoing' || "finale") {
         nextBoard.spawnTiles(1);
       }
       this.timeline.push(nextBoard);
@@ -173,6 +229,7 @@ function Game(mockScenario='noMock') {
   };
 
   this.squashBoard = (currentBoard, direction) => {
+    this.tempScore = 0;
     let newBoard = new Board();
     newBoard.initiatingDirection = direction;
     newBoard.matrix = cloneDeep(currentBoard.matrix);
@@ -181,6 +238,7 @@ function Game(mockScenario='noMock') {
     for (let row of temporaryBoardSlices) {
       this.squashRow(row, direction)  // mutates tiles in input
     }
+    newBoard.score = this.tempScore;
     return newBoard;
   };
 
@@ -327,13 +385,40 @@ function Game(mockScenario='noMock') {
     if (thisTile.currentValue === nextTile.currentValue) {
       thisTile.currentValue = null;
       nextTile.currentValue = nextTile.currentValue * 2;
+      this.tempScore += nextTile.currentValue;
       nextTile.wasJustMerged = true;
+      return true;
+    }
+    else if (thisTile.currentValue === 2048 && nextTile.currentValue === 1 || thisTile.currentValue === 1 && nextTile.currentValue === 2048) {
+      thisTile.currentValue = null;
+      nextTile.currentValue = 2049;
+      nextTile.wasJustMerged = true;
+      this.tempScore += 1;
+      this.gameOverAt = new Date;
       return true;
     }
 
     return false;
   };
 
+  /**
+   * Returns elapsed time since game start in seconds
+   * @returns {number}
+   */
+  this.elapsedTimeInSeconds = () => parseInt((new Date() - this.createdAt) / 1000)
+  ;
+
+  /**
+   * Returns elapsed time since countdown has started. If the game is not in the "finale" stage, returns false
+   * @returns {boolean|number}
+   */
+  this.elapsedCountdownInSeconds = () => {
+    if (this.finaleStartedAt && this.status() === "finale") {
+      return parseInt((new Date() - this.finaleStartedAt) / 1000)
+    } else {
+      return false
+    }
+  };
 
   if (this.currentBoard().isEmpty()) {
     this.currentBoard().spawnTiles(2);

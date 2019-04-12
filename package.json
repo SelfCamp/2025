@@ -8,8 +8,9 @@
   },
   "scripts": {
     "test": "jest --verbose",
-    "build": "browserify -p tinyify src/script.js > docs/bundle.js  &&  cp index.html docs/index.html  &&  cp style.css docs/style.css",
-    "devBuild": "browserify src/script.js > docs/bundle.js  &&  cp index.html docs/index.html  &&  cp style.css docs/style.css",
+    "build": "browserify -p tinyify src/script.js > docs/bundle.js  &&  cp index.html docs/index.html  &&  npx postcss style.css --use autoprefixer -d docs/",
+    "devBuild": "browserify src/script.js > docs/bundle.js  &&  cp index.html docs/index.html  &&  npx postcss style.css --use autoprefixer -d docs/",
+    "winBuild": "browserify src/script.js > docs/bundle.js",
     "start": "live-server --open=docs"
   },
   "repository": {
@@ -24,10 +25,12 @@
   },
   "homepage": "https://github.com/SelfCamp/2049#readme",
   "devDependencies": {
+    "autoprefixer": "^9.5.1",
     "browserify": "^16.2.3",
     "jest": "^24.5.0",
     "live-server": "^1.2.1",
     "lodash": "^4.17.11",
+    "postcss-cli": "^6.1.2",
     "tinyify": "^2.5.0"
   },
   "dependencies": {}
