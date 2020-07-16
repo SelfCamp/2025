@@ -29,7 +29,7 @@
     "browserify": "^16.2.3",
     "jest": "^24.5.0",
     "live-server": "^1.2.1",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "postcss-cli": "^6.1.2",
     "tinyify": "^2.5.0"
   },
